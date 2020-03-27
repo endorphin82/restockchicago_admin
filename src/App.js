@@ -12,7 +12,7 @@ function App() {
         </p>
         <a
           className="App-link"
-          href={process.env.REACT_APP_BASE_URL}
+          href="http://localhost:3005/graphql"
           target="_blank"
           rel="noopener noreferrer"
         >
