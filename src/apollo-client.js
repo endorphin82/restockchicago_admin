@@ -1,5 +1,7 @@
 import ApolloClient from "apollo-boost"
 
+const BASE_URL = require('../keys.js').BASE_URL
+
 export const client = new ApolloClient({
-  uri: 'http://localhost:3005/graphql'
+  uri: BASE_URL
 })

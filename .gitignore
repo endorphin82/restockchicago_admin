@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+Будет удалено .env
+Будет удалено .idea/
+Будет удалено node_modules/
