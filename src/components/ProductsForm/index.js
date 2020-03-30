@@ -58,7 +58,6 @@ const ProductsForm = ({ edited_product, editProduct, isOpenModal, setIsOpenModal
   const { categoriesAll = [] } = data
   console.log("isOpenModal", isOpenModal)
 
-
   return (
     <Modal
       title="Product information"

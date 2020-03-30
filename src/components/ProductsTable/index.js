@@ -12,32 +12,30 @@ const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 const ProductsTable = ({ editProduct, setIsOpenModal }) => {
   const { loading, error, data } = useQuery(productsAllQuery)
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
-  const [prod, pSet] = useState({})
+  const [productDeleted, setProductDeleted] = useState({})
   const [deleteProduct, {}] = useMutation(deleteProductMutation)
 
   if (loading) return <p>Loading ... </p>
   const { productsAll } = data
 
   const handleEdit = (id) => {
-    const product = productsAll.find(prod => prod.id === id)
-    editProduct(product)
-    console.log("editProduct(product)", product)
+    editProduct(productsAll.find(prod => prod.id === id))
+
 
     setIsOpenModal(true)
-    console.log("table", product)
+
   }
 
   const handleDelete = (id) => {
     setIsVisualDeleteModal(true)
-    const prod = productsAll.find(prod => prod.id === id)
-    pSet(prod)
-    console.log("table", prod)
+    setProductDeleted(productsAll.find(prod => prod.id === id))
+    console.log("table", productDeleted)
   }
 
-  const handleOk = (id) => {
+  const handleOk = () => {
     deleteProduct({
       variables: {
-        id
+        id: productDeleted.id
       }
     })
     setIsVisualDeleteModal(false)
@@ -118,10 +116,10 @@ const ProductsTable = ({ editProduct, setIsOpenModal }) => {
       <Modal
         title="Delete product?"
         visible={isVisualDeleteModal}
-        onOk={handleOk.bind(null, prod.id)}
+        onOk={handleOk.bind(null, productDeleted.id)}
         onCancel={handleCancel}
       >
-        <p>{prod.name}</p>
+        <p>{productDeleted.name}</p>
       </Modal>
     </>
   )
