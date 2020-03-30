@@ -8,7 +8,7 @@ import { categoriesAllQuery } from "../Categories/query"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenModal } from "../../actions"
 
-const ProductsForm = ({ edited_product, editProduct, isOpenModal, setIsOpenModal, isOpen }) => {
+const ProductsForm = ({ edited_product, editProduct, isOpenModal, setIsOpenModal }) => {
   const [form] = Form.useForm()
   const [addProduct, {}] = useMutation(addProductMutation)
   const [updateProduct, {}] = useMutation(updateProductMutation)
@@ -19,35 +19,40 @@ const ProductsForm = ({ edited_product, editProduct, isOpenModal, setIsOpenModal
     console.log("edited_product", edited_product)
   }, [edited_product])
   useEffect(() => {
-
     return () => {
       form.resetFields()
     }
   }, [])
-  console.log("values", values)
+  console.log("values+++", values)
 
-  const onFinish = values => {
+  const onFinish = () => {
     console.log("Received values of form:", values)
 
-    const { id, name, categoryId, images, icon } = values
+    const { id, name, category, images, icon } = values
     const price = Number(values.price)
 
+    console.log("onFinish", id)
     id ?
       updateProduct({
         variables: {
-          id, name, price, categoryId, images, icon
+          id, name, price, categoryId: category.id, images, icon
         }
-      })
+      }).then(m => console.log("updateProduct:", m))
+        .catch(e => console.log("updateProductERROR:", e))
       : addProduct({
         variables: {
-          name, price, categoryId, images, icon
+          name, price, categoryId: category.id, images, icon
         }
-      })
+      }).then(m => console.log("addProduct:", m))
+        .catch(e => console.log("addProductERROR:", e))
+
+    form.resetFields()
     setIsOpenModal(false)
   }
 
   const handleCancel = e => {
     console.log(e)
+    form.resetFields()
     setIsOpenModal(false)
     editProduct({})
   }
@@ -203,5 +208,5 @@ const formItemLayoutWithOutLabel = {
 export default connect(state => ({
     isOpenModal: state.modal.isOpen,
     edited_product: state.edit_product.product
-  }), { setIsOpenModal, editProduct }, null, { pure: false }
+  }), { setIsOpenModal, editProduct }
 )(ProductsForm)

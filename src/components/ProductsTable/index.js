@@ -14,30 +14,27 @@ const ProductsTable = ({ editProduct, setIsOpenModal }) => {
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
   const [productDeleted, setProductDeleted] = useState({})
   const [deleteProduct, {}] = useMutation(deleteProductMutation)
-
+  console.log("productDeleted", productDeleted)
   if (loading) return <p>Loading ... </p>
   const { productsAll } = data
 
   const handleEdit = (id) => {
     editProduct(productsAll.find(prod => prod.id === id))
-
-
     setIsOpenModal(true)
-
   }
 
   const handleDelete = (id) => {
     setIsVisualDeleteModal(true)
     setProductDeleted(productsAll.find(prod => prod.id === id))
-    console.log("table", productDeleted)
   }
 
   const handleOk = () => {
+    console.log("productDeleted.id", productDeleted.id)
     deleteProduct({
       variables: {
         id: productDeleted.id
       }
-    })
+    }).then(mess => console.log("deleteProduct response:", mess))
     setIsVisualDeleteModal(false)
   }
 
