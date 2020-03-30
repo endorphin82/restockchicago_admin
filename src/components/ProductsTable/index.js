@@ -3,11 +3,12 @@ import { useMutation, useQuery } from "@apollo/react-hooks"
 import { Button, Modal, Table } from "antd"
 import { productsAllQuery } from "../Products/query"
 import { deleteProductMutation } from "../Products/mutations"
+import { connect } from "react-redux"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 
-const ProductsTable = ({ prodSet, visibleSet }) => {
+const ProductsTable = ({ isOpenModal, prodSet, visibleSet }) => {
   const { loading, error, data } = useQuery(productsAllQuery)
   const [vis, visSet] = useState(false)
   const [prod, pSet] = useState({})
@@ -124,4 +125,7 @@ const ProductsTable = ({ prodSet, visibleSet }) => {
   )
 }
 
-export default ProductsTable
+export default connect(state => ({
+    isOpenModal: state.modal.isOpen
+  })
+)(ProductsTable)
