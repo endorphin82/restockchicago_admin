@@ -5,16 +5,27 @@ import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined"
 import MinusCircleOutlined from "@ant-design/icons/lib/icons/MinusCircleOutlined"
 import { addProductMutation, updateProductMutation } from "../Products/mutations"
 import { categoriesAllQuery } from "../Categories/query"
+import { connect } from "react-redux"
+import { editProduct, setIsOpenModal } from "../../actions"
 
-const ProductsForm = ({ prod, visible, visibleSet }) => {
+const ProductsForm = ({ edited_product, editProduct, isOpenModal, setIsOpenModal, isOpen }) => {
+  const [form] = Form.useForm()
   const [addProduct, {}] = useMutation(addProductMutation)
   const [updateProduct, {}] = useMutation(updateProductMutation)
   const { loading, error, data } = useQuery(categoriesAllQuery)
   const [values, setValues] = useState({ name: "", price: 0, category: "" })
   useEffect(() => {
-    setValues(prod)
-  }, [prod])
+    setValues(edited_product)
+    console.log("edited_product", edited_product)
+  }, [edited_product])
+  useEffect(() => {
+
+    return () => {
+      form.resetFields()
+    }
+  }, [])
   console.log("values", values)
+
   const onFinish = values => {
     console.log("Received values of form:", values)
 
@@ -32,46 +43,45 @@ const ProductsForm = ({ prod, visible, visibleSet }) => {
           name, price, categoryId, images, icon
         }
       })
-    visibleSet(false)
+    setIsOpenModal(false)
   }
 
   const handleCancel = e => {
-    e.preventDefault()
     console.log(e)
-    visibleSet(false)
+    setIsOpenModal(false)
+    editProduct({})
   }
   const handleChange = e => {
     const { name, value } = e.target
-
     setValues({ ...values, [name]: value })
   }
   const { categoriesAll = [] } = data
+  console.log("isOpenModal", isOpenModal)
+
   return (
     <Modal
       title="Product information"
-      visible={visible}
+      visible={isOpenModal}
       footer={false}
       // onOk={onFinish}
       onCancel={handleCancel}
+      forceRender={true}
+      destroyOnClose={false}
       // okButtonProps={{htmlType: "submit" }}
       // cancelButtonProps={{ htmlType: "submit" }}
     >
-
-      <Form
-        initialValues={{
-          ["price"]: values.price,
-          ["name"]: values.name,
-          ["images"]: values.images,
-          ["icon"]: values.icon
-          // ["categoryId"]: values.category.id
-
-        }}
-        name="product" {...formItemLayoutWithOutLabel} onFinish={onFinish}>
+      {form.setFieldsValue({
+        "name": values.name,
+        "price": values.price,
+        "images": values.images,
+        "icon": values.icon
+        // "categoryId": values.category.id
+      })}
+      <Form form={form}
+            name="product" {...formItemLayoutWithOutLabel} onFinish={onFinish}>
         <Form.Item
           label="Name product"
           name="name"
-          // value={values.name}
-
           // noStyle
           rules={[{ required: true, message: "Name product is required" }]}
         >
@@ -190,4 +200,8 @@ const formItemLayoutWithOutLabel = {
   }
 }
 
-export default ProductsForm
+export default connect(state => ({
+    isOpenModal: state.modal.isOpen,
+    edited_product: state.edit_product.product
+  }), { setIsOpenModal, editProduct }, null, { pure: false }
+)(ProductsForm)

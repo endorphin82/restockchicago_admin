@@ -4,46 +4,46 @@ import { Button, Modal, Table } from "antd"
 import { productsAllQuery } from "../Products/query"
 import { deleteProductMutation } from "../Products/mutations"
 import { connect } from "react-redux"
+import { editProduct, setIsOpenModal } from "../../actions"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 
-const ProductsTable = ({ isOpenModal, prodSet, visibleSet }) => {
+const ProductsTable = ({ editProduct, setIsOpenModal }) => {
   const { loading, error, data } = useQuery(productsAllQuery)
-  const [vis, visSet] = useState(false)
-  const [prod, pSet] = useState({})
+  const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
+  const [productDeleted, setProductDeleted] = useState({})
   const [deleteProduct, {}] = useMutation(deleteProductMutation)
 
   if (loading) return <p>Loading ... </p>
   const { productsAll } = data
 
   const handleEdit = (id) => {
-    const product = productsAll.find(prod => prod.id === id)
-    prodSet(product)
-    visibleSet(true)
-    console.log("table", product)
+    editProduct(productsAll.find(prod => prod.id === id))
+
+
+    setIsOpenModal(true)
+
   }
 
   const handleDelete = (id) => {
-    visSet(true)
-    const prod = productsAll.find(prod => prod.id === id)
-    pSet(prod)
-    console.log("table", prod)
+    setIsVisualDeleteModal(true)
+    setProductDeleted(productsAll.find(prod => prod.id === id))
+    console.log("table", productDeleted)
   }
 
-  const handleOk = (id) => {
+  const handleOk = () => {
     deleteProduct({
       variables: {
-        id
+        id: productDeleted.id
       }
     })
-    visSet(false)
+    setIsVisualDeleteModal(false)
   }
 
   const handleCancel = () => {
-    visSet(false)
+    setIsVisualDeleteModal(false)
   }
-
 
   const columns = [
     {
@@ -115,17 +115,15 @@ const ProductsTable = ({ isOpenModal, prodSet, visibleSet }) => {
       <Table dataSource={productsAll} columns={columns} rowKey="id"/>
       <Modal
         title="Delete product?"
-        visible={vis}
-        onOk={handleOk.bind(null, prod.id)}
+        visible={isVisualDeleteModal}
+        onOk={handleOk.bind(null, productDeleted.id)}
         onCancel={handleCancel}
       >
-        <p>{prod.name}</p>
+        <p>{productDeleted.name}</p>
       </Modal>
     </>
   )
 }
 
-export default connect(state => ({
-    isOpenModal: state.modal.isOpen
-  })
+export default connect(null, { setIsOpenModal, editProduct }, null, { pure: false }
 )(ProductsTable)

@@ -9,12 +9,11 @@ import { client } from "./store/apollo-client"
 import store from "./store"
 
 ReactDOM.render(
-  <ApolloProvider client={client}>
-    <Provider store={store}>
+  <Provider store={store}>
+    <ApolloProvider client={client}>
       <App/>
-    </Provider>
-  </ApolloProvider>,
-  document.getElementById("root")
+    </ApolloProvider>
+  </Provider>, document.getElementById("root")
 )
 
 // If you want your app to work offline and load faster, you can change
