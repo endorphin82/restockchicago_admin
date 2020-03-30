@@ -1,12 +1,12 @@
-import { IS_OPEN_MODAL } from "../actions/types"
+import { EDIT_PRODUCT } from "../actions/types"
 
 const initialState = {
-
+  product: {}
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case IS_OPEN_MODAL:
+    case EDIT_PRODUCT:
       return {
         ...state,
         product: action.payload

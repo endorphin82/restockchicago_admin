@@ -4,13 +4,14 @@ import { Button, Modal, Table } from "antd"
 import { productsAllQuery } from "../Products/query"
 import { deleteProductMutation } from "../Products/mutations"
 import { connect } from "react-redux"
+import { editProduct, setIsOpenModal } from "../../actions"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 
-const ProductsTable = ({ isOpenModal, prodSet, visibleSet }) => {
+const ProductsTable = ({ editProduct, setIsOpenModal }) => {
   const { loading, error, data } = useQuery(productsAllQuery)
-  const [vis, visSet] = useState(false)
+  const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
   const [prod, pSet] = useState({})
   const [deleteProduct, {}] = useMutation(deleteProductMutation)
 
@@ -19,13 +20,15 @@ const ProductsTable = ({ isOpenModal, prodSet, visibleSet }) => {
 
   const handleEdit = (id) => {
     const product = productsAll.find(prod => prod.id === id)
-    prodSet(product)
-    visibleSet(true)
+    editProduct(product)
+    console.log("editProduct(product)", product)
+
+    setIsOpenModal(true)
     console.log("table", product)
   }
 
   const handleDelete = (id) => {
-    visSet(true)
+    setIsVisualDeleteModal(true)
     const prod = productsAll.find(prod => prod.id === id)
     pSet(prod)
     console.log("table", prod)
@@ -37,13 +40,12 @@ const ProductsTable = ({ isOpenModal, prodSet, visibleSet }) => {
         id
       }
     })
-    visSet(false)
+    setIsVisualDeleteModal(false)
   }
 
   const handleCancel = () => {
-    visSet(false)
+    setIsVisualDeleteModal(false)
   }
-
 
   const columns = [
     {
@@ -115,7 +117,7 @@ const ProductsTable = ({ isOpenModal, prodSet, visibleSet }) => {
       <Table dataSource={productsAll} columns={columns} rowKey="id"/>
       <Modal
         title="Delete product?"
-        visible={vis}
+        visible={isVisualDeleteModal}
         onOk={handleOk.bind(null, prod.id)}
         onCancel={handleCancel}
       >
@@ -125,7 +127,5 @@ const ProductsTable = ({ isOpenModal, prodSet, visibleSet }) => {
   )
 }
 
-export default connect(state => ({
-    isOpenModal: state.modal.isOpen
-  })
+export default connect(null, { setIsOpenModal, editProduct }, null, { pure: false }
 )(ProductsTable)
