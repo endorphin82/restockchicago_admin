@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Button, Form, Input, Modal, Select } from "antd"
 import { useMutation, useQuery } from "@apollo/react-hooks"
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined"
@@ -12,34 +12,31 @@ import ApolloCacheUpdater from "apollo-cache-updater"
 const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => {
   const [addProduct, {}] = useMutation(addProductMutation)
   const { loading, error, data } = useQuery(categoriesAllQuery)
-  const [values, setValues] = useState({ name: "", price: 0, category: "" })
-
+  const [values, setValues] = useState({})
   console.log("values+++", values)
 
-  const onFinish = () => {
+  const onFinish = (valuefromformlist) => {
     console.log("Received values of form:", values)
 
-    const { id, name, images, icon } = values
+    const { name, images, categoryId, icon } = values
     const price = Number(values.price)
-    const category = String(values.category.id)
-    console.log("onFinish", id)
-
+    console.log("onFinish")
     addProduct({
       variables: {
-        name, price, categoryId: category, images, icon
-      },
-      update: (proxy, { data: { addProduct = {} } }) => { // your mutation response
-        const mutationResult = addProduct // mutation result to pass into the updater
-        const updates = ApolloCacheUpdater({
-          proxy, // apollo proxy
-          queriesToUpdate: [addProduct], // queries you want to automatically update
-          searchVariables: {
-            published: true // update queries in the cache that have these vars
-          },
-          mutationResult
-        })
-        if (updates) console.log(`Product added`) // if no errors
+        name, price, categoryId, images: valuefromformlist.images, icon
       }
+      // update: (proxy, { data: { addProduct = {} } }) => { // your mutation response
+      //   const mutationResult = addProduct // mutation result to pass into the updater
+      //   const updates = ApolloCacheUpdater({
+      //     // proxy, // apollo proxy
+      //     queriesToUpdate: [addProduct], // queries you want to automatically update
+      //     searchVariables: {
+      //       published: true // update queries in the cache that have these vars
+      //     },
+      //     mutationResult
+      //   })
+      //   if (updates) console.log(`Product added`) // if no errors
+      // }
 
     }).then(m => console.log("addProduct:", m))
       .catch(e => console.log("addProductERROR:", e))
@@ -48,12 +45,19 @@ const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => 
   }
 
   const handleCancel = e => {
+    e.preventDefault()
     console.log(e)
     setIsOpenAddProductModal(false)
   }
+
   const handleChange = e => {
     const { name, value } = e.target
+    console.log("target", e.target)
     setValues({ ...values, [name]: value })
+  }
+
+  const handleChangeSelect = value => {
+    setValues({ ...values, "categoryId": value })
   }
   const { categoriesAll = [] } = data
   console.log("isOpenAddProductModal", isOpenAddProductModal)
@@ -65,52 +69,56 @@ const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => 
       footer={false}
       // onOk={onFinish}
       onCancel={handleCancel}
-      forceRender={true}
-      destroyOnClose={false}
+      // forceRender={true}
+      // destroyOnClose={true}
       // okButtonProps={{htmlType: "submit" }}
       // cancelButtonProps={{ htmlType: "submit" }}
     >
-      {/*{form.setFieldsValue({*/}
-      {/*  "name": values.name,*/}
-      {/*  "price": values.price,*/}
-      {/*  "images": values.images,*/}
-      {/*  "icon": values.icon*/}
-      {/*  // "categoryId": values.category.id*/}
-      {/*})}*/}
       <Form
-        // form={formAdd}
-
-            name="product" {...formItemLayoutWithOutLabel} onFinish={onFinish}>
+        // onChange={handleChange}
+        name="product" {...formItemLayoutWithOutLabel}
+        onFinish={onFinish}>
         <Form.Item
           label="Name product"
-          name="name"
+          // name="name"
           // noStyle
           rules={[{ required: true, message: "Name product is required" }]}
         >
-          <Input onChange={handleChange} placeholder="name product"
-                 style={{ width: "100%", marginRight: 8 }}/>
+          <Input
+            name="name"
+            onChange={handleChange} placeholder="name product"
+            style={{ width: "100%", marginRight: 8 }}/>
         </Form.Item>
         <Form.Item
           label="Price"
-          name="price"
+          // name="price"
           // noStyle
           rules={[{ required: true, message: "Price is required" }]}
         >
-          <Input type="number" placeholder="Price $" style={{ width: "100%", marginRight: 8 }}/>
+          <Input
+            name="price"
+            onChange={handleChange}
+            // value={0}
+            type="number" placeholder="Price $" style={{ width: "100%", marginRight: 8 }}/>
         </Form.Item>
 
         <Form.Item
           label="Category"
           name="categoryId"
           // noStyle
-          onChange={handleChange}
+          // onChange={handleChange}
           rules={[{ required: true, message: "Category is required" }]}
         >
-          <Select placeholder="Select category">
+          <Select
+            name="categoryId"
+            // onChange={handleChange}
+            onChange={handleChangeSelect}
+            placeholder="Select category">
             {categoriesAll.map(category =>
               <Select.Option
                 key={category.id}
-                // value={category.id}
+                value={category.id}
+                onChange={handleChange}
               >{category.name}</Select.Option>
             )
             }
@@ -138,10 +146,11 @@ const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => 
                           message: "Please input image url or delete this field."
                         }
                       ]}
-                      // noStyle
+                      noStyle
                     >
-                      <Input onChange={handleChange} placeholder="image url"
-                             style={{ width: "90%", marginRight: 8 }}/>
+                      <Input
+                        // value={values.images[index]}
+                        style={{ width: "90%", marginRight: 8 }}/>
                     </Form.Item>
                     {fields.length > 1 ? (
                       <MinusCircleOutlined
@@ -203,6 +212,6 @@ const formItemLayoutWithOutLabel = {
 }
 
 export default connect(state => ({
-    isOpenAddProductModal: state.add_product_modal.isOpen,
+    isOpenAddProductModal: state.add_product_modal.isOpen
   }), { setIsOpenAddProductModal }
 )(ProductAddForm)
