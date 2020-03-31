@@ -2,11 +2,12 @@ import React, { useState } from "react"
 import { Button, Tooltip } from "antd"
 import { PlusOutlined } from "@ant-design/icons"
 import ProductsTable from "../ProductsTable"
-import ProductsEditForm from "../ProductsEditForm"
+import ProductEditForm from "../ProductEditForm"
+import ProductAddForm from "../ProductAddForm"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenAddProductModal } from "../../actions"
 
-const Products = ({ setIsOpenModal }) => {
+const Products = ({ setIsOpenAddProductModal }) => {
 
   const onClickHandler = () => {
     editProduct({})
@@ -16,7 +17,8 @@ const Products = ({ setIsOpenModal }) => {
     <>
       <h1>Products</h1>
       <ProductsTable/>
-      <ProductsEditForm/>
+      <ProductEditForm/>
+      <ProductAddForm/>
       <Tooltip title="Add Product">
         <Button onClick={onClickHandler} type="dashed" shape="circle"
                 style={{ position: "fixed", bottom: "50px", right: "50px", color: "#08c" }}

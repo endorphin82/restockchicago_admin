@@ -2,6 +2,7 @@ import React from "react"
 import TabsContainer from "./components/TabsContainer"
 import "antd/dist/antd.css";
 import "./App.css"
+import { BASE_URL } from "./actions/types"
 
 function App() {
   return (
@@ -12,11 +13,11 @@ function App() {
         </p>
         <a
           className="App-link"
-          href="http://localhost:3005/graphql"
+          href={BASE_URL}
           target="_blank"
           rel="noopener noreferrer"
         >
-          REACT_APP_BASE_URL
+          BASE_URL
         </a>
       </header>
       <TabsContainer/>
