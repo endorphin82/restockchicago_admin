@@ -4,12 +4,12 @@ import { Button, Modal, Table } from "antd"
 import { productsAllQuery } from "../Products/query"
 import { deleteProductMutation } from "../Products/mutations"
 import { connect } from "react-redux"
-import { editProduct, setIsOpenModal } from "../../actions"
+import { editProduct, setIsOpenEditProductModal } from "../../actions"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 
-const ProductsTable = ({ editProduct, setIsOpenModal }) => {
+const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
   const { loading, error, data } = useQuery(productsAllQuery)
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
   const [productDeleted, setProductDeleted] = useState({})
@@ -20,7 +20,7 @@ const ProductsTable = ({ editProduct, setIsOpenModal }) => {
 
   const handleEdit = (id) => {
     editProduct(productsAll.find(prod => prod.id === id))
-    setIsOpenModal(true)
+    setIsOpenEditProductModal(true)
   }
 
   const handleDelete = (id) => {
@@ -122,5 +122,5 @@ const ProductsTable = ({ editProduct, setIsOpenModal }) => {
   )
 }
 
-export default connect(null, { setIsOpenModal, editProduct }, null, { pure: false }
+export default connect(null, { setIsOpenEditProductModal, editProduct }, null, { pure: false }
 )(ProductsTable)
