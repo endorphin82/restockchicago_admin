@@ -10,7 +10,7 @@ import { editProduct, setIsOpenEditProductModal } from "../../actions"
 import ApolloCacheUpdater from "apollo-cache-updater"
 
 const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, setIsOpenEditProductModal }) => {
-  const [form] = Form.useForm()
+  const [formEditProduct] = Form.useForm()
   const [updateProduct, {}] = useMutation(updateProductMutation)
   const { loading, error, data } = useQuery(categoriesAllQuery)
   const [values, setValues] = useState({ name: "", price: 0, category: "" })
@@ -19,33 +19,42 @@ const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, 
     console.log("edited_product", edited_product)
   }, [edited_product])
   useEffect(() => {
+    formEditProduct.setFieldsValue({
+      "name": edited_product.name,
+      "price": edited_product.price,
+      "images": edited_product.images,
+      "icon": edited_product.icon
+      // "categoryId": values.category.id
+    })
     return () => {
-      form.resetFields()
+      formEditProduct.resetFields()
     }
-  }, [])
+  }, [edited_product])
   console.log("values+++", values)
 
-  const onFinish = () => {
+  const onFinish = (valuefromformlist) => {
     console.log("Received values of form:", values)
 
-    const { id, name, category, images, icon } = values
-    const price = Number(values.price)
+    const { name, categoryId, images, icon } = valuefromformlist
+    const price = Number(valuefromformlist.price)
+    const id = String(values.id)
 
-    console.log("onFinish", id)
+    console.log("onFinish", valuefromformlist)
     updateProduct({
       variables: {
-        id, name, price, categoryId: category.id, images, icon
-      },
-      update: (proxy, { data: { updateProduct = {} } }) => { // your mutation response
-        const mutationResult = updateProduct
-        const updates = ApolloCacheUpdater({
-          proxy,
-          queriesToUpdate: [updateProduct],
-          searchVariables: {},
-          mutationResult
-        })
-        if (updates) console.log(`Product updated`)
+        id, name, price, categoryId, images, icon
+        // id, name, price, categoryId: category.id, images: valuefromformlist.images, icon
       }
+      // update: (proxy, { data: { updateProduct = {} } }) => { // your mutation response
+      //   const mutationResult = updateProduct
+      //   const updates = ApolloCacheUpdater({
+      //     proxy,
+      //     queriesToUpdate: [updateProduct],
+      //     searchVariables: {},
+      //     mutationResult
+      //   })
+      //   if (updates) console.log(`Product updated`)
+      // }
     }).then(m => console.log("updateProduct:", m))
       .catch(e => console.log("updateProductERROR:", e))
 
@@ -79,15 +88,15 @@ const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, 
       // okButtonProps={{htmlType: "submit" }}
       // cancelButtonProps={{ htmlType: "submit" }}
     >
-      {/*/!*{form.setFieldsValue({*!/*/}
-      {/*/!*  "name": values.name,*!/*/}
-      {/*/!*  "price": values.price,*!/*/}
-      {/*/!*  "images": values.images,*!/*/}
-      {/*/!*  "icon": values.icon*!/*/}
-      {/*/!*  // "categoryId": values.category.id*!/*/}
-      {/*/!*})}*!/*/}
+      {/*{formEditProduct.setFieldsValue({*/}
+      {/*  "name": values.name,*/}
+      {/*  "price": values.price,*/}
+      {/*  "images": values.images,*/}
+      {/*  "icon": values.icon*/}
+      {/*  // "categoryId": values.category.id*/}
+      {/*})}*/}
       <Form
-        form={form}
+        form={formEditProduct}
         // initialValues={{
         //   ["price"]: values.price,
         //   ["name"]: values.name,
@@ -101,11 +110,14 @@ const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, 
           label="Name product"
           name="name"
           // noStyle
-
+          value={values.name}
           rules={[{ required: true, message: "Name product is required" }]}
         >
-          <Input onChange={handleChange} placeholder="name product"
-                 style={{ width: "100%", marginRight: 8 }}/>
+          <Input
+            // name="name"
+            // value={values.name}
+            onChange={handleChange} placeholder="name product"
+            style={{ width: "100%", marginRight: 8 }}/>
         </Form.Item>
         <Form.Item
           label="Price"
@@ -157,7 +169,7 @@ const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, 
                       ]}
                       noStyle
                     >
-                      <Input value={values.images[index]} onChange={handleChange} placeholder="image url"
+                      <Input value={values.images[index]} placeholder="image url"
                              style={{ width: "90%", marginRight: 8 }}/>
                     </Form.Item>
                     {fields.length > 1 ? (
