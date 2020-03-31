@@ -6,9 +6,10 @@ import MinusCircleOutlined from "@ant-design/icons/lib/icons/MinusCircleOutlined
 import { addProductMutation, updateProductMutation } from "../Products/mutations"
 import { categoriesAllQuery } from "../Categories/query"
 import { connect } from "react-redux"
-import { editProduct, setIsOpenModal } from "../../actions"
+import { setIsOpenAddProductModal } from "../../actions"
+import ApolloCacheUpdater from "apollo-cache-updater"
 
-const ProductsForm = ({ edited_product, editProduct, isOpenModal, setIsOpenModal }) => {
+const ProductsAddForm = ({ edited_product, editProduct, isOpenModal, setIsOpenAddProductModal }) => {
   const [form] = Form.useForm()
   const [addProduct, {}] = useMutation(addProductMutation)
   const [updateProduct, {}] = useMutation(updateProductMutation)
@@ -32,28 +33,35 @@ const ProductsForm = ({ edited_product, editProduct, isOpenModal, setIsOpenModal
     const price = Number(values.price)
 
     console.log("onFinish", id)
-    id ?
-      updateProduct({
-        variables: {
-          id, name, price, categoryId: category.id, images, icon
-        }
-      }).then(m => console.log("updateProduct:", m))
-        .catch(e => console.log("updateProductERROR:", e))
-      : addProduct({
-        variables: {
-          name, price, categoryId: category.id, images, icon
-        }
-      }).then(m => console.log("addProduct:", m))
-        .catch(e => console.log("addProductERROR:", e))
+
+    addProduct({
+      variables: {
+        name, price, categoryId: category.id, images, icon
+      },
+      update: (proxy, { data: { addProduct = {} } }) => { // your mutation response
+        const mutationResult = addProduct // mutation result to pass into the updater
+        const updates = ApolloCacheUpdater({
+          proxy, // apollo proxy
+          queriesToUpdate: [addProduct], // queries you want to automatically update
+          searchVariables: {
+            published: true // update queries in the cache that have these vars
+          },
+          mutationResult
+        })
+        if (updates) console.log(`Product added`) // if no errors
+      }
+
+    }).then(m => console.log("addProduct:", m))
+      .catch(e => console.log("addProductERROR:", e))
 
     form.resetFields()
-    setIsOpenModal(false)
+    setIsOpenAddProductModal(false)
   }
 
   const handleCancel = e => {
     console.log(e)
     form.resetFields()
-    setIsOpenModal(false)
+    setIsOpenAddProductModal(false)
     editProduct({})
   }
   const handleChange = e => {
@@ -75,14 +83,15 @@ const ProductsForm = ({ edited_product, editProduct, isOpenModal, setIsOpenModal
       // okButtonProps={{htmlType: "submit" }}
       // cancelButtonProps={{ htmlType: "submit" }}
     >
-      {form.setFieldsValue({
-        "name": values.name,
-        "price": values.price,
-        "images": values.images,
-        "icon": values.icon
-        // "categoryId": values.category.id
-      })}
+      {/*{form.setFieldsValue({*/}
+      {/*  "name": values.name,*/}
+      {/*  "price": values.price,*/}
+      {/*  "images": values.images,*/}
+      {/*  "icon": values.icon*/}
+      {/*  // "categoryId": values.category.id*/}
+      {/*})}*/}
       <Form form={form}
+
             name="product" {...formItemLayoutWithOutLabel} onFinish={onFinish}>
         <Form.Item
           label="Name product"
@@ -206,7 +215,7 @@ const formItemLayoutWithOutLabel = {
 }
 
 export default connect(state => ({
-    isOpenModal: state.modal.isOpen,
+    isOpenAddProductModal: state.add_product_modal.isOpen,
     edited_product: state.edit_product.product
-  }), { setIsOpenModal, editProduct }
-)(ProductsForm)
+  }), { setIsOpenAddProductModal }
+)(ProductsAddForm)

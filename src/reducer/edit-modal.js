@@ -1,4 +1,4 @@
-import { IS_OPEN_MODAL } from "../actions/types"
+import { IS_OPEN_EDIT_MODAL } from "../actions/types"
 
 const initialState = {
   isOpen: false
@@ -6,7 +6,7 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case IS_OPEN_MODAL:
+    case IS_OPEN_EDIT_MODAL:
       return {
         ...state,
         isOpen: action.payload
