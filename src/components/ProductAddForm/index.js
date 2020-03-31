@@ -1,124 +1,124 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Button, Form, Input, Modal, Select } from "antd"
 import { useMutation, useQuery } from "@apollo/react-hooks"
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined"
 import MinusCircleOutlined from "@ant-design/icons/lib/icons/MinusCircleOutlined"
-import { addProductMutation, updateProductMutation } from "../Products/mutations"
+import { addProductMutation } from "../Products/mutations"
 import { categoriesAllQuery } from "../Categories/query"
 import { connect } from "react-redux"
-import { editProduct, setIsOpenEditProductModal } from "../../actions"
+import { setIsOpenAddProductModal } from "../../actions"
 import ApolloCacheUpdater from "apollo-cache-updater"
 
-const ProductsEditForm = ({ edited_product, editProduct, isOpenEditProductModal, setIsOpenEditProductModal }) => {
-  const [form] = Form.useForm()
+const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => {
   const [addProduct, {}] = useMutation(addProductMutation)
-  const [updateProduct, {}] = useMutation(updateProductMutation)
   const { loading, error, data } = useQuery(categoriesAllQuery)
-  const [values, setValues] = useState({ name: "", price: 0, category: "" })
-  useEffect(() => {
-    setValues(edited_product)
-    console.log("edited_product", edited_product)
-  }, [edited_product])
-  useEffect(() => {
-    return () => {
-      form.resetFields()
-    }
-  }, [])
+  const [values, setValues] = useState({})
   console.log("values+++", values)
 
-  const onFinish = () => {
+  const onFinish = (valuefromformlist) => {
     console.log("Received values of form:", values)
 
-    const { id, name, category, images, icon } = values
+    const { name, images, categoryId, icon } = values
     const price = Number(values.price)
+    console.log("onFinish")
+    addProduct({
+      variables: {
+        name, price, categoryId, images: valuefromformlist.images, icon
+      }
+      // update: (proxy, { data: { addProduct = {} } }) => { // your mutation response
+      //   const mutationResult = addProduct // mutation result to pass into the updater
+      //   const updates = ApolloCacheUpdater({
+      //     // proxy, // apollo proxy
+      //     queriesToUpdate: [addProduct], // queries you want to automatically update
+      //     searchVariables: {
+      //       published: true // update queries in the cache that have these vars
+      //     },
+      //     mutationResult
+      //   })
+      //   if (updates) console.log(`Product added`) // if no errors
+      // }
 
-    console.log("onFinish", id)
-      updateProduct({
-        variables: {
-          id, name, price, categoryId: category.id, images, icon
-        },
-        update: (proxy, { data: { updateProduct = {} } }) => { // your mutation response
-          const mutationResult = updateProduct
-          const updates = ApolloCacheUpdater({
-            proxy,
-            queriesToUpdate: [updateProduct],
-            searchVariables: {},
-            mutationResult
-          })
-          if (updates) console.log(`Product updated`)
-        }
-      }).then(m => console.log("updateProduct:", m))
-        .catch(e => console.log("updateProductERROR:", e))
+    }).then(m => console.log("addProduct:", m))
+      .catch(e => console.log("addProductERROR:", e))
 
-
-    form.resetFields()
-    setIsOpenEditProductModal(false)
+    setIsOpenAddProductModal(false)
   }
 
   const handleCancel = e => {
+    e.preventDefault()
     console.log(e)
-    form.resetFields()
-    setIsOpenEditProductModal(false)
-    editProduct({})
+    setIsOpenAddProductModal(false)
   }
+
   const handleChange = e => {
     const { name, value } = e.target
+    console.log("target", e.target)
     setValues({ ...values, [name]: value })
   }
+
+  const handleChangeSelect = value => {
+    setValues({ ...values, "categoryId": value })
+  }
   const { categoriesAll = [] } = data
-  console.log("OpenEditProductModal", isOpenEditProductModal)
+  console.log("isOpenAddProductModal", isOpenAddProductModal)
 
   return (
     <Modal
       title="Product information"
-      visible={isOpenEditProductModal}
+      visible={isOpenAddProductModal}
       footer={false}
       // onOk={onFinish}
       onCancel={handleCancel}
-      forceRender={true}
-      destroyOnClose={false}
+      // forceRender={true}
+      // destroyOnClose={true}
       // okButtonProps={{htmlType: "submit" }}
       // cancelButtonProps={{ htmlType: "submit" }}
     >
-      {/*{form.setFieldsValue({*/}
-      {/*  "name": values.name,*/}
-      {/*  "price": values.price,*/}
-      {/*  "images": values.images,*/}
-      {/*  "icon": values.icon*/}
-      {/*  // "categoryId": values.category.id*/}
-      {/*})}*/}
-      <Form form={form}
-            name="product" {...formItemLayoutWithOutLabel} onFinish={onFinish}>
+      <Form
+        // onChange={handleChange}
+        name="product" {...formItemLayoutWithOutLabel}
+        onFinish={onFinish}>
         <Form.Item
           label="Name product"
-          name="name"
+          // name="name"
           // noStyle
           rules={[{ required: true, message: "Name product is required" }]}
         >
-          <Input onChange={handleChange} placeholder="name product"
-                 style={{ width: "100%", marginRight: 8 }}/>
+          <Input
+            name="name"
+            onChange={handleChange} placeholder="name product"
+            style={{ width: "100%", marginRight: 8 }}/>
         </Form.Item>
         <Form.Item
           label="Price"
-          name="price"
+          // name="price"
           // noStyle
           rules={[{ required: true, message: "Price is required" }]}
         >
-          <Input type="number" placeholder="Price $" style={{ width: "100%", marginRight: 8 }}/>
+          <Input
+            name="price"
+            onChange={handleChange}
+            // value={0}
+            type="number" placeholder="Price $" style={{ width: "100%", marginRight: 8 }}/>
         </Form.Item>
 
         <Form.Item
           label="Category"
           name="categoryId"
           // noStyle
-          onChange={handleChange}
+          // onChange={handleChange}
           rules={[{ required: true, message: "Category is required" }]}
         >
-          <Select placeholder="Select category">
+          <Select
+            name="categoryId"
+            // onChange={handleChange}
+            onChange={handleChangeSelect}
+            placeholder="Select category">
             {categoriesAll.map(category =>
               <Select.Option
                 key={category.id}
-                // value={category.id}
+                value={category.id}
+                onChange={handleChange}
               >{category.name}</Select.Option>
             )
             }
@@ -148,8 +148,9 @@ const ProductsEditForm = ({ edited_product, editProduct, isOpenEditProductModal,
                       ]}
                       noStyle
                     >
-                      <Input value={values.images[index]} onChange={handleChange} placeholder="image url"
-                             style={{ width: "90%", marginRight: 8 }}/>
+                      <Input
+                        // value={values.images[index]}
+                        style={{ width: "90%", marginRight: 8 }}/>
                     </Form.Item>
                     {fields.length > 1 ? (
                       <MinusCircleOutlined
@@ -211,7 +212,6 @@ const formItemLayoutWithOutLabel = {
 }
 
 export default connect(state => ({
-    isOpenEditProductModal: state.edit_product_modal.isOpen,
-    edited_product: state.edit_product.product
-  }), { setIsOpenEditProductModal, editProduct }
-)(ProductsEditForm)
+    isOpenAddProductModal: state.add_product_modal.isOpen
+  }), { setIsOpenAddProductModal }
+)(ProductAddForm)
