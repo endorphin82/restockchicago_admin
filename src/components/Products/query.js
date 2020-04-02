@@ -15,3 +15,16 @@ export const productsAllQuery = gql`
         }
     }
 `
+export const productsByCategoryIdQuery = gql`
+    query productsByCategoryId($categoryId: ID!){
+        productsByCategoryId(categoryId: $categoryId){
+            id
+            name
+            price
+            category{
+                id
+                name
+            }
+        }
+    }
+`
