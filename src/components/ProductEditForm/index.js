@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Button, Form, Input, Modal, Select } from "antd"
+import { Button, Form, Input, Modal, Select, Skeleton } from "antd"
 import { useMutation, useQuery } from "@apollo/react-hooks"
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined"
 import MinusCircleOutlined from "@ant-design/icons/lib/icons/MinusCircleOutlined"
@@ -7,53 +7,59 @@ import { updateProductMutation } from "../Products/mutations"
 import { categoriesAllQuery } from "../Categories/query"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenEditProductModal } from "../../actions"
-import ApolloCacheUpdater from "apollo-cache-updater"
 
 const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, setIsOpenEditProductModal }) => {
-  const [form] = Form.useForm()
+  const [formEditProduct] = Form.useForm()
   const [updateProduct, {}] = useMutation(updateProductMutation)
   const { loading, error, data } = useQuery(categoriesAllQuery)
-  const [values, setValues] = useState({ name: "", price: 0, category: "" })
+  const [values, setValues] = useState({})
   useEffect(() => {
     setValues(edited_product)
     console.log("edited_product", edited_product)
   }, [edited_product])
   useEffect(() => {
+    formEditProduct.setFieldsValue({
+      "name": edited_product.name,
+      "price": edited_product.price,
+      "images": edited_product.images,
+      "icon": edited_product.icon
+
+      // "categoryId": edited_product.category.name
+    })
     return () => {
-      form.resetFields()
+      formEditProduct.resetFields()
     }
-  }, [])
+  }, [edited_product])
   console.log("values+++", values)
 
-  const onFinish = () => {
+  const onFinish = (valuefromformlist) => {
     console.log("Received values of form:", values)
 
-    const { id, name, category, images, icon } = values
-    const price = Number(values.price)
+    const { name, categoryId, price, images, icon } = valuefromformlist
+    const id = String(values.id)
 
-    console.log("onFinish", id)
+    console.log("onFinish", valuefromformlist)
     updateProduct({
       variables: {
-        id, name, price, categoryId: category.id, images, icon
-      },
-      update: (proxy, { data: { updateProduct = {} } }) => { // your mutation response
-        const mutationResult = updateProduct
-        const updates = ApolloCacheUpdater({
-          proxy,
-          queriesToUpdate: [updateProduct],
-          searchVariables: {},
-          mutationResult
-        })
-        if (updates) console.log(`Product updated`)
+        id, name, price, categoryId, images, icon
       }
-    }).then(m => console.log("updateProduct:", m))
+      // update: (proxy, { data: { updateProduct = {} } }) => { // your mutation response
+      //   const mutationResult = updateProduct
+      //   const updates = ApolloCacheUpdater({
+      //     proxy,
+      //     queriesToUpdate: [updateProduct],
+      //     searchVariables: {},
+      //     mutationResult
+      //   })
+      //   if (updates) console.log(`Product updated`)
+      // }
+    }).then(m => console.log("updateProductMESSAGE:", m))
       .catch(e => console.log("updateProductERROR:", e))
 
 
     // form.resetFields()
     setIsOpenEditProductModal(false)
   }
-
   const handleCancel = e => {
     console.log(e)
     // form.resetFields()
@@ -64,7 +70,16 @@ const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, 
     const { name, value } = e.target
     setValues({ ...values, [name]: value })
   }
-  const { categoriesAll = [] } = data
+  if (!data.categoriesAll) return <Skeleton/>
+  const { categoriesAll } = data
+  if (!edited_product) return <Skeleton/>
+  const { category } = edited_product
+  // const cat = categoriesAll.find(category => category.id == edited_product.category.id)
+  console.log("cat", category)
+  //
+  // let edited_product_category_name = category.name
+  // console.log("edited_product_category_name",edited_product_category_name)
+
   console.log("OpenEditProductModal", isOpenEditProductModal)
 
   return (
@@ -79,15 +94,15 @@ const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, 
       // okButtonProps={{htmlType: "submit" }}
       // cancelButtonProps={{ htmlType: "submit" }}
     >
-      {/*/!*{form.setFieldsValue({*!/*/}
-      {/*/!*  "name": values.name,*!/*/}
-      {/*/!*  "price": values.price,*!/*/}
-      {/*/!*  "images": values.images,*!/*/}
-      {/*/!*  "icon": values.icon*!/*/}
-      {/*/!*  // "categoryId": values.category.id*!/*/}
-      {/*/!*})}*!/*/}
+      {/*{formEditProduct.setFieldsValue({*/}
+      {/*  "name": values.name,*/}
+      {/*  "price": values.price,*/}
+      {/*  "images": values.images,*/}
+      {/*  "icon": values.icon*/}
+      {/*  // "categoryId": values.category.id*/}
+      {/*})}*/}
       <Form
-        form={form}
+        form={formEditProduct}
         // initialValues={{
         //   ["price"]: values.price,
         //   ["name"]: values.name,
@@ -101,11 +116,14 @@ const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, 
           label="Name product"
           name="name"
           // noStyle
-
+          value={values.name}
           rules={[{ required: true, message: "Name product is required" }]}
         >
-          <Input onChange={handleChange} placeholder="name product"
-                 style={{ width: "100%", marginRight: 8 }}/>
+          <Input
+            // name="name"
+            // value={values.name}
+            onChange={handleChange} placeholder="name product"
+            style={{ width: "100%", marginRight: 8 }}/>
         </Form.Item>
         <Form.Item
           label="Price"
@@ -120,14 +138,18 @@ const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, 
           label="Category"
           name="categoryId"
           // noStyle
+          // defaultValue="5e820a91e3cd504a9fef2b0f"
           onChange={handleChange}
           rules={[{ required: true, message: "Category is required" }]}
         >
-          <Select placeholder="Select category">
+          <Select
+            // defaultValue={category.name}
+            placeholder="Select category">
             {categoriesAll.map(category =>
               <Select.Option
                 key={category.id}
-                // value={category.id}
+                firstActiveValue="nike"
+
               >{category.name}</Select.Option>
             )
             }
@@ -157,7 +179,7 @@ const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, 
                       ]}
                       noStyle
                     >
-                      <Input value={values.images[index]} onChange={handleChange} placeholder="image url"
+                      <Input value={values.images[index]} placeholder="image url"
                              style={{ width: "90%", marginRight: 8 }}/>
                     </Form.Item>
                     {fields.length > 1 ? (

@@ -9,7 +9,7 @@ import { editProduct, setIsOpenEditProductModal } from "../../actions"
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 
-const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
+const RecycleBinProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
   const { loading, error, data } = useQuery(productsAllQuery)
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
   const [productDeleted, setProductDeleted] = useState({})
@@ -19,10 +19,7 @@ const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
   const { productsAll } = data
 
   const handleEdit = (id) => {
-    editProduct(productsAll.find(prod => prod.id === id))
-    setTimeout(
-      () => setIsOpenEditProductModal(true)
-      , 250)
+
   }
 
   const handleDelete = (id) => {
@@ -124,5 +121,4 @@ const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
   )
 }
 
-export default connect(null, { setIsOpenEditProductModal, editProduct }, null, { pure: false }
-)(ProductsTable)
+export default RecycleBinProductsTable

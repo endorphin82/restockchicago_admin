@@ -9,3 +9,12 @@ export const categoriesAllQuery = gql`
         }
     }
 `
+export const categoryByIdQuery = gql`
+    query categoryById($id: ID){
+        categoryById(id: $id){
+            id
+            name
+            icons
+        }
+    }
+`
