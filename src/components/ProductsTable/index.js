@@ -1,16 +1,18 @@
 import React, { useState } from "react"
 import { useMutation, useQuery } from "@apollo/react-hooks"
-import { Button, Modal, Table } from "antd"
+import { Button, Modal, Table, Tooltip } from "antd"
 import { productsAllQuery } from "../Products/query"
-import { deleteProductMutation } from "../Products/mutations"
+import { deleteProductMutation, updateProductMutation } from "../Products/mutations"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenEditProductModal } from "../../actions"
+import { DeleteOutlined } from "@ant-design/icons"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 
 const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
   const { loading, error, data } = useQuery(productsAllQuery)
+  const [updateProduct, {}] = useMutation(updateProductMutation)
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
   const [productDeleted, setProductDeleted] = useState({})
   const [deleteProduct, {}] = useMutation(deleteProductMutation)
@@ -25,9 +27,7 @@ const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
   console.log("productsAllWithoutRecycleBin", productsAllWithoutRecycleBin)
   const handleEdit = (id) => {
     editProduct(productsAllWithoutRecycleBin.find(prod => prod.id === id))
-    setTimeout(
-      () => setIsOpenEditProductModal(true)
-      , 250)
+    setIsOpenEditProductModal(true)
   }
 
   const handleDelete = (id) => {
@@ -37,11 +37,20 @@ const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
 
   const handleOk = () => {
     console.log("productDeleted.id", productDeleted.id)
-    deleteProduct({
+    const { id, name, price, images, icon } = productDeleted
+    updateProduct({
       variables: {
-        id: productDeleted.id
+        id, name, price, categoryId: process.env.REACT_APP_RECYCLE_BIN_ID, images, icon
       }
-    }).then(mess => console.log("deleteProduct response:", mess))
+
+    }).then(m => console.log("updateProductMESSAGE:", m))
+      .catch(e => console.log("updateProductERROR:", e))
+
+    // deleteProduct({
+    //   variables: {
+    //     id: productDeleted.id
+    //   }
+    // }).then(mess => console.log("deleteProduct response:", mess))
     setIsVisualDeleteModal(false)
   }
 
@@ -105,12 +114,16 @@ const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
       dataIndex: "id",
       key: "id",
       render: (id) => <>
-        <Button onClick={() => handleEdit(id)} type="dashed">
-          Edit
-        </Button>
-        <Button onClick={() => handleDelete(id)} type="dashed" danger>
-          Delete
-        </Button>
+        <Tooltip title="Edit this product">
+          <Button onClick={() => handleEdit(id)} type="dashed">
+            Edit
+          </Button>
+        </Tooltip>
+        <Tooltip title="Move to recycle bin">
+          <Button style={{float: "right"}} onClick={() => handleDelete(id)} type="dashed" danger icon={<DeleteOutlined/>}>
+             &nbsp;
+          </Button>
+        </Tooltip>
       </>
     }
   ]
@@ -118,7 +131,7 @@ const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
     <>
       <Table dataSource={productsAllWithoutRecycleBin} columns={columns} rowKey="id"/>
       <Modal
-        title="Delete product?"
+        title="Delete product in recycle bin?"
         visible={isVisualDeleteModal}
         onOk={() => handleOk(productDeleted.id)}
         onCancel={handleCancel}
