@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import { useMutation, useQuery } from "@apollo/react-hooks"
 import { Button, Modal, Table } from "antd"
-import { productsAllQuery } from "../Products/query"
 import { deleteProductMutation } from "../Products/mutations"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenEditProductModal } from "../../actions"
@@ -9,14 +8,11 @@ import { editProduct, setIsOpenEditProductModal } from "../../actions"
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 
-const RecycleBinProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
-  const { loading, error, data } = useQuery(productsAllQuery)
+const RecycleBinProductsTable = ({productsByCategoryId, editProduct, setIsOpenEditProductModal }) => {
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
   const [productDeleted, setProductDeleted] = useState({})
   const [deleteProduct, {}] = useMutation(deleteProductMutation)
   console.log("productDeleted", productDeleted)
-  if (loading) return <p>Loading ... </p>
-  const { productsAll } = data
 
   const handleEdit = (id) => {
 
@@ -24,7 +20,7 @@ const RecycleBinProductsTable = ({ editProduct, setIsOpenEditProductModal }) => 
 
   const handleDelete = (id) => {
     setIsVisualDeleteModal(true)
-    setProductDeleted(productsAll.find(prod => prod.id === id))
+    setProductDeleted(productsByCategoryId.find(prod => prod.id === id))
   }
 
   const handleOk = () => {
@@ -108,7 +104,7 @@ const RecycleBinProductsTable = ({ editProduct, setIsOpenEditProductModal }) => 
   ]
   return (
     <>
-      <Table dataSource={productsAll} columns={columns} rowKey="id"/>
+      <Table dataSource={productsByCategoryId} columns={columns} rowKey="id"/>
       <Modal
         title="Delete product?"
         visible={isVisualDeleteModal}

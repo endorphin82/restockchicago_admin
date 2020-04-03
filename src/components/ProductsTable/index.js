@@ -17,9 +17,14 @@ const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
   console.log("productDeleted", productDeleted)
   if (loading) return <p>Loading ... </p>
   const { productsAll } = data
+  const productsAllWithoutRecycleBin = productsAll.filter(prod => {
+    const { category } = prod
+    return category.id !== process.env.REACT_APP_RECYCLE_BIN_ID
+  })
 
+  console.log("productsAllWithoutRecycleBin", productsAllWithoutRecycleBin)
   const handleEdit = (id) => {
-    editProduct(productsAll.find(prod => prod.id === id))
+    editProduct(productsAllWithoutRecycleBin.find(prod => prod.id === id))
     setTimeout(
       () => setIsOpenEditProductModal(true)
       , 250)
@@ -27,7 +32,7 @@ const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
 
   const handleDelete = (id) => {
     setIsVisualDeleteModal(true)
-    setProductDeleted(productsAll.find(prod => prod.id === id))
+    setProductDeleted(productsAllWithoutRecycleBin.find(prod => prod.id === id))
   }
 
   const handleOk = () => {
@@ -92,7 +97,7 @@ const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
                 )
             }
           </div>
-          : <span>no icons</span>
+          : <span>no images</span>
       }
     },
     {
@@ -111,7 +116,7 @@ const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
   ]
   return (
     <>
-      <Table dataSource={productsAll} columns={columns} rowKey="id"/>
+      <Table dataSource={productsAllWithoutRecycleBin} columns={columns} rowKey="id"/>
       <Modal
         title="Delete product?"
         visible={isVisualDeleteModal}

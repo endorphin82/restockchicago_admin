@@ -6,9 +6,9 @@ import { Query } from "react-apollo"
 import { useQuery } from "@apollo/react-hooks"
 import { categoriesAllQuery, categoryByIdQuery } from "../Categories/query"
 import { productsAllQuery, productsByCategoryIdQuery } from "../Products/query"
-import { RECYCLE_BIN_ID } from "../../actions/types"
 import AndroidOutlined from "@ant-design/icons/lib/icons/AndroidOutlined"
 import RecycleBinIcon from "../RecycleBinIcon"
+import RecycleBin from "../RecycleBin"
 
 const { TabPane } = Tabs
 
@@ -21,18 +21,18 @@ const TabsContainer = () => {
   const { loading: prod_loading, prod_error, data: prod_data } = useQuery(productsAllQuery)
   const { loading: recycle_bin_loading, recycle_bin_error, data: recycle_bin_data } = useQuery(productsByCategoryIdQuery, {
     variables: {
-      categoryId: RECYCLE_BIN_ID
+      categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
     }
   })
   const { loading: recycle_bin_prod_loading, recycle_bin_prod_error, data: recycle_bin_prod_data } = useQuery(productsByCategoryIdQuery, {
     variables: {
-      categoryId: RECYCLE_BIN_ID
+      categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
     }
   })
 
   const { loading: recycle_bin_cat_loading, recycle_bin_cat_error, data: recycle_bin_cat_data } = useQuery(categoryByIdQuery, {
     variables: {
-      id: RECYCLE_BIN_ID
+      id: process.env.REACT_APP_RECYCLE_BIN_ID
     }
   })
 
@@ -58,7 +58,7 @@ const TabsContainer = () => {
       }
                key="3">
 
-        <Empty/>
+        {(productsByCategoryId.length === 0) ?<Empty/>:<RecycleBin productsByCategoryId={productsByCategoryId}/>}
       </TabPane>
 
     </Tabs>

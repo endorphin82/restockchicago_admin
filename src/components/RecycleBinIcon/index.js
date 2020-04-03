@@ -1,8 +1,4 @@
 import React from "react"
-import { useQuery } from "@apollo/react-hooks"
-import { productsByCategoryIdQuery } from "../Products/query"
-import { RECYCLE_BIN_ID } from "../../actions/types"
-import { categoryByIdQuery } from "../Categories/query"
 
 const RecycleBinIcon = ({categoryById, productsByCategoryId}) => {
   if (productsByCategoryId.length == 0)

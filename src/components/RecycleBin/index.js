@@ -4,7 +4,8 @@ const RecycleBin = () => {
   return (
     <>
       <h1>Recycle bin</h1>
-      <RecycleBinProductsTable/>
+
+      {/*<RecycleBinProductsTable/>*/}
     </>
   )
 }
