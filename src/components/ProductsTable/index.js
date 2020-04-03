@@ -127,6 +127,7 @@ const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
       </>
     }
   ]
+
   return (
     <>
       <Table dataSource={productsAllWithoutRecycleBin} columns={columns} rowKey="id"/>

@@ -2,9 +2,6 @@ import React, { useState } from "react"
 import { useMutation, useQuery } from "@apollo/react-hooks"
 import { Button, Modal, Table, Tooltip } from "antd"
 import { deleteProductMutation } from "../Products/mutations"
-import { connect } from "react-redux"
-import { editProduct, setIsOpenEditProductModal } from "../../actions"
-import { categoryByIdQuery } from "../Categories/query"
 import { productsByCategoryIdQuery } from "../Products/query"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
