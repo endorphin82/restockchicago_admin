@@ -58,7 +58,7 @@ const TabsContainer = () => {
       }
                key="3">
 
-        {(productsByCategoryId.length === 0) ?<Empty/>:<RecycleBin productsByCategoryId={productsByCategoryId}/>}
+        {(productsByCategoryId.length === 0) ?<Empty/>:<RecycleBin />}
       </TabPane>
 
     </Tabs>

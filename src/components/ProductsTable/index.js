@@ -1,10 +1,11 @@
 import React, { useState } from "react"
 import { useMutation, useQuery } from "@apollo/react-hooks"
-import { Button, Modal, Table } from "antd"
+import { Button, Modal, Table, Tooltip } from "antd"
 import { productsAllQuery } from "../Products/query"
 import { deleteProductMutation, updateProductMutation } from "../Products/mutations"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenEditProductModal } from "../../actions"
+import { DeleteOutlined } from "@ant-design/icons"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
@@ -36,7 +37,7 @@ const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
 
   const handleOk = () => {
     console.log("productDeleted.id", productDeleted.id)
-    const {id, name, price, images, icon}=productDeleted
+    const { id, name, price, images, icon } = productDeleted
     updateProduct({
       variables: {
         id, name, price, categoryId: process.env.REACT_APP_RECYCLE_BIN_ID, images, icon
@@ -113,12 +114,16 @@ const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
       dataIndex: "id",
       key: "id",
       render: (id) => <>
-        <Button onClick={() => handleEdit(id)} type="dashed">
-          Edit
-        </Button>
-        <Button onClick={() => handleDelete(id)} type="dashed" danger>
-          Delete
-        </Button>
+        <Tooltip title="Edit this product">
+          <Button onClick={() => handleEdit(id)} type="dashed">
+            Edit
+          </Button>
+        </Tooltip>
+        <Tooltip title="Move to recycle bin">
+          <Button style={{float: "right"}} onClick={() => handleDelete(id)} type="dashed" danger icon={<DeleteOutlined/>}>
+             &nbsp;
+          </Button>
+        </Tooltip>
       </>
     }
   ]
