@@ -89,7 +89,7 @@ const RecycleBinProductsTable = ({ editProduct, setIsOpenEditProductModal }) => 
       key: "id",
       render: (id) => <>
         <Tooltip title="Recovery this product in any category">
-          <Button onClick={() => handleEdit(id)} type="dashed">
+          <Button disabled onClick={() => handleEdit(id)} type="dashed">
             Recovery in category
           </Button>
         </Tooltip>
