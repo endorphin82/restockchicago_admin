@@ -55,10 +55,8 @@ const TabsContainer = () => {
           <RecycleBinIcon categoryById={categoryById} productsByCategoryId={productsByCategoryId}/>
           Recycle bin
         </span>
-      }
-               key="3">
-
-        {(productsByCategoryId.length === 0) ?<Empty/>:<RecycleBin />}
+      } key="3">
+        {(productsByCategoryId.length === 0) ? <Empty/> : <RecycleBin/>}
       </TabPane>
 
     </Tabs>
