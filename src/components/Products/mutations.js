@@ -35,3 +35,10 @@ export const deleteProductMutation = gql`
         }
     }
 `
+export const clearRecycleBinMutation = gql`
+    mutation clearRecycleBin {
+        clearRecycleBin{
+            name
+        }
+    }
+`

@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-app-env --env-file=.env.production build",
     "deploy-gh-pages": "npm run build && gh-pages -d build"
   },
   "eslintConfig": {
@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "gh-pages": "^2.2.0",
-    "node-sass": "^4.13.1"
+    "node-sass": "^4.13.1",
+    "react-app-env": "^1.2.3"
   }
 }

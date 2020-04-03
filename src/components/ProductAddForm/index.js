@@ -10,16 +10,16 @@ import { setIsOpenAddProductModal } from "../../actions"
 import ApolloCacheUpdater from "apollo-cache-updater"
 
 const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => {
-  const [addProduct, {}] = useMutation(addProductMutation)
-  const { loading, error, data } = useQuery(categoriesAllQuery)
+  const [addProduct, { data }] = useMutation(addProductMutation)
+  const { loading, error, data: data_categories } = useQuery(categoriesAllQuery)
   const [values, setValues] = useState({})
   console.log("values+++", values)
 
   const onFinish = (valuefromformlist) => {
     console.log("Received values of form:", values)
 
-    const { name, images, categoryId, icon } = values
-    const price = Number(values.price)
+    const { name, images, price, categoryId, icon } = values
+    // const price = Number(values.price)
     console.log("onFinish")
     addProduct({
       variables: {
@@ -59,7 +59,7 @@ const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => 
   const handleChangeSelect = value => {
     setValues({ ...values, "categoryId": value })
   }
-  const { categoriesAll = [] } = data
+  const { categoriesAll = [] } = data_categories
   console.log("isOpenAddProductModal", isOpenAddProductModal)
 
   return (
