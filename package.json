@@ -20,7 +20,8 @@
     "react-scripts": "3.4.1",
     "redux": "^4.0.5",
     "apollo-link-http": "latest",
-    "apollo-link": "latest"
+    "apollo-link": "latest",
+    "@apollo/react-hooks": "latest"
   },
   "scripts": {
     "start": "react-scripts start",
