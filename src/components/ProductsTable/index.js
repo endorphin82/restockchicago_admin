@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { useMutation, useQuery } from "@apollo/react-hooks"
 import { Button, Modal, Table, Tooltip } from "antd"
-import { productsAllQuery } from "../Products/query"
+import { productsAllQuery, productsByCategoryIdQuery } from "../Products/query"
 import { deleteProductMutation, updateProductMutation } from "../Products/mutations"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenEditProductModal } from "../../actions"
@@ -12,10 +12,24 @@ const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 
 const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
   const { loading, error, data } = useQuery(productsAllQuery)
-  const [updateProduct, {}] = useMutation(updateProductMutation)
+  const [updateProduct, {}] = useMutation(updateProductMutation, {
+    update(cache, { data: { updateProduct } })
+    {
+      const { productsByCategoryId } = cache.readQuery({
+        query: productsByCategoryIdQuery,
+        variables: {
+          categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
+        }
+      })
+      cache.writeQuery({
+        query: productsByCategoryIdQuery,
+        variables: { categoryId: process.env.REACT_APP_RECYCLE_BIN_ID },
+        data: { productsByCategoryId: productsByCategoryId.concat(updateProduct) }
+      })
+    }
+  })
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
   const [productDeleted, setProductDeleted] = useState({})
-  const [deleteProduct, {}] = useMutation(deleteProductMutation)
   console.log("productDeleted", productDeleted)
   if (loading) return <p>Loading ... </p>
   const { productsAll } = data

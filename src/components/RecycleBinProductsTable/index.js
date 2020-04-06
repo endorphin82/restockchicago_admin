@@ -16,7 +16,23 @@ const RecycleBinProductsTable = ({ editProduct, setIsOpenEditProductModal }) => 
 
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
   const [productDeleted, setProductDeleted] = useState({})
-  const [deleteProduct, {}] = useMutation(deleteProductMutation)
+  const [deleteProduct, {}] = useMutation(deleteProductMutation,
+    {
+      update(cache, { data: { deleteProduct } }) {
+        const { productsByCategoryId } = cache.readQuery({
+          query: productsByCategoryIdQuery,
+          variables: {
+            categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
+          }
+        })
+        cache.writeQuery({
+          query: productsByCategoryIdQuery,
+          variables: { categoryId: process.env.REACT_APP_RECYCLE_BIN_ID },
+          data: { productsByCategoryId: productsByCategoryId.filter(prod => prod.id !== deleteProduct.id) }
+        })
+      }
+    }
+  )
   console.log("productDeleted", productDeleted)
 
   if (recycle_bin_prod_loading) return <p>Loading ... </p>
