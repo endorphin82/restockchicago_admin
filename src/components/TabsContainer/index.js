@@ -29,7 +29,6 @@ const TabsContainer = () => {
       categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
     }
   })
-
   const { loading: recycle_bin_cat_loading, recycle_bin_cat_error, data: recycle_bin_cat_data } = useQuery(categoryByIdQuery, {
     variables: {
       id: process.env.REACT_APP_RECYCLE_BIN_ID

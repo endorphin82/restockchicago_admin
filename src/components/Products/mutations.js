@@ -6,6 +6,7 @@ export const addProductMutation = gql`
             id
             name
             price
+            images
             category{
                 id
                 name
@@ -20,6 +21,7 @@ export const updateProductMutation = gql`
             id
             name
             price
+            images
             category{
                 id
                 name
@@ -38,7 +40,7 @@ export const deleteProductMutation = gql`
 export const clearRecycleBinMutation = gql`
     mutation clearRecycleBin {
         clearRecycleBin{
-            name
+            __typename
         }
     }
 `
