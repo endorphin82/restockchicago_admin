@@ -8,9 +8,19 @@ import { categoriesAllQuery } from "../Categories/query"
 import { connect } from "react-redux"
 import { setIsOpenAddProductModal } from "../../actions"
 import ApolloCacheUpdater from "apollo-cache-updater"
+import { productsAllQuery } from "../Products/query"
 
 const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => {
-  const [addProduct, { data }] = useMutation(addProductMutation)
+  const [addProduct, {}] = useMutation(addProductMutation,
+    {
+      update(cache, { data: { addProduct } }) {
+        const { productsAll } = cache.readQuery({ query: productsAllQuery })
+        cache.writeQuery({
+          query: productsAllQuery,
+          data: { productsAll: productsAll.concat([addProduct]) }
+        })
+      }
+    })
   const { loading, error, data: data_categories } = useQuery(categoriesAllQuery)
   const [values, setValues] = useState({})
   console.log("values+++", values)
