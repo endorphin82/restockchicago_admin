@@ -20,7 +20,8 @@ const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => 
           data: { productsAll: productsAll.concat([addProduct]) }
         })
       }
-    })
+    }
+  )
   const { loading, error, data: data_categories } = useQuery(categoriesAllQuery)
   const [values, setValues] = useState({})
   console.log("values+++", values)

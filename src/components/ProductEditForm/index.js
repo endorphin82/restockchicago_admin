@@ -43,16 +43,6 @@ const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, 
       variables: {
         id, name, price, categoryId, images, icon
       }
-      // update: (proxy, { data: { updateProduct = {} } }) => { // your mutation response
-      //   const mutationResult = updateProduct
-      //   const updates = ApolloCacheUpdater({
-      //     proxy,
-      //     queriesToUpdate: [updateProduct],
-      //     searchVariables: {},
-      //     mutationResult
-      //   })
-      //   if (updates) console.log(`Product updated`)
-      // }
     }).then(m => console.log("updateProductMESSAGE:", m))
       .catch(e => console.log("updateProductERROR:", e))
 

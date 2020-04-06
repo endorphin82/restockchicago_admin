@@ -12,22 +12,16 @@ const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 
 const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
   const { loading, error, data } = useQuery(productsAllQuery)
-  const [updateProduct, {}] = useMutation(updateProductMutation, {
-    update(cache, { data: { updateProduct } })
+  const [updateProduct, {}] = useMutation(updateProductMutation,
     {
-      const { productsByCategoryId } = cache.readQuery({
+      refetchQueries: [{
         query: productsByCategoryIdQuery,
         variables: {
           categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
         }
-      })
-      cache.writeQuery({
-        query: productsByCategoryIdQuery,
-        variables: { categoryId: process.env.REACT_APP_RECYCLE_BIN_ID },
-        data: { productsByCategoryId: productsByCategoryId.concat(updateProduct) }
-      })
+      }]
     }
-  })
+  )
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
   const [productDeleted, setProductDeleted] = useState({})
   console.log("productDeleted", productDeleted)
@@ -109,7 +103,7 @@ const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
       dataIndex: "images",
       key: "images",
       render: images => {
-        return (images.length !== 0)
+        return (images)
           ? <div>
             {
               images
@@ -134,8 +128,9 @@ const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
           </Button>
         </Tooltip>
         <Tooltip title="Move to recycle bin">
-          <Button style={{float: "right"}} onClick={() => handleDelete(id)} type="dashed" danger icon={<DeleteOutlined/>}>
-             &nbsp;
+          <Button style={{ float: "right" }} onClick={() => handleDelete(id)} type="dashed" danger
+                  icon={<DeleteOutlined/>}>
+            &nbsp;
           </Button>
         </Tooltip>
       </>
