@@ -1,38 +1,57 @@
 import React, { useState } from "react"
 import { useMutation, useQuery } from "@apollo/react-hooks"
-import { Button, Modal, Table, Tooltip } from "antd"
-import { deleteProductMutation } from "../Products/mutations"
+import { Button, Form, Modal, Select, Skeleton, Table, Tooltip } from "antd"
+import { deleteProductMutation, updateProductMutation } from "../Products/mutations"
 import { productsByCategoryIdQuery } from "../Products/query"
+import { connect } from "react-redux"
+import { editProduct } from "../../actions"
+import { categoriesAllQuery } from "../Categories/query"
+import { client } from "../../store/apollo-client"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 
-const RecycleBinProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
+const RecycleBinProductsTable = ({
+                                   editProduct,
+                                   edited_product
+                                 }) => {
   const { loading: recycle_bin_prod_loading, recycle_bin_prod_error, data: recycle_bin_prod_data } = useQuery(productsByCategoryIdQuery, {
     variables: {
       categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
     }
   })
+  const { loading, error, data } = useQuery(categoriesAllQuery)
 
+  const [values, setValues] = useState({})
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
+  const [isVisualRestoreModal, setIsVisualRestoreModal] = useState(false)
   const [productDeleted, setProductDeleted] = useState({})
-  const [deleteProduct, {}] = useMutation(deleteProductMutation,
+  const [deleteProduct, {}] = useMutation(deleteProductMutation
+    ,
     {
-      update(cache, { data: { deleteProduct } }) {
-        const { productsByCategoryId } = cache.readQuery({
-          query: productsByCategoryIdQuery,
-          variables: {
-            categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
-          }
-        })
-        cache.writeQuery({
-          query: productsByCategoryIdQuery,
-          variables: { categoryId: process.env.REACT_APP_RECYCLE_BIN_ID },
-          data: { productsByCategoryId: productsByCategoryId.filter(prod => prod.id !== deleteProduct.id) }
-        })
-      }
+      refetchQueries: [{
+        query: productsByCategoryIdQuery,
+        variables: {
+          categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
+        }
+      }]
     }
   )
+  const [updateProduct, {}] = useMutation(updateProductMutation
+    ,
+    {
+      refetchQueries: [{
+        query: productsByCategoryIdQuery,
+        variables: {
+          categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
+        }
+      }]
+    }
+  )
+
+  if (!data) return <p>Loading ... </p>
+  const { categoriesAll } = data
+
   console.log("productDeleted", productDeleted)
 
   if (recycle_bin_prod_loading) return <p>Loading ... </p>
@@ -40,10 +59,39 @@ const RecycleBinProductsTable = ({ editProduct, setIsOpenEditProductModal }) => 
   const { productsByCategoryId } = recycle_bin_prod_data
 
   console.log("productsByCategoryId", productsByCategoryId)
+  const onFinish = (valuefromformlist) => {
+    console.log("Received values of form:", values)
 
-  const handleEdit = (id) => {
+    const { categoryId } = valuefromformlist
+    const { name, images, price, icon } = edited_product
+    const id = String(edited_product.id)
 
+    console.log("onFinish", valuefromformlist)
+    updateProduct({
+      variables: {
+        id, name, price, categoryId, images, icon
+      }
+
+    }).then(m => {
+        console.log("updateProductMESSAGE:", m)
+      }
+    )
+      .catch(e => console.log("updateProductERROR:", e))
+
+    // form.resetFields()
+    setIsVisualRestoreModal(false)
   }
+  const handleEdit = (id) => {
+    editProduct(productsByCategoryId.find(prod => prod.id === id))
+    setIsVisualRestoreModal(true)
+  }
+  const handleCancelRestore = () => {
+    editProduct({})
+    setIsVisualRestoreModal(false)
+  }
+  // const handleOkRestore = () => {
+  //   setIsVisualRestoreModal(false)
+  // }
 
   const handleDelete = (id) => {
     setIsVisualDeleteModal(true)
@@ -64,6 +112,10 @@ const RecycleBinProductsTable = ({ editProduct, setIsOpenEditProductModal }) => 
     setIsVisualDeleteModal(false)
   }
 
+  const handleChange = e => {
+    const { name, value } = e.target
+    setValues({ ...values, [name]: value })
+  }
   const columns = [
     {
       title: "Name",
@@ -105,7 +157,7 @@ const RecycleBinProductsTable = ({ editProduct, setIsOpenEditProductModal }) => 
       key: "id",
       render: (id) => <>
         <Tooltip title="Recovery this product in any category">
-          <Button disabled onClick={() => handleEdit(id)} type="dashed">
+          <Button onClick={() => handleEdit(id)} type="dashed">
             Recovery in category
           </Button>
         </Tooltip>
@@ -117,6 +169,7 @@ const RecycleBinProductsTable = ({ editProduct, setIsOpenEditProductModal }) => 
       </>
     }
   ]
+
   return (
     <>
       <Table dataSource={productsByCategoryId} columns={columns} rowKey="id"/>
@@ -128,8 +181,40 @@ const RecycleBinProductsTable = ({ editProduct, setIsOpenEditProductModal }) => 
       >
         <p>{productDeleted.name}</p>
       </Modal>
+
+      <Modal
+        footer={false}
+        title="Restore in category?"
+        visible={isVisualRestoreModal}
+        onCancel={handleCancelRestore}
+      >
+        <Form
+          name="restore" onFinish={onFinish}>
+          <Form.Item
+            label="Category"
+            name="categoryId"
+            onChange={handleChange}
+            rules={[{ required: true, message: "Category is required" }]}
+          >
+            <Select
+              placeholder="Select category">
+              {categoriesAll.map(category =>
+                <Select.Option
+                  key={category.id}
+                >{category.name}</Select.Option>
+              )
+              }
+            </Select>
+          </Form.Item>
+          <Button type="primary" htmlType="submit">
+            Restore
+          </Button>
+        </Form>
+      </Modal>
     </>
   )
 }
 
-export default RecycleBinProductsTable
+export default connect(state => ({
+  edited_product: state.edit_product.product
+}), { editProduct })(RecycleBinProductsTable)
