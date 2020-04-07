@@ -13,13 +13,29 @@ const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
   const { loading, error, data } = useQuery(productsAllQuery)
   const [updateProduct, {}] = useMutation(updateProductMutation,
+    // {
+    //   refetchQueries: [{
+    //     query: productsByCategoryIdQuery,
+    //     variables: {
+    //       categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
+    //     }
+    //   }]
+    // }
     {
-      refetchQueries: [{
-        query: productsByCategoryIdQuery,
-        variables: {
-          categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
-        }
-      }]
+      update(cache, { data: { updateProduct } }) {
+        const { productsByCategoryId } = cache.readQuery({
+          query: productsByCategoryIdQuery, variables: {
+            categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
+          }
+        })
+        cache.writeQuery({
+          query: productsByCategoryIdQuery,
+          variables: {
+            categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
+          },
+          data: { productsByCategoryId: productsByCategoryId.concat([updateProduct]) }
+        })
+      }
     }
   )
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)

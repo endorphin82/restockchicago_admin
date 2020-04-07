@@ -37,8 +37,7 @@ const RecycleBinProductsTable = ({
       }]
     }
   )
-  const [updateProduct, {}] = useMutation(updateProductMutation
-    ,
+  const [updateProduct, {}] = useMutation(updateProductMutation,
     {
       refetchQueries: [{
         query: productsByCategoryIdQuery,
@@ -89,9 +88,6 @@ const RecycleBinProductsTable = ({
     editProduct({})
     setIsVisualRestoreModal(false)
   }
-  // const handleOkRestore = () => {
-  //   setIsVisualRestoreModal(false)
-  // }
 
   const handleDelete = (id) => {
     setIsVisualDeleteModal(true)
