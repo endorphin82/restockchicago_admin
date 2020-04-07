@@ -34,21 +34,12 @@ const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => 
     console.log("onFinish")
     addProduct({
       variables: {
-        name, price, categoryId, images: valuefromformlist.images, icon
+        name,
+        price,
+        categoryId,
+        images: !valuefromformlist.images ? [process.env.REACT_APP_NO_IMAGE_AVAILABLE] : valuefromformlist.images,
+        icon
       }
-      // update: (proxy, { data: { addProduct = {} } }) => { // your mutation response
-      //   const mutationResult = addProduct // mutation result to pass into the updater
-      //   const updates = ApolloCacheUpdater({
-      //     // proxy, // apollo proxy
-      //     queriesToUpdate: [addProduct], // queries you want to automatically update
-      //     searchVariables: {
-      //       published: true // update queries in the cache that have these vars
-      //     },
-      //     mutationResult
-      //   })
-      //   if (updates) console.log(`Product added`) // if no errors
-      // }
-
     }).then(m => console.log("addProduct:", m))
       .catch(e => console.log("addProductERROR:", e))
 
