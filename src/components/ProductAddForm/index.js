@@ -34,7 +34,11 @@ const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => 
     console.log("onFinish")
     addProduct({
       variables: {
-        name, price, categoryId, images: valuefromformlist.images, icon
+        name,
+        price,
+        categoryId,
+        images: !valuefromformlist.images ? [process.env.REACT_APP_NO_IMAGE_AVAILABLE] : valuefromformlist.images,
+        icon
       }
       // update: (proxy, { data: { addProduct = {} } }) => { // your mutation response
       //   const mutationResult = addProduct // mutation result to pass into the updater

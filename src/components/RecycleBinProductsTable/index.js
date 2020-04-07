@@ -21,7 +21,6 @@ const RecycleBinProductsTable = ({
     }
   })
   const { loading, error, data } = useQuery(categoriesAllQuery)
-
   const [values, setValues] = useState({})
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
   const [isVisualRestoreModal, setIsVisualRestoreModal] = useState(false)
