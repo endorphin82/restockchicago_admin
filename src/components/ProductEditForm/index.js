@@ -23,8 +23,6 @@ const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, 
       "price": edited_product.price,
       "images": edited_product.images,
       "icon": edited_product.icon
-
-      // "categoryId": edited_product.category.name
     })
     return () => {
       formEditProduct.resetFields()
@@ -45,14 +43,10 @@ const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, 
       }
     }).then(m => console.log("updateProductMESSAGE:", m))
       .catch(e => console.log("updateProductERROR:", e))
-
-
-    // form.resetFields()
     setIsOpenEditProductModal(false)
   }
   const handleCancel = e => {
     console.log(e)
-    // form.resetFields()
     setIsOpenEditProductModal(false)
     editProduct({})
   }
@@ -64,12 +58,7 @@ const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, 
   const { categoriesAll } = data
   if (!edited_product) return <Skeleton/>
   const { category } = edited_product
-  // const cat = categoriesAll.find(category => category.id == edited_product.category.id)
   console.log("cat", category)
-  //
-  // let edited_product_category_name = category.name
-  // console.log("edited_product_category_name",edited_product_category_name)
-
   console.log("OpenEditProductModal", isOpenEditProductModal)
 
   return (
@@ -77,30 +66,14 @@ const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, 
       title={`Product information id: ${values.id}`}
       visible={isOpenEditProductModal}
       footer={false}
-      // onOk={onFinish}
       onCancel={handleCancel}
       forceRender={true}
       destroyOnClose={false}
-      // okButtonProps={{htmlType: "submit" }}
-      // cancelButtonProps={{ htmlType: "submit" }}
+
     >
-      {/*{formEditProduct.setFieldsValue({*/}
-      {/*  "name": values.name,*/}
-      {/*  "price": values.price,*/}
-      {/*  "images": values.images,*/}
-      {/*  "icon": values.icon*/}
-      {/*  // "categoryId": values.category.id*/}
-      {/*})}*/}
+
       <Form
         form={formEditProduct}
-        // initialValues={{
-        //   ["price"]: values.price,
-        //   ["name"]: values.name,
-        //   ["images"]: values.images,
-        //   ["icon"]: values.icon
-        //   // ["categoryId"]: values.category.id
-        //
-        // }}
         name="product" {...formItemLayoutWithOutLabel} onFinish={onFinish}>
         <Form.Item
           label="Name product"

@@ -25,8 +25,7 @@ const RecycleBinProductsTable = ({
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
   const [isVisualRestoreModal, setIsVisualRestoreModal] = useState(false)
   const [productDeleted, setProductDeleted] = useState({})
-  const [deleteProduct, {}] = useMutation(deleteProductMutation
-    ,
+  const [deleteProduct, {}] = useMutation(deleteProductMutation,
     {
       refetchQueries: [{
         query: productsByCategoryIdQuery,
