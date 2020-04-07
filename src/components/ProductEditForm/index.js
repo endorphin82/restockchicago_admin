@@ -7,6 +7,7 @@ import { updateProductMutation } from "../Products/mutations"
 import { categoriesAllQuery } from "../Categories/query"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenEditProductModal } from "../../actions"
+import { priceStringToIntCent } from "../../utils"
 
 const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, setIsOpenEditProductModal }) => {
   const [formEditProduct] = Form.useForm()
@@ -33,9 +34,9 @@ const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, 
   const onFinish = (valuefromformlist) => {
     console.log("Received values of form:", values)
 
-    const { name, categoryId, price, images, icon } = valuefromformlist
+    const { name, categoryId, images, icon } = valuefromformlist
     const id = String(values.id)
-
+    const price = priceStringToIntCent(valuefromformlist.price)
     console.log("onFinish", valuefromformlist)
     updateProduct({
       variables: {

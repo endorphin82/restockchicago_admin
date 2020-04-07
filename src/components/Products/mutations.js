@@ -1,7 +1,7 @@
 import { gql } from "apollo-boost"
 
 export const addProductMutation = gql`
-    mutation addProduct($name: String!, $price: String!, $categoryId: ID!, $images: [String] ) {
+    mutation addProduct($name: String!, $price: Float!, $categoryId: ID!, $images: [String] ) {
         addProduct(name: $name, price: $price, categoryId: $categoryId, images: $images ){
             id
             name
@@ -16,7 +16,7 @@ export const addProductMutation = gql`
 `
 
 export const updateProductMutation = gql`
-    mutation updateProduct($id: ID!, $name: String!, $price: String!, $categoryId: ID!, $images: [String] ) {
+    mutation updateProduct($id: ID!, $name: String!, $price: Float!, $categoryId: ID!, $images: [String] ) {
         updateProduct(id: $id, name: $name, price: $price, categoryId: $categoryId, images: $images ){
             id
             name
