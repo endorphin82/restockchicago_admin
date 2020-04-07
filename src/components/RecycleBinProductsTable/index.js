@@ -7,6 +7,7 @@ import { connect } from "react-redux"
 import { editProduct } from "../../actions"
 import { categoriesAllQuery } from "../Categories/query"
 import { client } from "../../store/apollo-client"
+import { priceToDollars } from "../../utils"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
@@ -124,7 +125,10 @@ const RecycleBinProductsTable = ({
     {
       title: "Price",
       dataIndex: "price",
-      key: "price"
+      key: "price",
+      render: price => {
+        return priceToDollars(price)
+      }
     },
     {
       title: "Images",

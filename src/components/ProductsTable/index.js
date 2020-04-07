@@ -6,6 +6,7 @@ import { deleteProductMutation, updateProductMutation } from "../Products/mutati
 import { connect } from "react-redux"
 import { editProduct, setIsOpenEditProductModal } from "../../actions"
 import { DeleteOutlined } from "@ant-design/icons"
+import { priceToDollars } from "../../utils"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
@@ -96,7 +97,10 @@ const ProductsTable = ({ editProduct, setIsOpenEditProductModal }) => {
     {
       title: "Price",
       dataIndex: "price",
-      key: "price"
+      key: "price",
+      render: price => {
+        return priceToDollars(price)
+      }
     },
     {
       title: "Category",

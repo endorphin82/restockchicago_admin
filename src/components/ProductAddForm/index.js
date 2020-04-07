@@ -9,6 +9,7 @@ import { connect } from "react-redux"
 import { setIsOpenAddProductModal } from "../../actions"
 import ApolloCacheUpdater from "apollo-cache-updater"
 import { productsAllQuery } from "../Products/query"
+import { priceStringToIntCent } from "../../utils"
 
 const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => {
   const [addProduct, {}] = useMutation(addProductMutation,
@@ -29,8 +30,8 @@ const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => 
   const onFinish = (valuefromformlist) => {
     console.log("Received values of form:", values)
 
-    const { name, images, price, categoryId, icon } = values
-    // const price = Number(values.price)
+    const { name, categoryId, icon } = values
+    const price = priceStringToIntCent(values.price)
     console.log("onFinish")
     addProduct({
       variables: {
