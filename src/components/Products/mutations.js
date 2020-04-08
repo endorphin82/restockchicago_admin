@@ -1,12 +1,13 @@
 import { gql } from "apollo-boost"
 
 export const addProductMutation = gql`
-    mutation addProduct($name: String!, $price: Float!, $categoryId: ID!, $images: [String] ) {
-        addProduct(name: $name, price: $price, categoryId: $categoryId, images: $images ){
+    mutation addProduct($name: String!, $price: Float!, $categoryId: ID!, $images: [String], $icon: String ) {
+        addProduct(name: $name, price: $price, categoryId: $categoryId, images: $images, icon: $icon ){
             id
             name
             price
             images
+            icon
             category{
                 id
                 name
@@ -16,15 +17,17 @@ export const addProductMutation = gql`
 `
 
 export const updateProductMutation = gql`
-    mutation updateProduct($id: ID!, $name: String!, $price: Float!, $categoryId: ID!, $images: [String] ) {
-        updateProduct(id: $id, name: $name, price: $price, categoryId: $categoryId, images: $images ){
+    mutation updateProduct($id: ID!, $name: String!, $price: Float!, $categoryId: ID!, $images: [String], $icon: String ) {
+        updateProduct(id: $id, name: $name, price: $price, categoryId: $categoryId, images: $images, icon: $icon){
             id
             name
             price
             images
+            icon
             category{
                 id
                 name
+                icons
             }
         }
     }
@@ -37,6 +40,7 @@ export const deleteProductMutation = gql`
             name
             price
             images
+            icon
             category{
                 id
                 name
@@ -51,3 +55,5 @@ export const clearRecycleBinMutation = gql`
         }
     }
 `
+
+
