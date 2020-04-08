@@ -21,6 +21,7 @@ export const productsByCategoryIdQuery = gql`
             id
             name
             price
+            images
             category{
                 id
                 name

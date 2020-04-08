@@ -12,7 +12,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <p>
-          <code> APP</code>
+          <code>APP</code>
         </p>
         <a
           className="App-link"

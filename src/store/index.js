@@ -1,6 +1,5 @@
-
 import { createStore, compose } from "redux";
-import reducer from "../reducer";
+import { rootReducer } from "../reducer"
 
 const composeEnhancers =
   typeof window === "object" &&
@@ -11,6 +10,6 @@ const composeEnhancers =
 
 const enhancer = composeEnhancers();
 
-const store = createStore(reducer, {}, enhancer);
+const store = createStore(rootReducer, {}, enhancer);
 
 export default store;
