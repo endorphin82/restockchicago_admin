@@ -3,13 +3,14 @@ import { gql } from "apollo-boost"
 export const productsAllQuery = gql`
     {
         productsAll{
-            id,
-            name,
-            price,
-            images,
+            id
+            name
+            price
+            images
+            icon
             category{
-                id,
-                name,
+                id
+                name
                 icons
             }
         }
@@ -22,10 +23,13 @@ export const productsByCategoryIdQuery = gql`
             name
             price
             images
+            icon
             category{
                 id
                 name
+                icons
             }
         }
     }
 `
+
