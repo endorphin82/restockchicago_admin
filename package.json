@@ -5,13 +5,21 @@
   "homepage": ".",
   "dependencies": {
     "@ant-design/icons": "^4.0.3",
+    "@apollo/react-hooks": "latest",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "@types/jest": "^25.2.1",
+    "@types/node": "^13.11.0",
+    "@types/react": "^16.9.32",
+    "@types/react-dom": "^16.9.6",
+    "@types/react-redux": "^7.1.7",
     "antd": "^4.0.4",
     "apollo-boost": "^0.4.7",
     "apollo-cache-inmemory": "^1.6.5",
     "apollo-cache-updater": "^0.1.3",
+    "apollo-link": "latest",
+    "apollo-link-http": "latest",
     "graphql": "^14.6.0",
     "react": "^16.13.1",
     "react-apollo": "^3.1.3",
@@ -19,9 +27,7 @@
     "react-redux": "^7.2.0",
     "react-scripts": "3.4.1",
     "redux": "^4.0.5",
-    "apollo-link-http": "latest",
-    "apollo-link": "latest",
-    "@apollo/react-hooks": "latest"
+    "typescript": "^3.8.3"
   },
   "scripts": {
     "start": "react-scripts start",

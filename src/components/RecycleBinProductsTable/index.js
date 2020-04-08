@@ -146,7 +146,7 @@ const RecycleBinProductsTable = ({
                 )
             }
           </div>
-          : <span>no icons</span>
+          : <span>no images</span>
       }
     },
     {
