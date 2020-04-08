@@ -1,7 +1,7 @@
 import { gql } from "apollo-boost"
 
 export const productsAllQuery = gql`
-    {
+    query productsAll{
         productsAll{
             id
             name
