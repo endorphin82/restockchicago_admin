@@ -39,7 +39,7 @@
     "build": "react-app-env --env-file=.env.production build",
     "deploy-gh-pages": "npm run build && gh-pages -d build",
     "schema": "apollo client:download-schema --endpoint=http://localhost:3005/graphql ./src/schema.json",
-    "types": "apollo client:codegen ./src/__generated__/types.ts --outputFlat --includes=./src/**/mutations.ts --addTypename --localSchemaFile=./src/schema.json --target=typescript"
+    "types": "apollo client:codegen ./src/__generated__/types.ts --outputFlat --includes=./src/**/query.ts --addTypename --localSchemaFile=./src/schema.json --target=typescript"
   },
   "eslintConfig": {
     "extends": "react-app"

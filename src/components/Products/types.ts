@@ -2,17 +2,21 @@ import {
   Category,
   editProductAction,
   interfaceREACT_APP_RECYCLE_BIN_ID,
-  Product, ProductCat,
   setIsOpenEditProductModalAction
 } from "../../actions/types"
+import { Product, ProductCatId } from "../../__generated__/types-query"
 
 export interface PropsProductsTable {
-  editProduct: (product: ProductCat) => void
-  setIsOpenEditProductModal: (isOpen: Boolean) => void
+  editProduct: (product: Product | ProductCatId | undefined) => void
+  setIsOpenEditProductModal: (isOpen: Boolean | undefined) => void
+}
+
+export interface PropsUpdateProduct {
+  variables: (product: Product | ProductCatId) => void
 }
 
 export interface ResponseProductsAllQueryData {
-  productsAll: ProductCat[] | any
+  productsAll: Product[] | any
 }
 
 export interface ResponseProductsByCategoryIdQueryData {
