@@ -61,8 +61,8 @@ export interface updateProduct_updateProduct {
   category: updateProduct_updateProduct_category | null;
 }
 
-export interface updateProduct {
-  updateProduct: updateProduct_updateProduct | null;
+export interface IupdateProduct {
+  IupdateProduct: updateProduct_updateProduct | null;
 }
 
 export interface updateProductVariables {

@@ -1,25 +1,28 @@
 import React, { useState } from "react"
 import { useMutation, useQuery } from "@apollo/react-hooks"
-import { Button, Modal, Skeleton, Table, Tooltip } from "antd"
-import { productsAllQuery, productsByCategoryIdQuery } from "../Products/query"
-import { deleteProductMutation, updateProductMutation } from "../Products/mutations"
+import { Modal } from "antd"
+import { productsAllQuery } from "../Products/query"
+import { updateProductMutation } from "../Products/mutations"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenEditProductModal } from "../../actions"
-import { DeleteOutlined } from "@ant-design/icons"
-import { priceToDollars } from "../../utils"
 import {
-  InputProductsByCategoryIdQueryVars, InputUpdateProductMutationVars,
-  PropsProductsTable,
-  ResponseProductsAllQueryData, ResponseProductsByCategoryIdQueryData
+  IproductsAll, IproductsByCategoryId,
+  Product,
+  productsByCategoryId_productsByCategoryId_category, productsByCategoryIdVariables
+} from "../../__generated__/types-query"
 
+import { updateProduct_updateProduct, updateProductVariables } from "../../__generated__/types-mutation"
+import {
+  PropsProductsTable, PropsUpdateProduct
 } from "../Products/types"
-import { Category, editProductAction, Product, ProductCat, REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
-import { ColumnProps } from "antd/es/table"
+
+import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
+
 import ProductsTableAntd from "./ProductsTableAntd"
 
 const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEditProductModal }): any => {
-  const { loading, error, data } = useQuery<ResponseProductsAllQueryData>(productsAllQuery)
-  const [updateProduct, {}] = useMutation<InputUpdateProductMutationVars | any, InputUpdateProductMutationVars>(updateProductMutation
+  const { loading, error, data } = useQuery<IproductsAll>(productsAllQuery)
+  const [updateProduct, {}] = useMutation<{ updateProduct: updateProduct_updateProduct }, { variables: updateProductVariables }>(updateProductMutation
     // {
     //   refetchQueries: [{
     //     query: productsByCategoryIdQuery,
@@ -30,7 +33,7 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
     // }
     // {
     //   update(cache, { data: { updateProduct } }) {
-    //     const { productsByCategoryId } = cache.readQuery<ResponseProductsByCategoryIdQueryData, InputProductsByCategoryIdQueryVars>({
+    //     const { productsByCategoryId } = cache.readQuery<{ query: IproductsByCategoryId }, { variables: typeof REACT_APP_RECYCLE_BIN_ID}>({
     //       query: productsByCategoryIdQuery, variables: {
     //         categoryId: REACT_APP_RECYCLE_BIN_ID
     //       }
@@ -46,7 +49,7 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
     // }
   )
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
-  const [productDeleted, setProductDeleted] = useState<ProductCat | Product>({})
+  const [productDeleted, setProductDeleted] = useState<Product | any>({})
   console.log("productDeleted", productDeleted)
   /* tslint:disable */
   if (loading) {
@@ -56,29 +59,31 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
   if (error || !data) {
     return (<div>Error...</div>)
   }
-  /* tslint:enable */
+  // @ts-ignore
   const { productsAll } = data
-  const productsAllWithoutRecycleBin = productsAll.filter((prod: ProductCat) => {
+  const productsAllWithoutRecycleBin = productsAll.filter((prod: Product) => {
     // const { category } = prod
     return prod.category?.id !== REACT_APP_RECYCLE_BIN_ID
   })
 
   console.log("productsAllWithoutRecycleBin", productsAllWithoutRecycleBin)
   const handleEdit = (id: String): void => {
-    const prod = productsAllWithoutRecycleBin.find((prod: ProductCat) => prod.id === id)
+    const prod = productsAllWithoutRecycleBin.find((prod: Product) => prod.id === id)
     editProduct(prod)
     setIsOpenEditProductModal(true)
   }
 
   const handleDelete = (id: String): void => {
     setIsVisualDeleteModal(true)
-    setProductDeleted(productsAllWithoutRecycleBin.find((prod: ProductCat) => prod.id === id))
+    setProductDeleted(productsAllWithoutRecycleBin.find((prod: Product) => prod.id === id))
   }
 
-  const handleOk = (productDeleted: ProductCat): void => {
-    console.log("productDeleted.id", productDeleted.id)
+  const handleOk = (productDeleted: Product): void => {
+    // console.log("productDeleted.id", productDeleted.id)
     const { id, name, price, images, icon } = productDeleted
-    updateProduct({
+
+    // @ts-ignore
+    updateProduct<PropsUpdateProduct>({
       variables: {
         id, name, price, categoryId: process.env.REACT_APP_RECYCLE_BIN_ID, images, icon
       }
@@ -95,7 +100,8 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
 
   return (
     <>
-      <ProductsTableAntd productsAllWithoutRecycleBinProp={productsAllWithoutRecycleBin} handleEditProp={handleEdit} handleDeleteProp={handleDelete}/>
+      <ProductsTableAntd productsAllWithoutRecycleBinProp={productsAllWithoutRecycleBin} handleEditProp={handleEdit}
+                         handleDeleteProp={handleDelete}/>
       <Modal
         title="Delete product in recycle bin?"
         visible={isVisualDeleteModal}
@@ -108,5 +114,5 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
   )
 }
 
-export default connect(null, { setIsOpenEditProductModal, editProduct }, null, { pure: false }
-)(ProductsTable)
+// @ts-ignore
+export default connect(null, { setIsOpenEditProductModal, editProduct }, null, { pure: false })(ProductsTable)
