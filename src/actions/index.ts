@@ -2,10 +2,11 @@ import {
   EDIT_PRODUCT,
   IS_OPEN_EDIT_MODAL,
   IS_OPEN_ADD_MODAL,
-  Product, editProductAction, setIsOpenEditProductModalAction, setIsOpenAddProductModalAction, ProductCat
+  editProductAction, setIsOpenEditProductModalAction, setIsOpenAddProductModalAction
 } from "./types"
+import { Product } from "../__generated__/types-query"
 
-export const editProduct = (product: ProductCat): editProductAction => ({
+export const editProduct = (product: Product): editProductAction => ({
   type: EDIT_PRODUCT,
   payload: product
 })

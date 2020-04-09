@@ -1,21 +1,21 @@
 import React, { useState } from "react"
 import { useMutation, useQuery } from "@apollo/react-hooks"
 import { Modal } from "antd"
-import { productsAllQuery } from "../Products/query"
+import { productsAllQuery, productsByCategoryIdQuery } from "../Products/query"
 import { updateProductMutation } from "../Products/mutations"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenEditProductModal } from "../../actions"
-import { IproductsAll, Product } from "../../__generated__/types-query"
+import { IproductsAll, Product, ProductCatId } from "../../__generated__/types-query"
 import { updateProduct_updateProduct, updateProductVariables } from "../../__generated__/types-mutation"
-import { PropsProductsTable, PropsUpdateProduct } from "../Products/types"
+import { AllTasksResult, PropsProductsTable, PropsUpdateProduct } from "../Products/types"
 
 import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
 
 import ProductsTableAntd from "./ProductsTableAntd"
 
-const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEditProductModal }): any => {
+const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEditProductModal }) => {
   const { loading, error, data } = useQuery<IproductsAll>(productsAllQuery)
-  const [updateProduct, {}] = useMutation<{ updateProduct: updateProduct_updateProduct }, { variables: updateProductVariables }>(updateProductMutation
+  const [updateProduct, {}] = useMutation<{ query: updateProduct_updateProduct }, { variables: updateProductVariables }>(updateProductMutation,
     // {
     //   refetchQueries: [{
     //     query: productsByCategoryIdQuery,
@@ -24,29 +24,29 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
     //     }
     //   }]
     // }
-    // {
-    //   update(cache, { data: { updateProduct } }) {
-    //     const { productsByCategoryId } = cache.readQuery<{ query: IproductsByCategoryId }, { variables: typeof REACT_APP_RECYCLE_BIN_ID}>({
-    //       query: productsByCategoryIdQuery, variables: {
-    //         categoryId: REACT_APP_RECYCLE_BIN_ID
-    //       }
-    //     })
-    //     cache.writeQuery({
-    //       query: productsByCategoryIdQuery,
-    //       variables: {
-    //         categoryId: REACT_APP_RECYCLE_BIN_ID
-    //       },
-    //       data: { productsByCategoryId: productsByCategoryId.concat([updateProduct]) }
-    //     })
-    //   }
-    // }
+    {
+  // @ts-ignore
+      update(cache, { data: { updateProduct } }) {
+        const { productsByCategoryId } = cache.readQuery<AllTasksResult>({
+          query: productsByCategoryIdQuery, variables: {
+            categoryId: REACT_APP_RECYCLE_BIN_ID
+          }
+        })!.allTasks
+        cache.writeQuery({
+          query: productsByCategoryIdQuery,
+          variables: {
+            categoryId: REACT_APP_RECYCLE_BIN_ID
+          },
+          data: { productsByCategoryId: productsByCategoryId.concat([updateProduct]) }
+        })
+      }
+    }
   )
-  const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
-  const [productDeleted, setProductDeleted] = useState<Product | any>({})
+  const [isVisualDeleteModal, setIsVisualDeleteModal] = useState<Boolean>(false)
+  // @ts-ignore
+  const [productDeleted, setProductDeleted] = useState<Product>({})
   console.log("productDeleted", productDeleted)
-  /* tslint:disable */
   if (loading) {
-// tslint:disable-next-line
     return (<div>Loading...</div>) // tslint:disable
   }
   if (error || !data) {
@@ -78,11 +78,11 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
     // @ts-ignore
     updateProduct<PropsUpdateProduct>({
       variables: {
-        id, name, price, categoryId: process.env.REACT_APP_RECYCLE_BIN_ID, images, icon
+        id, name, price, categoryId: REACT_APP_RECYCLE_BIN_ID, images, icon
       }
 
-    }).then((m: any) => console.log("updateProductMESSAGE:", m))
-      .catch((e: any) => console.log("updateProductERROR:", e))
+    }).then((m: String) => console.log("updateProductMESSAGE:", m))
+      .catch((e: Error) => console.log("updateProductERROR:", e))
 
     setIsVisualDeleteModal(false)
   }
@@ -97,15 +97,15 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
                          handleDeleteProp={handleDelete}/>
       <Modal
         title="Delete product in recycle bin?"
+        // @ts-ignore
         visible={isVisualDeleteModal}
         onOk={() => handleOk(productDeleted)}
         onCancel={handleCancel}
       >
-        <p>{productDeleted.name}</p>
+        <p>{productDeleted.id}</p>
       </Modal>
     </>
   )
 }
 
-// @ts-ignore
-export default connect(null, { setIsOpenEditProductModal, editProduct }, null, { pure: false })(ProductsTable)
+export default connect<typeof ProductsTable>(null, { setIsOpenEditProductModal, editProduct }, null, { pure: false })(ProductsTable)

@@ -1,7 +1,7 @@
 import { gql } from "apollo-boost";
 
 export const categoriesAllQuery = gql`
-    {
+    query categoriesAll{
         categoriesAll{
             id,
             name,

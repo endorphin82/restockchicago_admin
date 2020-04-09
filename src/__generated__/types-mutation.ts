@@ -99,7 +99,7 @@ export interface deleteProduct_deleteProduct {
   category: deleteProduct_deleteProduct_category | null;
 }
 
-export interface deleteProduct {
+export interface IdeleteProduct {
   /**
    * Description deleteProduct
    */
@@ -123,7 +123,7 @@ export interface clearRecycleBin_clearRecycleBin {
   __typename: "Product";
 }
 
-export interface clearRecycleBin {
+export interface IclearRecycleBin {
   clearRecycleBin: clearRecycleBin_clearRecycleBin | null;
 }
 

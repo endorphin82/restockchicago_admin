@@ -36,6 +36,8 @@ export interface IproductsAll {
 // ====================================================
 // GraphQL query operation: productsByCategoryId
 // ====================================================
+
+// my type
 export interface Product {
   __typename: "Product";
   id: string | null;
@@ -45,6 +47,8 @@ export interface Product {
   icon: string | null;
   category: productsByCategoryId_productsByCategoryId_category | null;
 }
+
+// my type
 export interface ProductCatId {
   __typename: "ProductCatId";
   id: string | null;
@@ -73,11 +77,68 @@ export interface productsByCategoryId_productsByCategoryId {
 }
 
 export interface IproductsByCategoryId {
-  IproductsByCategoryId: (productsByCategoryId_productsByCategoryId | null)[] | null;
+  productsByCategoryId: (productsByCategoryId_productsByCategoryId | null)[] | null;
 }
 
 export interface productsByCategoryIdVariables {
   categoryId: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+//==============================================================
+// START Enums and Input Objects
+//==============================================================
+
+//==============================================================
+// END Enums and Input Objects
+//==============================================================
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: categoriesAll
+// ====================================================
+
+export interface categoriesAll_categoriesAll {
+  __typename: "Category";
+  id: string | null;
+  name: string;
+  icons: (string | null)[] | null;
+}
+
+export interface IcategoriesAll {
+  // categoriesAll: (categoriesAll_categoriesAll | null)[] | null;
+  categoriesAll: (categoriesAll_categoriesAll)[];
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: categoryById
+// ====================================================
+
+export interface categoryById_categoryById {
+  __typename: "Category";
+  id: string | null;
+  name: string;
+  icons: (string | null)[] | null;
+}
+
+export interface categoryById {
+  categoryById: categoryById_categoryById | null;
+}
+
+export interface categoryByIdVariables {
+  id?: string | null;
 }
 
 /* tslint:disable */
