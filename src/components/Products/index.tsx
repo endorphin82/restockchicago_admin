@@ -6,10 +6,12 @@ import ProductEditForm from "../ProductEditForm"
 import ProductAddForm from "../ProductAddForm"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenAddProductModal } from "../../actions"
+import { PropsProducts } from "./types"
 
-const Products = ({ setIsOpenAddProductModal }) => {
+const Products: React.FC<PropsProducts> = ({ setIsOpenAddProductModal, editProduct }) => {
 
   const onClickHandler = () => {
+    // @ts-ignore
     editProduct({})
     setIsOpenAddProductModal(true)
   }
@@ -30,5 +32,5 @@ const Products = ({ setIsOpenAddProductModal }) => {
   )
 }
 
-export default connect(null, { setIsOpenAddProductModal, editProduct }, null, { pure: false }
-)(Products)
+// @ts-ignore
+export default connect(null, { setIsOpenAddProductModal, editProduct }, null, { pure: false })(Products)

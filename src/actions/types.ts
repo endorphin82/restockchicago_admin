@@ -1,3 +1,5 @@
+import { Product } from "../__generated__/types-query"
+
 export const IS_OPEN_ADD_MODAL = "IS_OPEN_ADD_MODAL"
 export const IS_OPEN_EDIT_MODAL = "IS_OPEN_EDIT_MODAL"
 export const EDIT_PRODUCT = "EDIT_PRODUCT"
@@ -11,27 +13,27 @@ export interface AddProductModalState {
   isOpen: Boolean
 }
 
-export interface Product {
-  id?: String
-  name?: String
-  categoryId?: String
-  price?: Number
-  images?: String[]
-  icon?: String
-}
+// export interface Product {
+//   id?: String
+//   name?: String
+//   categoryId?: String
+//   price?: Number
+//   images?: String[]
+//   icon?: String
+// }
 
-export interface ProductCat {
-  id?: String
-  name?: String
-  category?: {
-    id?: String
-    name?: String
-    icons?: String[]
-  }
-  price?: Number
-  images?: String[]
-  icon?: String
-}
+// export interface ProductCat {
+//   id?: String
+//   name?: String
+//   category?: {
+//     id?: String
+//     name?: String
+//     icons?: String[]
+//   }
+//   price?: Number
+//   images?: String[]
+//   icon?: String
+// }
 
 export interface Category {
   id?: String
@@ -54,10 +56,10 @@ export interface setIsOpenEditProductModalAction {
 }
 
 export interface EditProductState {
-  product: ProductCat
+  product: Product | {}
 }
 
 export interface editProductAction {
   type: typeof EDIT_PRODUCT
-  payload: ProductCat
+  payload: Product | {}
 }

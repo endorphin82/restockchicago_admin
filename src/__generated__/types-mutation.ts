@@ -123,7 +123,7 @@ export interface clearRecycleBin_clearRecycleBin {
   __typename: "Product";
 }
 
-export interface clearRecycleBin {
+export interface IclearRecycleBin {
   clearRecycleBin: clearRecycleBin_clearRecycleBin | null;
 }
 

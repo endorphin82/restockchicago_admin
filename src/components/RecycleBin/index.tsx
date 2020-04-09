@@ -5,18 +5,21 @@ import { DeleteOutlined } from "@ant-design/icons"
 import { useMutation } from "@apollo/react-hooks"
 import { clearRecycleBinMutation } from "../Products/mutations"
 import { productsByCategoryIdQuery } from "../Products/query"
+import { IclearRecycleBin, clearRecycleBin_clearRecycleBin } from "../../__generated__/types-mutation"
+import { IproductsByCategoryId } from "../../__generated__/types-query"
+import { AllTasksResult } from "../Products/types"
 
 const RecycleBin = () => {
-  const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
+  const [isVisualDeleteModal, setIsVisualDeleteModal] = useState<Boolean>(false)
   const [clearRecycleBin] = useMutation(clearRecycleBinMutation,
     {
       update(cache, { data: { clearRecycleBin } }) {
-        const { productsByCategoryId } = cache.readQuery({
+        const { productsByCategoryId } = cache.readQuery<AllTasksResult>({
           query: productsByCategoryIdQuery,
           variables: {
             categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
           }
-        })
+        })!.allTasks
         cache.writeQuery({
           query: productsByCategoryIdQuery,
           variables: { categoryId: process.env.REACT_APP_RECYCLE_BIN_ID },
@@ -48,6 +51,7 @@ const RecycleBin = () => {
       </Tooltip>
       <Modal
         title="Clear recycle bin?"
+        // @ts-ignore
         visible={isVisualDeleteModal}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -59,4 +63,5 @@ const RecycleBin = () => {
   )
 }
 
+// @ts-ignore
 export default RecycleBin

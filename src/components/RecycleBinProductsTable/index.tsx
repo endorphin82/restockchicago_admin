@@ -8,15 +8,16 @@ import { editProduct } from "../../actions"
 import { categoriesAllQuery } from "../Categories/query"
 import { client } from "../../store/apollo-client"
 import { priceToDollars } from "../../utils"
+import { PropsRecycleBinProductsTable } from "../Products/types"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 
-const RecycleBinProductsTable = ({
+const RecycleBinProductsTable:React.FC<PropsRecycleBinProductsTable> = ({
                                    editProduct,
                                    edited_product
                                  }) => {
-  const { loading: recycle_bin_prod_loading, recycle_bin_prod_error, data: recycle_bin_prod_data } = useQuery(productsByCategoryIdQuery, {
+  const { loading: recycle_bin_prod_loading, recycle_bin_prod_error, data: recycle_bin_prod_data } = useQuery<>(productsByCategoryIdQuery, {
     variables: {
       categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
     }
