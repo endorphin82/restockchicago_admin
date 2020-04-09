@@ -11,6 +11,7 @@ export const addProductMutation = gql`
             category{
                 id
                 name
+                icons
             }
         }
     }
@@ -44,6 +45,7 @@ export const deleteProductMutation = gql`
             category{
                 id
                 name
+                icons
             }
         }
     }

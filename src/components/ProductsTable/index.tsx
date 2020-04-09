@@ -14,9 +14,8 @@ import {
 
 } from "../Products/types"
 import { Category, editProductAction, Product, ProductCat, REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
-
-const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
-const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
+import { ColumnProps } from "antd/es/table"
+import ProductsTableAntd from "./ProductsTableAntd"
 
 const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEditProductModal }): any => {
   const { loading, error, data } = useQuery<ResponseProductsAllQueryData>(productsAllQuery)
@@ -76,7 +75,7 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
     setProductDeleted(productsAllWithoutRecycleBin.find((prod: ProductCat) => prod.id === id))
   }
 
-  const handleOk = (): void => {
+  const handleOk = (productDeleted: ProductCat): void => {
     console.log("productDeleted.id", productDeleted.id)
     const { id, name, price, images, icon } = productDeleted
     updateProduct({
@@ -94,98 +93,13 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
     setIsVisualDeleteModal(false)
   }
 
-  const columns = [
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "name"
-    },
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id"
-    },
-    {
-      title: "Price",
-      dataIndex: "price",
-      key: "price",
-      render: (price: Number) => {
-        return priceToDollars(price)
-      }
-    },
-    {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
-      render: (category: Category) => {
-        const { name, icons, id } = category
-        return (
-          <div>
-            <span>{name} </span>
-            {
-              (icons?.length !== 0)
-                ? <img
-                  key={icons[0]}
-                  alt="img" src={icons[0]} style={styleIconInTable}/> : ""
-            }
-            <span> {id} </span>
-          </div>)
-      }
-    },
-    {
-      title: "Images",
-      dataIndex: "images",
-      key: "images",
-      render: (images?: String[]) => {
-        return (images)
-          ? <div>
-            {
-              images
-                .map((image: String) => <img
-                  key={image}
-                  alt="img"
-                  src={image}
-                  style={styleImagesInTable}/>
-                )
-            }
-          </div>
-          : <span>no  images </span>
-      }
-    },
-    {
-      title: "Actions",
-      dataIndex: "id",
-      key: "id",
-      render: (id: String) => <>
-        <Tooltip title="Edit this product">
-          <Button onClick={() => handleEdit(id)}
-                  type="dashed">
-            Edit
-          </Button>
-        </Tooltip>
-        <Tooltip
-          title="Move to recycle bin">
-          <Button style={{ float: "right" }}
-                  onClick={() => handleDelete(id)}
-                  type="dashed"
-                  danger
-                  icon={<DeleteOutlined/>}>
-
-          </Button>
-        </Tooltip>
-      </>
-    }
-  ]
-
   return (
     <>
-      <Table dataSource={productsAllWithoutRecycleBin}
-             columns={columns}
-             rowKey="id"/>
+      <ProductsTableAntd productsAllWithoutRecycleBinProp={productsAllWithoutRecycleBin} handleEditProp={handleEdit} handleDeleteProp={handleDelete}/>
       <Modal
         title="Delete product in recycle bin?"
         visible={isVisualDeleteModal}
-        onOk={() => handleOk(productDeleted.id)}
+        onOk={() => handleOk(productDeleted)}
         onCancel={handleCancel}
       >
         <p>{productDeleted.name}</p>
