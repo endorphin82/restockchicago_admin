@@ -5,7 +5,7 @@ import { productsAllQuery, productsByCategoryIdQuery } from "../Products/query"
 import { updateProductMutation } from "../Products/mutations"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenEditProductModal } from "../../actions"
-import { IproductsAll, Product } from "../../__generated__/types-query"
+import { IproductsAll, Product, ProductCatId } from "../../__generated__/types-query"
 import { updateProduct_updateProduct, updateProductVariables } from "../../__generated__/types-mutation"
 import { AllTasksResult, PropsProductsTable, PropsUpdateProduct } from "../Products/types"
 
@@ -25,7 +25,7 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
     //   }]
     // }
     {
-      // @ts-ignore
+  // @ts-ignore
       update(cache, { data: { updateProduct } }) {
         const { productsByCategoryId } = cache.readQuery<AllTasksResult>({
           query: productsByCategoryIdQuery, variables: {
@@ -46,9 +46,7 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
   // @ts-ignore
   const [productDeleted, setProductDeleted] = useState<Product>({})
   console.log("productDeleted", productDeleted)
-  /* tslint:disable */
   if (loading) {
-// tslint:disable-next-line
     return (<div>Loading...</div>) // tslint:disable
   }
   if (error || !data) {
@@ -80,11 +78,11 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
     // @ts-ignore
     updateProduct<PropsUpdateProduct>({
       variables: {
-        id, name, price, categoryId: process.env.REACT_APP_RECYCLE_BIN_ID, images, icon
+        id, name, price, categoryId: REACT_APP_RECYCLE_BIN_ID, images, icon
       }
 
-    }).then((m: any) => console.log("updateProductMESSAGE:", m))
-      .catch((e: any) => console.log("updateProductERROR:", e))
+    }).then((m: String) => console.log("updateProductMESSAGE:", m))
+      .catch((e: Error) => console.log("updateProductERROR:", e))
 
     setIsVisualDeleteModal(false)
   }
@@ -110,5 +108,4 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
   )
 }
 
-// @ts-ignore
-export default connect(null, { setIsOpenEditProductModal, editProduct }, null, { pure: false })(ProductsTable)
+export default connect<typeof ProductsTable>(null, { setIsOpenEditProductModal, editProduct }, null, { pure: false })(ProductsTable)

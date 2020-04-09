@@ -8,36 +8,48 @@ import { editProduct } from "../../actions"
 import { categoriesAllQuery } from "../Categories/query"
 import { client } from "../../store/apollo-client"
 import { priceToDollars } from "../../utils"
-import { PropsRecycleBinProductsTable } from "../Products/types"
+import { PropsRecycleBinProductsTable, PropsUpdateProduct } from "../Products/types"
+import {
+  Product,
+  ProductCatId,
+  productsByCategoryIdVariables,
+  IproductsAll,
+  categoriesAll_categoriesAll, IcategoriesAll
+} from "../../__generated__/types-query"
+import { EditProductState, EditProductStateOrEmpty, REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
+import { updateProduct_updateProduct, updateProductVariables } from "../../__generated__/types-mutation"
+import { RootState } from "../../reducer"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 
-const RecycleBinProductsTable:React.FC<PropsRecycleBinProductsTable> = ({
-                                   editProduct,
-                                   edited_product
-                                 }) => {
-  const { loading: recycle_bin_prod_loading, recycle_bin_prod_error, data: recycle_bin_prod_data } = useQuery<>(productsByCategoryIdQuery, {
+const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
+                                                                           editProduct,
+                                                                           edited_product
+                                                                         }) => {
+  const { loading: recycle_bin_prod_loading, error: recycle_bin_prod_error, data: recycle_bin_prod_data } = useQuery<any, productsByCategoryIdVariables>(productsByCategoryIdQuery, {
     variables: {
-      categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
+      // @ts-ignore
+      categoryId: REACT_APP_RECYCLE_BIN_ID
     }
   })
-  const { loading, error, data } = useQuery(categoriesAllQuery)
+  const { loading, error, data } = useQuery<IcategoriesAll>(categoriesAllQuery)
   const [values, setValues] = useState({})
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
   const [isVisualRestoreModal, setIsVisualRestoreModal] = useState(false)
-  const [productDeleted, setProductDeleted] = useState({})
+  // @ts-ignore
+  const [productDeleted, setProductDeleted] = useState<Product>({})
   const [deleteProduct, {}] = useMutation(deleteProductMutation,
     {
       refetchQueries: [{
         query: productsByCategoryIdQuery,
         variables: {
-          categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
+          categoryId: REACT_APP_RECYCLE_BIN_ID
         }
       }]
     }
   )
-  const [updateProduct, {}] = useMutation(updateProductMutation,
+  const [updateProduct, {}] = useMutation<{ query: updateProduct_updateProduct }, { variables: updateProductVariables }>(updateProductMutation,
     {
       refetchQueries: [{
         query: productsByCategoryIdQuery,
@@ -47,7 +59,6 @@ const RecycleBinProductsTable:React.FC<PropsRecycleBinProductsTable> = ({
       }]
     }
   )
-
   if (!data) return <p>Loading ... </p>
   const { categoriesAll } = data
 
@@ -58,47 +69,51 @@ const RecycleBinProductsTable:React.FC<PropsRecycleBinProductsTable> = ({
   const { productsByCategoryId } = recycle_bin_prod_data
 
   console.log("productsByCategoryId", productsByCategoryId)
-  const onFinish = (valuefromformlist) => {
+  const onFinish = (valuefromformlist: ProductCatId) => {
     console.log("Received values of form:", values)
 
     const { categoryId } = valuefromformlist
+
+    // @ts-ignore
     const { name, images, price, icon } = edited_product
+    // @ts-ignore
     const id = String(edited_product.id)
 
     console.log("onFinish", valuefromformlist)
-    updateProduct({
+    // @ts-ignore
+    updateProduct<PropsUpdateProduct>({
       variables: {
         id, name, price, categoryId, images, icon
       }
-
-    }).then(m => {
+    }).then((m: String) => {
         console.log("updateProductMESSAGE:", m)
       }
     )
-      .catch(e => console.log("updateProductERROR:", e))
+      .catch((e: Error) => console.log("updateProductERROR:", e))
 
     // form.resetFields()
     setIsVisualRestoreModal(false)
   }
-  const handleEdit = (id) => {
-    editProduct(productsByCategoryId.find(prod => prod.id === id))
+  const handleEdit = (id: String) => {
+    editProduct(productsByCategoryId.find((prod: Product) => prod.id === id))
     setIsVisualRestoreModal(true)
   }
   const handleCancelRestore = () => {
+    // @ts-ignore
     editProduct({})
     setIsVisualRestoreModal(false)
   }
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: String) => {
     setIsVisualDeleteModal(true)
-    setProductDeleted(productsByCategoryId.find(prod => prod.id === id))
+    setProductDeleted(productsByCategoryId.find((prod: Product) => prod.id === id))
   }
 
-  const handleOk = () => {
+  const handleOk = (id: String) => {
     console.log("productDeleted.id", productDeleted.id)
     deleteProduct({
       variables: {
-        id: productDeleted.id
+        id
       }
     }).then(mess => console.log("deleteProduct response:", mess))
     setIsVisualDeleteModal(false)
@@ -108,7 +123,7 @@ const RecycleBinProductsTable:React.FC<PropsRecycleBinProductsTable> = ({
     setIsVisualDeleteModal(false)
   }
 
-  const handleChange = e => {
+  const handleChange = (e: { target: HTMLInputElement; }) => {
     const { name, value } = e.target
     setValues({ ...values, [name]: value })
   }
@@ -127,7 +142,7 @@ const RecycleBinProductsTable:React.FC<PropsRecycleBinProductsTable> = ({
       title: "Price",
       dataIndex: "price",
       key: "price",
-      render: price => {
+      render: (price: Number) => {
         return priceToDollars(price)
       }
     },
@@ -135,13 +150,15 @@ const RecycleBinProductsTable:React.FC<PropsRecycleBinProductsTable> = ({
       title: "Images",
       dataIndex: "images",
       key: "images",
-      render: images => {
+      render: (images: String[]) => {
         return (images)
           ? <div>
             {
               images
                 .map(image => <img
+                  // @ts-ignore
                   key={image} alt="img"
+                  // @ts-ignore
                   src={image}
                   style={styleImagesInTable}/>
                 )
@@ -154,7 +171,7 @@ const RecycleBinProductsTable:React.FC<PropsRecycleBinProductsTable> = ({
       title: "Actions",
       dataIndex: "id",
       key: "id",
-      render: (id) => <>
+      render: (id: String) => <>
         <Tooltip title="Recovery this product in any category">
           <Button onClick={() => handleEdit(id)} type="dashed">
             Recovery in category
@@ -169,6 +186,7 @@ const RecycleBinProductsTable:React.FC<PropsRecycleBinProductsTable> = ({
     }
   ]
 
+  // @ts-ignore
   return (
     <>
       <Table dataSource={productsByCategoryId} columns={columns} rowKey="id"/>
@@ -188,17 +206,20 @@ const RecycleBinProductsTable:React.FC<PropsRecycleBinProductsTable> = ({
         onCancel={handleCancelRestore}
       >
         <Form
+          // @ts-ignore
           name="restore" onFinish={onFinish}>
           <Form.Item
             label="Category"
             name="categoryId"
+            // @ts-ignore
             onChange={handleChange}
             rules={[{ required: true, message: "Category is required" }]}
           >
             <Select
               placeholder="Select category">
-              {categoriesAll.map(category =>
+              {categoriesAll.map((category) =>
                 <Select.Option
+                  // @ts-ignore
                   key={category.id}
                 >{category.name}</Select.Option>
               )
@@ -214,6 +235,17 @@ const RecycleBinProductsTable:React.FC<PropsRecycleBinProductsTable> = ({
   )
 }
 
-export default connect(state => ({
+
+interface StateProps {
+  edited_product: EditProductState
+}
+
+const mapStateToProps = (state: RootState): StateProps => ({
+// @ts-ignore
   edited_product: state.edit_product.product
-}), { editProduct })(RecycleBinProductsTable)
+})
+
+export default connect<StateProps, typeof RecycleBinProductsTable>(
+// @ts-ignore
+  mapStateToProps,
+  { editProduct })(RecycleBinProductsTable)

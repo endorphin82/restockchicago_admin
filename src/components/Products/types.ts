@@ -42,7 +42,7 @@ export interface PropsProductsTableAntd {
 }
 
 export interface PropsUpdateProduct {
-  variables: (product: Product | ProductCatId) => void
+  variables: Product | ProductCatId
 }
 
 export interface ResponseProductsAllQueryData {

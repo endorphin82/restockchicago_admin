@@ -99,7 +99,7 @@ export interface deleteProduct_deleteProduct {
   category: deleteProduct_deleteProduct_category | null;
 }
 
-export interface deleteProduct {
+export interface IdeleteProduct {
   /**
    * Description deleteProduct
    */

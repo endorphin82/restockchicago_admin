@@ -32,5 +32,4 @@ const Products: React.FC<PropsProducts> = ({ setIsOpenAddProductModal, editProdu
   )
 }
 
-// @ts-ignore
-export default connect(null, { setIsOpenAddProductModal, editProduct }, null, { pure: false })(Products)
+export default connect<typeof Products>(null, { setIsOpenAddProductModal, editProduct }, null, { pure: false })(Products)

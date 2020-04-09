@@ -56,6 +56,10 @@ export interface setIsOpenEditProductModalAction {
 }
 
 export interface EditProductState {
+  product: Product
+}
+
+export interface EditProductStateOrEmpty {
   product: Product | {}
 }
 

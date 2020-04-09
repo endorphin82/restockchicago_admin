@@ -96,3 +96,60 @@ export interface productsByCategoryIdVariables {
 //==============================================================
 // END Enums and Input Objects
 //==============================================================
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: categoriesAll
+// ====================================================
+
+export interface categoriesAll_categoriesAll {
+  __typename: "Category";
+  id: string | null;
+  name: string;
+  icons: (string | null)[] | null;
+}
+
+export interface IcategoriesAll {
+  // categoriesAll: (categoriesAll_categoriesAll | null)[] | null;
+  categoriesAll: (categoriesAll_categoriesAll)[];
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: categoryById
+// ====================================================
+
+export interface categoryById_categoryById {
+  __typename: "Category";
+  id: string | null;
+  name: string;
+  icons: (string | null)[] | null;
+}
+
+export interface categoryById {
+  categoryById: categoryById_categoryById | null;
+}
+
+export interface categoryByIdVariables {
+  id?: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+//==============================================================
+// START Enums and Input Objects
+//==============================================================
+
+//==============================================================
+// END Enums and Input Objects
+//==============================================================
