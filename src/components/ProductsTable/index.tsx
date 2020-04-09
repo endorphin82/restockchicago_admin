@@ -5,16 +5,9 @@ import { productsAllQuery } from "../Products/query"
 import { updateProductMutation } from "../Products/mutations"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenEditProductModal } from "../../actions"
-import {
-  IproductsAll, IproductsByCategoryId,
-  Product,
-  productsByCategoryId_productsByCategoryId_category, productsByCategoryIdVariables
-} from "../../__generated__/types-query"
-
+import { IproductsAll, Product } from "../../__generated__/types-query"
 import { updateProduct_updateProduct, updateProductVariables } from "../../__generated__/types-mutation"
-import {
-  PropsProductsTable, PropsUpdateProduct
-} from "../Products/types"
+import { PropsProductsTable, PropsUpdateProduct } from "../Products/types"
 
 import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
 
