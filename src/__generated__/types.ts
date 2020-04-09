@@ -4,28 +4,35 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: productsAll
+// GraphQL mutation operation: addProduct
 // ====================================================
 
-export interface productsAll_productsAll_category {
+export interface addProduct_addProduct_category {
   __typename: "Category";
   id: string | null;
   name: string;
-  icons: (string | null)[] | null;
 }
 
-export interface productsAll_productsAll {
+export interface addProduct_addProduct {
   __typename: "Product";
   id: string | null;
   name: string;
   price: number;
   images: (string | null)[] | null;
   icon: string | null;
-  category: productsAll_productsAll_category | null;
+  category: addProduct_addProduct_category | null;
 }
 
-export interface productsAll {
-  productsAll: (productsAll_productsAll | null)[] | null;
+export interface addProduct {
+  addProduct: addProduct_addProduct | null;
+}
+
+export interface addProductVariables {
+  name: string;
+  price: number;
+  categoryId: string;
+  images?: (string | null)[] | null;
+  icon?: string | null;
 }
 
 /* tslint:disable */
@@ -34,32 +41,90 @@ export interface productsAll {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: productsByCategoryId
+// GraphQL mutation operation: updateProduct
 // ====================================================
 
-export interface productsByCategoryId_productsByCategoryId_category {
+export interface updateProduct_updateProduct_category {
   __typename: "Category";
   id: string | null;
   name: string;
   icons: (string | null)[] | null;
 }
 
-export interface productsByCategoryId_productsByCategoryId {
+export interface updateProduct_updateProduct {
   __typename: "Product";
   id: string | null;
   name: string;
   price: number;
   images: (string | null)[] | null;
   icon: string | null;
-  category: productsByCategoryId_productsByCategoryId_category | null;
+  category: updateProduct_updateProduct_category | null;
 }
 
-export interface productsByCategoryId {
-  productsByCategoryId: (productsByCategoryId_productsByCategoryId | null)[] | null;
+export interface updateProduct {
+  updateProduct: updateProduct_updateProduct | null;
 }
 
-export interface productsByCategoryIdVariables {
+export interface updateProductVariables {
+  id: string;
+  name: string;
+  price: number;
   categoryId: string;
+  images?: (string | null)[] | null;
+  icon?: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: deleteProduct
+// ====================================================
+
+export interface deleteProduct_deleteProduct_category {
+  __typename: "Category";
+  id: string | null;
+  name: string;
+}
+
+export interface deleteProduct_deleteProduct {
+  __typename: "Product";
+  id: string | null;
+  name: string;
+  price: number;
+  images: (string | null)[] | null;
+  icon: string | null;
+  category: deleteProduct_deleteProduct_category | null;
+}
+
+export interface deleteProduct {
+  /**
+   * Description deleteProduct
+   */
+  deleteProduct: deleteProduct_deleteProduct | null;
+}
+
+export interface deleteProductVariables {
+  id: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: clearRecycleBin
+// ====================================================
+
+export interface clearRecycleBin_clearRecycleBin {
+  __typename: "Product";
+}
+
+export interface clearRecycleBin {
+  clearRecycleBin: clearRecycleBin_clearRecycleBin | null;
 }
 
 /* tslint:disable */
