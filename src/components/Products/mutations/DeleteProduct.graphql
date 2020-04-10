@@ -1,0 +1,14 @@
+mutation DeleteProduct($id: ID!) {
+    deleteProduct(id: $id){
+        id
+        name
+        price
+        images
+        icon
+        category{
+            id
+            name
+            icons
+        }
+    }
+}
