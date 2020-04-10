@@ -1,10 +1,10 @@
-import { EDIT_PRODUCT, editProductAction, EditProductStateOrEmpty } from "../actions/types"
+import { EDIT_PRODUCT, editProductAction, EditProductState } from "../actions/types"
 
-const initialState: EditProductStateOrEmpty = {
+const initialState: EditProductState = {
   product: {}
 }
 
-export default (state = initialState, action: editProductAction): EditProductStateOrEmpty => {
+export default (state = initialState, action: editProductAction): EditProductState => {
   switch (action.type) {
     case EDIT_PRODUCT:
       return {

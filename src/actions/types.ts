@@ -1,4 +1,4 @@
-import { Product } from "../__generated__/types-query"
+import { Product } from "../__generated__apollo__/types-query"
 
 export const IS_OPEN_ADD_MODAL = "IS_OPEN_ADD_MODAL"
 export const IS_OPEN_EDIT_MODAL = "IS_OPEN_EDIT_MODAL"
@@ -56,11 +56,11 @@ export interface setIsOpenEditProductModalAction {
 }
 
 export interface EditProductState {
-  product: Product
+  product?: Product | {}
 }
 
-export interface EditProductStateOrEmpty {
-  product: Product | {}
+export interface mstpEditProductState {
+  edited_product?: Product | {}
 }
 
 export interface editProductAction {

@@ -62,7 +62,7 @@ export interface updateProduct_updateProduct {
 }
 
 export interface IupdateProduct {
-  IupdateProduct: updateProduct_updateProduct | null;
+  updateProduct: updateProduct_updateProduct | null;
 }
 
 export interface updateProductVariables {

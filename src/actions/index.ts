@@ -4,7 +4,7 @@ import {
   IS_OPEN_ADD_MODAL,
   editProductAction, setIsOpenEditProductModalAction, setIsOpenAddProductModalAction
 } from "./types"
-import { Product } from "../__generated__/types-query"
+import { Product } from "../__generated__apollo__/types-query"
 
 export const editProduct = (product: Product): editProductAction => ({
   type: EDIT_PRODUCT,

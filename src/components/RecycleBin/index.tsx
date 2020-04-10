@@ -5,8 +5,8 @@ import { DeleteOutlined } from "@ant-design/icons"
 import { useMutation } from "@apollo/react-hooks"
 import { clearRecycleBinMutation } from "../Products/mutations"
 import { productsByCategoryIdQuery } from "../Products/query"
-import { IclearRecycleBin, clearRecycleBin_clearRecycleBin } from "../../__generated__/types-mutation"
-import { IproductsByCategoryId } from "../../__generated__/types-query"
+import { IclearRecycleBin, clearRecycleBin_clearRecycleBin } from "../../__generated__apollo__/types-mutation"
+import { IproductsByCategoryId } from "../../__generated__apollo__/types-query"
 import { AllTasksResult } from "../Products/types"
 
 const RecycleBin = () => {

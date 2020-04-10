@@ -11,7 +11,6 @@ import { PropsProducts } from "./types"
 const Products: React.FC<PropsProducts> = ({ setIsOpenAddProductModal, editProduct }) => {
 
   const onClickHandler = () => {
-    // @ts-ignore
     editProduct({})
     setIsOpenAddProductModal(true)
   }

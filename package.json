@@ -5,7 +5,13 @@
   "homepage": ".",
   "dependencies": {
     "@ant-design/icons": "^4.0.3",
+    "@apollo/client": "^3.0.0-beta.43",
     "@apollo/react-hooks": "^3.1.4",
+    "@graphql-codegen/cli": "^1.13.2",
+    "@graphql-codegen/near-operation-file-preset": "^1.13.2",
+    "@graphql-codegen/typescript": "^1.13.2",
+    "@graphql-codegen/typescript-operations": "^1.13.2",
+    "@graphql-codegen/typescript-react-apollo": "^1.13.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -38,9 +44,12 @@
     "start": "react-scripts start",
     "start-antd": "react-app-rewired start",
     "build": "react-app-env --env-file=.env.production build",
+    "generate": "graphql-codegen",
+    "watch-generate": "graphql-codegen --watch",
+    "clear": "find ./src -name \"__generated__\" -exec rm -rf '{}' +",
     "deploy-gh-pages": "npm run build && gh-pages -d build",
     "schema": "apollo client:download-schema --endpoint=http://localhost:3005/graphql ./src/schema.json",
-    "types": "apollo client:codegen ./src/__generated__/types.ts --outputFlat --includes=./src/**/query.ts --addTypename --localSchemaFile=./src/schema.json --target=typescript"
+    "types": "apollo client:codegen ./src/__generated__apollo__/types.ts --outputFlat --includes=./src/**/query.ts --addTypename --localSchemaFile=./src/schema.json --target=typescript"
   },
   "eslintConfig": {
     "extends": "react-app"
