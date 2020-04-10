@@ -10,6 +10,7 @@ import {
   ProductCatId,
   productsByCategoryId_productsByCategoryId
 } from "../../__generated__apollo__/types-query"
+import { MutationAddProductArgs } from "../../__generated__/types"
 
 export interface AllTasksResult {
   allTasks: any;  // TODO: Put correct type here
@@ -26,8 +27,8 @@ export interface PropsRecycleBinIcon {
 }
 
 export interface PropsRecycleBinProductsTable {
-  editProduct: (product: EditProductState) => void
-  edited_product: EditProductState
+  editProduct: (product: MutationAddProductArgs) => void
+  edited_product: MutationAddProductArgs
 }
 
 export interface PropsProducts {
