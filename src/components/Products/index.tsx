@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import { Button, Tooltip } from "antd"
 import { PlusOutlined } from "@ant-design/icons"
 import ProductsTable from "../ProductsTable"

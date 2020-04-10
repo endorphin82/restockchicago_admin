@@ -1,0 +1,7 @@
+query CategoryById($id: ID){
+    categoryById(id: $id){
+        id
+        name
+        icons
+    }
+}
