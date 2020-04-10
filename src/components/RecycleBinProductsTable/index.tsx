@@ -9,7 +9,7 @@ import {
   Product,
   ProductCatId,
 } from "../../__generated__apollo__/types-query"
-import { EditProductState, REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
+import { EditProductState, mstpEditProductState, REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
 import { RootState } from "../../reducer"
 import { useProductsByCategoryId } from "../Products/queries/__generated__/ProductsByCategoryId"
 import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
@@ -47,7 +47,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
       refetchQueries: [{
         query: productsByCategoryIdQuery,
         variables: {
-          categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
+          categoryId: REACT_APP_RECYCLE_BIN_ID
         }
       }]
     }
@@ -117,7 +117,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
     setIsVisualDeleteModal(false)
   }
 
-  const handleChange = (e: { target: HTMLInputElement; }) => {
+  const handleChange = (e: { target: HTMLInputElement }) => {
     const { name, value } = e.target
     setValues({ ...values, [name]: value })
   }
@@ -230,11 +230,10 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
 
 
 interface StateProps {
-  edited_product: EditProductState
+  edited_product?: Product | {}
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-// @ts-ignore
   edited_product: state.edit_product.product
 })
 

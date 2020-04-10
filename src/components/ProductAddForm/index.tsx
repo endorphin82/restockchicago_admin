@@ -7,15 +7,27 @@ import { addProductMutation } from "../Products/mutations"
 import { categoriesAllQuery } from "../Categories/query"
 import { connect } from "react-redux"
 import { setIsOpenAddProductModal } from "../../actions"
-import ApolloCacheUpdater from "apollo-cache-updater"
 import { productsAllQuery } from "../Products/query"
 import { priceStringToIntCent } from "../../utils/utils"
+import {
+  AddProductModalState, Category,
+  EditProductState,
+  mstpAddProductModalState,
+  REACT_APP_NO_IMAGE_AVAILABLE
+} from "../../actions/types"
+import { RootState } from "../../reducer"
+import { AllTasksResult, PropsProductAddForm } from "../Products/types"
+import { useAddProduct } from "../Products/mutations/__generated__/AddProduct"
+import { ProductsAllDocument } from "../Products/queries/__generated__/ProductsAll"
+import { ProductCatId } from "../../__generated__apollo__/types-query"
+import { Product } from "../../__generated__/types"
 
-const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => {
-  const [addProduct, {}] = useMutation(addProductMutation,
+const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => {
+  const [addProduct, {}] = useAddProduct(
     {
+      // @ts-ignore
       update(cache, { data: { addProduct } }) {
-        const { productsAll } = cache.readQuery({ query: productsAllQuery })
+        const { productsAll } = cache.readQuery<AllTasksResult>({ query: ProductsAllDocument })!.allTasks
         cache.writeQuery({
           query: productsAllQuery,
           data: { productsAll: productsAll.concat([addProduct]) }
@@ -24,10 +36,11 @@ const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => 
     }
   )
   const { loading, error, data: data_categories } = useQuery(categoriesAllQuery)
-  const [values, setValues] = useState({})
+  // @ts-ignore
+  const [values, setValues] = useState<Product>({})
   console.log("values+++", values)
 
-  const onFinish = (valuefromformlist) => {
+  const onFinish = (valuefromformlist: ProductCatId) => {
     console.log("Received values of form:", values)
 
     const { name, categoryId, icon } = values
@@ -38,7 +51,7 @@ const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => 
         name,
         price,
         categoryId,
-        images: !valuefromformlist.images ? [process.env.REACT_APP_NO_IMAGE_AVAILABLE] : valuefromformlist.images,
+        images: !valuefromformlist.images ? [REACT_APP_NO_IMAGE_AVAILABLE] : valuefromformlist.images,
         icon
       }
     }).then(m => console.log("addProduct:", m))
@@ -47,19 +60,17 @@ const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => 
     setIsOpenAddProductModal(false)
   }
 
-  const handleCancel = e => {
-    e.preventDefault()
-    console.log(e)
+  const handleCancel = () => {
     setIsOpenAddProductModal(false)
   }
 
-  const handleChange = e => {
+  const handleChange = (e: { target: HTMLInputElement }) => {
     const { name, value } = e.target
     console.log("target", e.target)
     setValues({ ...values, [name]: value })
   }
 
-  const handleChangeSelect = value => {
+  const handleChangeSelect = (value) => {
     setValues({ ...values, "categoryId": value })
   }
   const { categoriesAll = [] } = data_categories
@@ -68,6 +79,7 @@ const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => 
   return (
     <Modal
       title="Product information"
+      // @ts-ignore
       visible={isOpenAddProductModal}
       footer={false}
       // onOk={onFinish}
@@ -80,11 +92,10 @@ const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => 
       <Form
         // onChange={handleChange}
         name="product" {...formItemLayoutWithOutLabel}
+        // @ts-ignore
         onFinish={onFinish}>
         <Form.Item
           label="Name product"
-          // name="name"
-          // noStyle
           rules={[{ required: true, message: "Name product is required" }]}
         >
           <Input
@@ -94,8 +105,6 @@ const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => 
         </Form.Item>
         <Form.Item
           label="Price"
-          // name="price"
-          // noStyle
           rules={[{ required: true, message: "Price is required" }]}
         >
           <Input
@@ -113,14 +122,15 @@ const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => 
           rules={[{ required: true, message: "Category is required" }]}
         >
           <Select
+            // @ts-ignore
             name="categoryId"
             // onChange={handleChange}
             onChange={handleChangeSelect}
             placeholder="Select category">
-            {categoriesAll.map(category =>
+            {categoriesAll.map((category: Category) =>
               <Select.Option
-                key={category.id}
-                value={category.id}
+                key={String(category.id)}
+                value={String(category.id)}
                 onChange={handleChange}
               >{category.name}</Select.Option>
             )
@@ -159,7 +169,9 @@ const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => 
                       <MinusCircleOutlined
                         className="dynamic-delete-button"
                         onClick={() => {
-                          remove(field.name)
+                      // @ts-ignore
+                          const {name} = field
+                          remove(field?.name: any)
                         }}
                       />
                     ) : null}
@@ -214,7 +226,16 @@ const formItemLayoutWithOutLabel = {
   }
 }
 
-export default connect(state => ({
-    isOpenAddProductModal: state.add_product_modal.isOpen
-  }), { setIsOpenAddProductModal }
+interface StateProps {
+  isOpenAddProductModal: Boolean
+}
+
+const mapStateToProps = (state: RootState): StateProps => ({
+  isOpenAddProductModal: state.add_product_modal.isOpen
+})
+
+export default connect<typeof ProductAddForm>(
+// @ts-ignore
+  mapStateToProps,
+  { setIsOpenAddProductModal }
 )(ProductAddForm)
