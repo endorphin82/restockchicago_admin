@@ -1,7 +1,5 @@
 import React, { useState } from "react"
-import { useMutation } from "@apollo/react-hooks"
 import { Button, Form, Modal, Select, Skeleton, Table, Tooltip } from "antd"
-import { deleteProductMutation, updateProductMutation } from "../Products/mutations"
 import { productsByCategoryIdQuery } from "../Products/query"
 import { connect } from "react-redux"
 import { editProduct } from "../../actions"
@@ -10,10 +8,8 @@ import { PropsRecycleBinProductsTable, PropsUpdateProduct } from "../Products/ty
 import {
   Product,
   ProductCatId,
-  IcategoriesAll
 } from "../../__generated__apollo__/types-query"
 import { EditProductState, REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
-import { updateProduct_updateProduct, updateProductVariables } from "../../__generated__apollo__/types-mutation"
 import { RootState } from "../../reducer"
 import { useProductsByCategoryId } from "../Products/queries/__generated__/ProductsByCategoryId"
 import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
@@ -73,7 +69,6 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
 
     const { categoryId } = valuefromformlist
 
-    // @ts-ignore
     const { name, images, price, icon } = edited_product
     // @ts-ignore
     const id = String(edited_product.id)
