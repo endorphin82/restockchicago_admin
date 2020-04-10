@@ -1,0 +1,14 @@
+query ProductsByCategoryId($categoryId: ID!){
+    productsByCategoryId(categoryId: $categoryId){
+        id
+        name
+        price
+        images
+        icon
+        category{
+            id
+            name
+            icons
+        }
+    }
+}

@@ -1,7 +1,7 @@
 import React from "react"
 import { ColumnProps } from "antd/es/table"
 import { Category } from "../../actions/types"
-import { priceToDollars } from "../../utils"
+import { priceToDollars } from "../../utils/utils"
 import { Button, Table, Tooltip } from "antd"
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined"
 import { PropsProductsTableAntd } from "../Products/types"

@@ -9,7 +9,7 @@ import {
   Product,
   ProductCatId,
   productsByCategoryId_productsByCategoryId
-} from "../../__generated__/types-query"
+} from "../../__generated__apollo__/types-query"
 
 export interface AllTasksResult {
   allTasks: any;  // TODO: Put correct type here

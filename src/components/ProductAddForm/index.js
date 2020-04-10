@@ -9,7 +9,7 @@ import { connect } from "react-redux"
 import { setIsOpenAddProductModal } from "../../actions"
 import ApolloCacheUpdater from "apollo-cache-updater"
 import { productsAllQuery } from "../Products/query"
-import { priceStringToIntCent } from "../../utils"
+import { priceStringToIntCent } from "../../utils/utils"
 
 const ProductAddForm = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => {
   const [addProduct, {}] = useMutation(addProductMutation,

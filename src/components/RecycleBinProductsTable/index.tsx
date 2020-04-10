@@ -7,7 +7,7 @@ import { connect } from "react-redux"
 import { editProduct } from "../../actions"
 import { categoriesAllQuery } from "../Categories/query"
 import { client } from "../../store/apollo-client"
-import { priceToDollars } from "../../utils"
+import { priceToDollars } from "../../utils/utils"
 import { PropsRecycleBinProductsTable, PropsUpdateProduct } from "../Products/types"
 import {
   Product,
@@ -15,9 +15,9 @@ import {
   productsByCategoryIdVariables,
   IproductsAll,
   categoriesAll_categoriesAll, IcategoriesAll
-} from "../../__generated__/types-query"
-import { EditProductState, EditProductStateOrEmpty, REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
-import { updateProduct_updateProduct, updateProductVariables } from "../../__generated__/types-mutation"
+} from "../../__generated__apollo__/types-query"
+import { EditProductState, REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
+import { updateProduct_updateProduct, updateProductVariables } from "../../__generated__apollo__/types-mutation"
 import { RootState } from "../../reducer"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }

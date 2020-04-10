@@ -7,7 +7,7 @@ import { updateProductMutation } from "../Products/mutations"
 import { categoriesAllQuery } from "../Categories/query"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenEditProductModal } from "../../actions"
-import { priceStringToIntCent } from "../../utils"
+import { priceStringToIntCent } from "../../utils/utils"
 
 const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, setIsOpenEditProductModal }) => {
   const [formEditProduct] = Form.useForm()
