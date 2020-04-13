@@ -9,18 +9,18 @@ import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 
 const CategoriesTable: React.FC = () => {
-  const { loading, error, data } = useCategoriesAll()
+  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
 
-  if (loading) {
+  if (cat_loading) {
     return (<div>Loading...</div>) // tslint:disable
   }
-  if (error || !data) {
+  if (cat_error || !cat_data) {
     return (<div>Error...</div>)
   }
-  const { categoriesAll } = data
+  const { categoriesAll } = cat_data
   // @ts-ignore
-  const categoriesAllWithoutRecycleBin = toArraycategoriesAll?.filter((category: Category) => {
-    return category.id !== REACT_APP_RECYCLE_BIN_ID
+  const categoriesAllWithoutRecycleBin = categoriesAll?.filter((category: Category) => {
+    return category?.id !== REACT_APP_RECYCLE_BIN_ID
   })
   const columns = [
     {
