@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Button, Form, Modal, Select, Skeleton, Table, Tooltip } from "antd"
+import { Button, Form, Modal, Select, Table, Tooltip } from "antd"
 import { productsByCategoryIdQuery } from "../Products/query"
 import { connect } from "react-redux"
 import { clearEditProduct, editProduct } from "../../actions"
@@ -18,7 +18,6 @@ import { useUpdateProduct } from "../Products/mutations/__generated__/UpdateProd
 import { MutationAddProductArgs } from "../../__generated__/types"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
-const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 
 interface PropsRecycleBinProductsTable {
   clearEditProduct: () => void
@@ -36,7 +35,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
       categoryId: REACT_APP_RECYCLE_BIN_ID
     }
   })
-  const { loading, error, data } = useCategoriesAll()
+  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
   const [values, setValues] = useState({})
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
   const [isVisualRestoreModal, setIsVisualRestoreModal] = useState(false)
@@ -59,15 +58,25 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
       }]
     }
   )
+  if (cat_loading) {
+    return (<div>Loading...</div>)
+  }
+  if (cat_error || !cat_data) {
+    return (<div>Error...</div>)
+  }
+  const { categoriesAll } = cat_data
 
-  if (!data) return <p>Loading ... </p>
-  const { categoriesAll } = data
-
+  const categoriesAllWithoutRecycleBin = categoriesAll?.filter((category) => {
+    return category?.id !== REACT_APP_RECYCLE_BIN_ID
+  })
   console.log("productDeleted", productDeleted)
 
-  if (recycle_bin_prod_loading) return <p>Loading ... </p>
-
-  // @ts-ignore
+  if (recycle_bin_prod_loading) {
+    return (<div>Loading...</div>)
+  }
+  if (recycle_bin_prod_error || !recycle_bin_prod_data) {
+    return (<div>Error...</div>)
+  }
   const { productsByCategoryId } = recycle_bin_prod_data
 
   console.log("productsByCategoryId", recycle_bin_prod_data?.productsByCategoryId)
@@ -77,10 +86,12 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
     const { categoryId } = valuefromformlist
 
     const { name, images, price, icon } = edited_product
+    // TODO:
     // @ts-ignore
     const id = String(edited_product.id)
 
     console.log("onFinish", valuefromformlist)
+    // TODO:
     // @ts-ignore
     updateProduct<PropsUpdateProduct>({
       variables: {
@@ -92,11 +103,12 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
     )
       .catch((e: Error) => console.log("updateProductERROR:", e))
 
-    // form.resetFields()
     setIsVisualRestoreModal(false)
   }
   const handleEdit = (id: String) => {
-    editProduct(productsByCategoryId.find((prod: Product) => prod.id === id))
+    // TODO:
+    // @ts-ignore
+    editProduct(productsByCategoryId?.find((prod: Product) => prod.id === id))
     setIsVisualRestoreModal(true)
   }
   const handleCancelRestore = () => {
@@ -106,7 +118,8 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
 
   const handleDelete = (id: String) => {
     setIsVisualDeleteModal(true)
-    setProductDeleted(productsByCategoryId.find((prod: Product) => prod.id === id))
+    // @ts-ignore
+    setProductDeleted(productsByCategoryId?.find((prod: Product) => prod.id === id))
   }
 
   const handleOk = (id: String) => {
@@ -123,7 +136,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
     setIsVisualDeleteModal(false)
   }
 
-  const handleChange = (e: { target: HTMLInputElement }) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setValues({ ...values, [name]: value })
   }
@@ -156,10 +169,9 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
             {
               images
                 .map(image => <img
-                  // @ts-ignore
-                  key={image} alt="img"
-                  // @ts-ignore
-                  src={image}
+                  key={String(image)}
+                  alt="img"
+                  src={String(image)}
                   style={styleImagesInTable}/>
                 )
             }
@@ -188,7 +200,10 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
 
   return (
     <>
-      <Table dataSource={productsByCategoryId} columns={columns} rowKey="id"/>
+      <Table
+        // TODO:
+        // @ts-ignore
+        dataSource={Array(productsByCategoryId)} columns={columns} rowKey="id"/>
       <Modal
         title="Delete product?"
         visible={isVisualDeleteModal}
@@ -205,21 +220,25 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
         onCancel={handleCancelRestore}
       >
         <Form
+          name="restore"
+          // TODO:
           // @ts-ignore
-          name="restore" onFinish={onFinish}>
+          onFinish={onFinish}>
           <Form.Item
             label="Category"
             name="categoryId"
+            // TODO:
             // @ts-ignore
             onChange={handleChange}
             rules={[{ required: true, message: "Category is required" }]}
           >
             <Select
               placeholder="Select category">
-              {categoriesAll?.map((category) =>
+              {categoriesAllWithoutRecycleBin?.map((category) =>
                 <Select.Option
+                  // TODO:
                   // @ts-ignore
-                  key={category.id}
+                  key={category?.id}
                 >{category?.name}</Select.Option>
               )
               }
@@ -244,6 +263,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 })
 
 export default connect<StateProps, typeof RecycleBinProductsTable>(
-// @ts-ignore
+  // TODO:
+  // @ts-ignore
   mapStateToProps,
   { editProduct, clearEditProduct })(RecycleBinProductsTable)

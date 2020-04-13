@@ -23,24 +23,24 @@ export const clearRecycleBinDocument = gql`
 export type clearRecycleBinMutationFn = ApolloReactCommon.MutationFunction<clearRecycleBin, clearRecycleBinVariables>;
 
 /**
- * __useclearRecycleBin__
+ * __useClearRecycleBin__
  *
- * To run a mutation, you first call `useclearRecycleBin` within a React component and pass it any options that fit your needs.
- * When your component renders, `useclearRecycleBin` returns a tuple that includes:
+ * To run a mutation, you first call `useClearRecycleBin` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useClearRecycleBin` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [clearRecycleBin, { data, loading, error }] = useclearRecycleBin({
+ * const [clearRecycleBin, { data, loading, error }] = useClearRecycleBin({
  *   variables: {
  *   },
  * });
  */
-export function useclearRecycleBin(baseOptions?: ApolloReactHooks.MutationHookOptions<clearRecycleBin, clearRecycleBinVariables>) {
+export function useClearRecycleBin(baseOptions?: ApolloReactHooks.MutationHookOptions<clearRecycleBin, clearRecycleBinVariables>) {
         return ApolloReactHooks.useMutation<clearRecycleBin, clearRecycleBinVariables>(clearRecycleBinDocument, baseOptions);
       }
-export type clearRecycleBinHookResult = ReturnType<typeof useclearRecycleBin>;
+export type clearRecycleBinHookResult = ReturnType<typeof useClearRecycleBin>;
 export type clearRecycleBinMutationResult = ApolloReactCommon.MutationResult<clearRecycleBin>;
 export type clearRecycleBinMutationOptions = ApolloReactCommon.BaseMutationOptions<clearRecycleBin, clearRecycleBinVariables>;

@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Modal } from "antd"
+import { Form, Modal } from "antd"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenEditProductModal } from "../../actions"
 import { Product, ProductCatId } from "../../__generated__apollo__/types-query"
@@ -23,35 +23,18 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
         }
       }]
     }
-
-    //   {
-    // // @ts-ignore
-    //     update(cache, { data: { updateProduct } }) {
-    //       const dataReadQuery = cache.readQuery<AllTasksResult>({
-    //         query: ProductsByCategoryIdDocument, variables: {
-    //           categoryId: REACT_APP_RECYCLE_BIN_ID
-    //         }
-    //       })!.allTasks
-    //       cache.writeQuery({
-    //         query: ProductsByCategoryIdDocument,
-    //         variables: {
-    //           categoryId: REACT_APP_RECYCLE_BIN_ID
-    //         },
-    //         data: { productsByCategoryId: dataReadQuery?.productsByCategoryId.concat([updateProduct]) }
-    //       })
-    //     }
-    //   }
   )
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState<Boolean>(false)
   const [productDeleted, setProductDeleted] = useState<Product | any>({})
   console.log("productDeleted", productDeleted)
   if (loading) {
-    return (<div>Loading...</div>) // tslint:disable
+    return (<div>Loading...</div>)
   }
   if (error || !data) {
     return (<div>Error...</div>)
   }
   const { productsAll } = data
+  // TODO:
   // @ts-ignore
   const productsAllWithoutRecycleBin = productsAll?.filter((prod: Product) => {
     return prod?.category?.id !== REACT_APP_RECYCLE_BIN_ID
@@ -93,8 +76,7 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
                          handleDeleteProp={handleDelete}/>
       <Modal
         title="Delete product in recycle bin?"
-        // @ts-ignore
-        visible={isVisualDeleteModal}
+        visible={Boolean(isVisualDeleteModal)}
         onOk={() => handleOk(productDeleted)}
         onCancel={handleCancel}
       >
@@ -107,4 +89,4 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
 export default connect<typeof ProductsTable>(null, {
   setIsOpenEditProductModal,
   editProduct
-}, null, { pure: false })(ProductsTable)
+})(ProductsTable)

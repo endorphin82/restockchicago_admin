@@ -33,12 +33,6 @@ export interface PropsProducts {
   setIsOpenAddProductModal: (isOpen: Boolean) => void
 }
 
-export interface PropsProductsTableAntd {
-  handleEditProp: (id: String) => void
-  handleDeleteProp: (id: String) => void
-  productsAllWithoutRecycleBinProp: IproductsByCategoryId
-}
-
 export interface PropsUpdateProduct {
   variables: Product | ProductCatId
 }

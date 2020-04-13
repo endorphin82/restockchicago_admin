@@ -1,4 +1,4 @@
-mutation clearRecycleBin {
+mutation ClearRecycleBin {
     clearRecycleBin{
         __typename
     }
