@@ -1,34 +1,29 @@
 import React, { useEffect, useState } from "react"
 import { Button, Form, Input, Modal, Select, Skeleton } from "antd"
-import { useMutation, useQuery } from "@apollo/react-hooks"
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined"
 import MinusCircleOutlined from "@ant-design/icons/lib/icons/MinusCircleOutlined"
-import { updateProductMutation } from "../Products/mutations"
-import { categoriesAllQuery } from "../Categories/query"
 import { connect } from "react-redux"
-import { clearEditProduct, editProduct, setIsOpenEditProductModal } from "../../actions"
+import { clearEditProduct, setIsOpenEditProductModal } from "../../actions"
 import { priceStringToIntCent } from "../../utils/utils"
-import { Category, MutationUpdateProductArgs } from "../../__generated__/types"
 import { Product, ProductCatId } from "../../__generated__apollo__/types-query"
 import { RootState } from "../../reducer"
+import { useUpdateProduct } from "../Products/mutations/__generated__/UpdateProduct"
+import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
 
 interface PropsProductEditForm {
   edited_product: Product
-  editProduct: (product: MutationUpdateProductArgs) => void
   clearEditProduct: () => void
   setIsOpenEditProductModal: (isOpen: Boolean) => void
   isOpenEditProductModal: Boolean
 }
 
-const ProductEditForm: React.FC<PropsProductEditForm> = ({ clearEditProduct, edited_product, editProduct, isOpenEditProductModal, setIsOpenEditProductModal }) => {
+const ProductEditForm: React.FC<PropsProductEditForm> = ({ clearEditProduct, edited_product, isOpenEditProductModal, setIsOpenEditProductModal }) => {
   const [formEditProduct] = Form.useForm()
-  const [updateProduct, {}] = useMutation(updateProductMutation)
-  const { loading, error, data } = useQuery(categoriesAllQuery)
-  // @ts-ignore
-  const [values, setValues] = useState<ProductCatId>({})
+  const [updateProduct, {}] = useUpdateProduct()
+  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
+  const [values, setValues] = useState<ProductCatId | any>({})
   useEffect(() => {
     setValues(edited_product)
-    console.log("edited_product", edited_product)
   }, [edited_product])
   useEffect(() => {
     formEditProduct.setFieldsValue({
@@ -41,18 +36,13 @@ const ProductEditForm: React.FC<PropsProductEditForm> = ({ clearEditProduct, edi
       formEditProduct.resetFields()
     }
   }, [edited_product])
-  console.log("values+++", values)
-
   const onFinish = (valuefromformlist: ProductCatId) => {
-    console.log("Received values of form:", values)
-
     const { name, categoryId, images, icon } = valuefromformlist
     const id = String(values?.id)
     const price = priceStringToIntCent(String(valuefromformlist.price))
-    console.log("onFinish", valuefromformlist)
     updateProduct({
       variables: {
-        id, name, price, categoryId, images, icon
+        id, name, price, categoryId: String(categoryId), images, icon
       }
     }).then(m => console.log("updateProductMESSAGE:", m))
       .catch(e => console.log("updateProductERROR:", e))
@@ -66,13 +56,13 @@ const ProductEditForm: React.FC<PropsProductEditForm> = ({ clearEditProduct, edi
     const { name, value } = e.target
     setValues({ ...values, [name]: value })
   }
-
-  if (!data.categoriesAll) return <Skeleton/>
-  const { categoriesAll } = data
-  if (!edited_product) return <Skeleton/>
-  const { category } = edited_product
-  console.log("cat", category)
-  console.log("OpenEditProductModal", isOpenEditProductModal)
+  if (cat_loading) {
+    return (<div>Loading...</div>)
+  }
+  if (cat_error || !cat_data) {
+    return (<div>Error...</div>)
+  }
+  const { categoriesAll } = cat_data
 
   return (
     <Modal
@@ -87,20 +77,20 @@ const ProductEditForm: React.FC<PropsProductEditForm> = ({ clearEditProduct, edi
       <Form
         form={formEditProduct}
         name="product" {...formItemLayoutWithOutLabel}
+        // TODO:
         // @ts-ignore
         onFinish={onFinish}>
 
         <Form.Item
           label="Name product"
           name="name"
-          // noStyle
+          // TODO:
           // @ts-ignore
           value={String(values?.name)}
           rules={[{ required: true, message: "Name product is required" }]}
         >
           <Input
-            // name="name"
-            // value={values.name}
+
             onChange={handleChange} placeholder="name product"
             style={{ width: "100%", marginRight: 8 }}/>
         </Form.Item>
@@ -116,21 +106,20 @@ const ProductEditForm: React.FC<PropsProductEditForm> = ({ clearEditProduct, edi
         <Form.Item
           label="Category"
           name="categoryId"
-          // noStyle
-          // defaultValue="5e820a91e3cd504a9fef2b0f"
+          // TODO:
           // @ts-ignore
           onChange={handleChange}
           rules={[{ required: true, message: "Category is required" }]}
         >
           <Select
-            // defaultValue={category.name}
             placeholder="Select category">
-            {categoriesAll.map((category: Category) =>
+            {categoriesAll?.map((category) =>
               <Select.Option
                 key={String(category?.id)}
                 firstActiveValue="nike"
                 value={String(category?.id)}
-              >{category.name}</Select.Option>
+              >{String(category?.name)}
+              </Select.Option>
             )
             }
           </Select>
@@ -232,7 +221,8 @@ const mapStateToProps = (state: RootState): StateProps => ({
 })
 
 export default connect<typeof ProductEditForm>(
+  // TODO:
 // @ts-ignore
   mapStateToProps,
-  { setIsOpenEditProductModal, editProduct, clearEditProduct }
+  { setIsOpenEditProductModal, clearEditProduct }
 )(ProductEditForm)

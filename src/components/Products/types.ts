@@ -9,9 +9,14 @@ import {
   ProductCatId
 } from "../../__generated__apollo__/types-query"
 import { MutationAddProductArgs } from "../../__generated__/types"
+import { ProductsAllDocument, ProductsAll } from "./queries/__generated__/ProductsAll"
 
-export interface AllTasksResult {
-  allTasks: any;  // TODO: Put correct type here
+// export interface AllTasksResult {
+//   allTasks: any;  // TODO: Put correct type here
+// }
+
+export interface IProductsAll {
+  productsAll: ProductsAll  // TODO: Put correct type here
 }
 
 export interface PropsProductsTable {

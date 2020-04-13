@@ -43,7 +43,7 @@ const TabsContainer: React.FC = () => {
     return (<div>Loading...</div>)
   }
   if (cat_error || prod_error || recycle_bin_error || recycle_bin_prod_error || recycle_bin_cat_error || !cat_data || !prod_data || !recycle_bin_prod_data || !recycle_bin_cat_data || !recycle_bin_data) {
-    return (<div>Error...</div>)
+    return (<div>Error.</div>)
   }
   const { categoriesAll } = cat_data
   const { productsAll } = prod_data

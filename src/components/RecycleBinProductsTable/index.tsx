@@ -40,8 +40,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
   const [values, setValues] = useState({})
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
   const [isVisualRestoreModal, setIsVisualRestoreModal] = useState(false)
-  // @ts-ignore
-  const [productDeleted, setProductDeleted] = useState<Product>({})
+  const [productDeleted, setProductDeleted] = useState<Product | any>({})
   const [deleteProduct, {}] = useDeleteProduct({
       refetchQueries: [{
         query: productsByCategoryIdQuery,

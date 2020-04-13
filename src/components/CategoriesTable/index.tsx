@@ -1,10 +1,8 @@
 import React from "react"
-import { useQuery } from "@apollo/react-hooks"
 import { Table } from "antd"
-import { categoriesAllQuery } from "../Categories/query"
 import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
-import { Category } from "../../__generated__/types"
 import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
+import { Category } from "../../__generated__/types"
 
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 
@@ -12,15 +10,16 @@ const CategoriesTable: React.FC = () => {
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
 
   if (cat_loading) {
-    return (<div>Loading...</div>) // tslint:disable
+    return (<div>Loading...</div>)
   }
   if (cat_error || !cat_data) {
     return (<div>Error...</div>)
   }
   const { categoriesAll } = cat_data
+
   // @ts-ignore
   const categoriesAllWithoutRecycleBin = categoriesAll?.filter((category: Category) => {
-    return category?.id !== REACT_APP_RECYCLE_BIN_ID
+    return category.id !== REACT_APP_RECYCLE_BIN_ID
   })
   const columns = [
     {

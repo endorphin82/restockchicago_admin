@@ -43,6 +43,7 @@
   "scripts": {
     "start": "react-scripts start",
     "start-antd": "react-app-rewired start",
+    "build:react": "react-app-env --env-file=.env.production build",
     "build": "react-app-env --env-file=.env.production build",
     "generate": "graphql-codegen",
     "watch-generate": "graphql-codegen --watch",

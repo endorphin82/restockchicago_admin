@@ -4,6 +4,7 @@ import "antd/dist/antd.css"
 import "./App.css"
 
 const App: React.FC = () => {
+  console.log("app.tsx")
   return (
     <div className="App">
       <header className="App-header">
