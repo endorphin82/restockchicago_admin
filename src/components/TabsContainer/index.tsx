@@ -9,33 +9,39 @@ import { productsAllQuery, productsByCategoryIdQuery } from "../Products/query"
 import AndroidOutlined from "@ant-design/icons/lib/icons/AndroidOutlined"
 import RecycleBinIcon from "../RecycleBinIcon"
 import RecycleBin from "../RecycleBin"
+import { useProductsAll } from "../Products/queries/__generated__/ProductsAll"
+import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
 
 const { TabPane } = Tabs
 
-function callback(key) {
+function callback(key: any) {
   console.log(key)
 }
 
-const TabsContainer = () => {
-  const { loading: cat_loading, cat_error, data: cat_data } = useQuery(categoriesAllQuery)
-  const { loading: prod_loading, prod_error, data: prod_data } = useQuery(productsAllQuery)
-  const { loading: recycle_bin_loading, recycle_bin_error, data: recycle_bin_data } = useQuery(productsByCategoryIdQuery, {
+const TabsContainer: React.FC = () => {
+  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
+  const { loading: prod_loading, error: prod_error, data: prod_data } = useProductsAll()
+  const { loading: recycle_bin_loading, error: recycle_bin_error, data: recycle_bin_data } = useQuery(productsByCategoryIdQuery, {
     variables: {
       categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
     }
   })
-  const { loading: recycle_bin_prod_loading, recycle_bin_prod_error, data: recycle_bin_prod_data } = useQuery(productsByCategoryIdQuery, {
+  const { loading: recycle_bin_prod_loading, error: recycle_bin_prod_error, data: recycle_bin_prod_data } = useQuery(productsByCategoryIdQuery, {
     variables: {
       categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
     }
   })
-  const { loading: recycle_bin_cat_loading, recycle_bin_cat_error, data: recycle_bin_cat_data } = useQuery(categoryByIdQuery, {
+  const { loading: recycle_bin_cat_loading, error: recycle_bin_cat_error, data: recycle_bin_cat_data } = useQuery(categoryByIdQuery, {
     variables: {
       id: process.env.REACT_APP_RECYCLE_BIN_ID
     }
   })
-
-  if (cat_loading || prod_loading || recycle_bin_prod_loading || recycle_bin_cat_loading) return <p>Loading ... </p>
+  if (cat_loading || prod_loading || recycle_bin_prod_loading || recycle_bin_loading || recycle_bin_cat_loading) {
+    return (<div>Loading...</div>)
+  }
+  if (cat_error || prod_error || recycle_bin_error || recycle_bin_prod_error || recycle_bin_cat_error || !cat_data || !prod_data || !recycle_bin_prod_data || !recycle_bin_cat_data || !recycle_bin_data) {
+    return (<div>Error...</div>)
+  }
   const { categoriesAll } = cat_data
   const { productsAll } = prod_data
   const { productsByCategoryId } = recycle_bin_prod_data
