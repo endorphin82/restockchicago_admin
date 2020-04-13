@@ -6,7 +6,7 @@ import { connect } from "react-redux"
 import { setIsOpenAddProductModal } from "../../actions"
 import { priceStringToIntCent } from "../../utils/utils"
 import {
-  REACT_APP_NO_IMAGE_AVAILABLE, REACT_APP_RECYCLE_BIN_ID, CategoryRequireIcons
+  REACT_APP_NO_IMAGE_AVAILABLE, REACT_APP_RECYCLE_BIN_ID
 } from "../../actions/types"
 import { RootState } from "../../reducer"
 import { IProductsAll } from "../Products/types"
@@ -21,8 +21,9 @@ type PropsProductAddForm = {
 }
 
 const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => {
-  const [addProduct, {}] = useAddProduct(
+  const [addProduct, {data: add_product_data}] = useAddProduct(
     {
+      // TODO:
       // @ts-ignore
       update(cache, { data: { addProduct } }) {
         const { productsAll } = cache.readQuery<IProductsAll>({ query: ProductsAllDocument })!.productsAll

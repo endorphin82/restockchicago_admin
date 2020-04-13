@@ -97,11 +97,12 @@ const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, h
       </>
     }
   ]
-
   return (
     <>
       <Table
-        dataSource={Array(productsAllWithoutRecycleBinProp)}
+        // TODO:
+        // @ts-ignore
+        dataSource={productsAllWithoutRecycleBinProp}
         columns={columns}
         rowKey="id"/>
     </>

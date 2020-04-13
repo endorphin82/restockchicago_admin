@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Button, Form, Input, Modal, Select, Skeleton } from "antd"
+import { Button, Form, Input, Modal, Select } from "antd"
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined"
 import MinusCircleOutlined from "@ant-design/icons/lib/icons/MinusCircleOutlined"
 import { connect } from "react-redux"

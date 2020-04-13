@@ -1,5 +1,5 @@
 import React from "react"
-import { Empty, Tabs } from "antd"
+import { Empty, Select, Tabs } from "antd"
 import Categories from "../Categories"
 import Products from "../Products"
 import { Query } from "react-apollo"
@@ -45,8 +45,7 @@ const TabsContainer: React.FC = () => {
   if (cat_error || prod_error || recycle_bin_error || recycle_bin_prod_error || recycle_bin_cat_error || !cat_data || !prod_data || !recycle_bin_prod_data || !recycle_bin_cat_data || !recycle_bin_data) {
     return (<div>Error.</div>)
   }
-  const { categoriesAll } = cat_data
-  const { productsAll } = prod_data
+
   const { productsByCategoryId } = recycle_bin_prod_data
   const { categoryById } = recycle_bin_cat_data
 
@@ -61,6 +60,7 @@ const TabsContainer: React.FC = () => {
       <TabPane tab={
         <span>
           <RecycleBinIcon
+            // TODO:
             // @ts-ignore
             categoryById={categoryById} productsByCategoryId={productsByCategoryId}/>
           Recycle bin

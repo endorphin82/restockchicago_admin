@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Button, Form, Modal, Select, Skeleton, Table, Tooltip } from "antd"
+import { Button, Form, Modal, Select, Table, Tooltip } from "antd"
 import { productsByCategoryIdQuery } from "../Products/query"
 import { connect } from "react-redux"
 import { clearEditProduct, editProduct } from "../../actions"
@@ -15,10 +15,9 @@ import { useProductsByCategoryId } from "../Products/queries/__generated__/Produ
 import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
 import { useDeleteProduct } from "../Products/mutations/__generated__/DeleteProduct"
 import { useUpdateProduct } from "../Products/mutations/__generated__/UpdateProduct"
-import { Category, MutationAddProductArgs } from "../../__generated__/types"
+import { MutationAddProductArgs } from "../../__generated__/types"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
-const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 
 interface PropsRecycleBinProductsTable {
   clearEditProduct: () => void
@@ -36,7 +35,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
       categoryId: REACT_APP_RECYCLE_BIN_ID
     }
   })
-  const { loading, error, data } = useCategoriesAll()
+  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
   const [values, setValues] = useState({})
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
   const [isVisualRestoreModal, setIsVisualRestoreModal] = useState(false)
@@ -59,18 +58,25 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
       }]
     }
   )
+  if (cat_loading) {
+    return (<div>Loading...</div>)
+  }
+  if (cat_error || !cat_data) {
+    return (<div>Error...</div>)
+  }
+  const { categoriesAll } = cat_data
 
-  if (!data) return <p>Loading ... </p>
-  const { categoriesAll } = data
-  
   const categoriesAllWithoutRecycleBin = categoriesAll?.filter((category) => {
     return category?.id !== REACT_APP_RECYCLE_BIN_ID
   })
   console.log("productDeleted", productDeleted)
 
-  if (recycle_bin_prod_loading) return <p>Loading ... </p>
-
-  // @ts-ignore
+  if (recycle_bin_prod_loading) {
+    return (<div>Loading...</div>)
+  }
+  if (recycle_bin_prod_error || !recycle_bin_prod_data) {
+    return (<div>Error...</div>)
+  }
   const { productsByCategoryId } = recycle_bin_prod_data
 
   console.log("productsByCategoryId", recycle_bin_prod_data?.productsByCategoryId)
@@ -95,11 +101,11 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
     )
       .catch((e: Error) => console.log("updateProductERROR:", e))
 
-    // form.resetFields()
     setIsVisualRestoreModal(false)
   }
   const handleEdit = (id: String) => {
-    editProduct(productsByCategoryId.find((prod: Product) => prod.id === id))
+    // @ts-ignore
+    editProduct(productsByCategoryId?.find((prod: Product) => prod.id === id))
     setIsVisualRestoreModal(true)
   }
   const handleCancelRestore = () => {
@@ -109,7 +115,8 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
 
   const handleDelete = (id: String) => {
     setIsVisualDeleteModal(true)
-    setProductDeleted(productsByCategoryId.find((prod: Product) => prod.id === id))
+    // @ts-ignore
+    setProductDeleted(productsByCategoryId?.find((prod: Product) => prod.id === id))
   }
 
   const handleOk = (id: String) => {
@@ -190,7 +197,9 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
 
   return (
     <>
-      <Table dataSource={productsByCategoryId} columns={columns} rowKey="id"/>
+      <Table
+        // @ts-ignore
+        dataSource={Array(productsByCategoryId)} columns={columns} rowKey="id"/>
       <Modal
         title="Delete product?"
         visible={isVisualDeleteModal}
