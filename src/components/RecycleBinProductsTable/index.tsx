@@ -2,30 +2,38 @@ import React, { useState } from "react"
 import { Button, Form, Modal, Select, Skeleton, Table, Tooltip } from "antd"
 import { productsByCategoryIdQuery } from "../Products/query"
 import { connect } from "react-redux"
-import { editProduct } from "../../actions"
+import { clearEditProduct, editProduct } from "../../actions"
 import { priceToDollars } from "../../utils/utils"
-import { PropsRecycleBinProductsTable, PropsUpdateProduct } from "../Products/types"
+import { PropsUpdateProduct } from "../Products/types"
 import {
   Product,
-  ProductCatId,
+  ProductCatId
 } from "../../__generated__apollo__/types-query"
-import { EditProductState, mstpEditProductState, REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
+import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
 import { RootState } from "../../reducer"
 import { useProductsByCategoryId } from "../Products/queries/__generated__/ProductsByCategoryId"
 import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
 import { useDeleteProduct } from "../Products/mutations/__generated__/DeleteProduct"
 import { useUpdateProduct } from "../Products/mutations/__generated__/UpdateProduct"
+import { MutationAddProductArgs } from "../../__generated__/types"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 
+interface PropsRecycleBinProductsTable {
+  clearEditProduct: () => void
+  editProduct: (product: MutationAddProductArgs) => void
+  edited_product: MutationAddProductArgs
+}
+
 const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
+                                                                           clearEditProduct,
                                                                            editProduct,
                                                                            edited_product
                                                                          }) => {
   const { loading: recycle_bin_prod_loading, error: recycle_bin_prod_error, data: recycle_bin_prod_data } = useProductsByCategoryId({
     variables: {
-      categoryId: String(REACT_APP_RECYCLE_BIN_ID)
+      categoryId: REACT_APP_RECYCLE_BIN_ID
     }
   })
   const { loading, error, data } = useCategoriesAll()
@@ -93,8 +101,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
     setIsVisualRestoreModal(true)
   }
   const handleCancelRestore = () => {
-    // @ts-ignore
-    editProduct({})
+    clearEditProduct()
     setIsVisualRestoreModal(false)
   }
 
@@ -240,4 +247,4 @@ const mapStateToProps = (state: RootState): StateProps => ({
 export default connect<StateProps, typeof RecycleBinProductsTable>(
 // @ts-ignore
   mapStateToProps,
-  { editProduct })(RecycleBinProductsTable)
+  { editProduct, clearEditProduct })(RecycleBinProductsTable)

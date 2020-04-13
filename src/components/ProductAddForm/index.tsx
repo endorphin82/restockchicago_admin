@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Button, Form, Input, Modal, Select } from "antd"
-import { useMutation, useQuery } from "@apollo/react-hooks"
+import { useQuery } from "@apollo/react-hooks"
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined"
 import MinusCircleOutlined from "@ant-design/icons/lib/icons/MinusCircleOutlined"
 import { addProductMutation } from "../Products/mutations"
@@ -8,19 +8,23 @@ import { categoriesAllQuery } from "../Categories/query"
 import { connect } from "react-redux"
 import { setIsOpenAddProductModal } from "../../actions"
 import { productsAllQuery } from "../Products/query"
-import { priceStringToIntCent } from "../../utils/utils"
+import { priceStringToIntCent, toArray } from "../../utils/utils"
 import {
-  AddProductModalState, Category,
-  EditProductState,
-  mstpAddProductModalState,
+  Category,
   REACT_APP_NO_IMAGE_AVAILABLE
 } from "../../actions/types"
 import { RootState } from "../../reducer"
-import { AllTasksResult, PropsProductAddForm } from "../Products/types"
+import { AllTasksResult } from "../Products/types"
 import { useAddProduct } from "../Products/mutations/__generated__/AddProduct"
 import { ProductsAllDocument } from "../Products/queries/__generated__/ProductsAll"
 import { ProductCatId } from "../../__generated__apollo__/types-query"
 import { Product } from "../../__generated__/types"
+import { CategoriesAllDocument } from "../Categories/queries/__generated__/CategoriesAll"
+
+type PropsProductAddForm = {
+  setIsOpenAddProductModal: (isOpen: Boolean) => void
+  isOpenAddProductModal: Boolean
+}
 
 const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => {
   const [addProduct, {}] = useAddProduct(
@@ -35,9 +39,9 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
       }
     }
   )
-  const { loading, error, data: data_categories } = useQuery(categoriesAllQuery)
+  const { loading, error, data: data_categories } = useQuery(CategoriesAllDocument)
   // @ts-ignore
-  const [values, setValues] = useState<Product>({})
+  const [values, setValues] = useState<ProductCatId>({})
   console.log("values+++", values)
 
   const onFinish = (valuefromformlist: ProductCatId) => {
@@ -70,7 +74,7 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
     setValues({ ...values, [name]: value })
   }
 
-  const handleChangeSelect = (value) => {
+  const handleChangeSelect = (value: string) => {
     setValues({ ...values, "categoryId": value })
   }
   const { categoriesAll = [] } = data_categories
@@ -79,8 +83,7 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
   return (
     <Modal
       title="Product information"
-      // @ts-ignore
-      visible={isOpenAddProductModal}
+      visible={Boolean(isOpenAddProductModal)}
       footer={false}
       // onOk={onFinish}
       onCancel={handleCancel}
@@ -165,16 +168,15 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
                         // value={values.images[index]}
                         style={{ width: "90%", marginRight: 8 }}/>
                     </Form.Item>
-                    {fields.length > 1 ? (
+
+                    {(fields.length >= 1) ? (
                       <MinusCircleOutlined
                         className="dynamic-delete-button"
                         onClick={() => {
-                      // @ts-ignore
-                          const {name} = field
-                          remove(field?.name: any)
+                          remove(field.name)
                         }}
                       />
-                    ) : null}
+                    ) : <span/>}
                   </Form.Item>
                 ))}
                 <Form.Item>

@@ -6,14 +6,26 @@ import MinusCircleOutlined from "@ant-design/icons/lib/icons/MinusCircleOutlined
 import { updateProductMutation } from "../Products/mutations"
 import { categoriesAllQuery } from "../Categories/query"
 import { connect } from "react-redux"
-import { editProduct, setIsOpenEditProductModal } from "../../actions"
+import { clearEditProduct, editProduct, setIsOpenEditProductModal } from "../../actions"
 import { priceStringToIntCent } from "../../utils/utils"
+import { Category, MutationUpdateProductArgs } from "../../__generated__/types"
+import { Product, ProductCatId } from "../../__generated__apollo__/types-query"
+import { RootState } from "../../reducer"
 
-const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, setIsOpenEditProductModal }) => {
+interface PropsProductEditForm {
+  edited_product: Product
+  editProduct: (product: MutationUpdateProductArgs) => void
+  clearEditProduct: () => void
+  setIsOpenEditProductModal: (isOpen: Boolean) => void
+  isOpenEditProductModal: Boolean
+}
+
+const ProductEditForm: React.FC<PropsProductEditForm> = ({ clearEditProduct, edited_product, editProduct, isOpenEditProductModal, setIsOpenEditProductModal }) => {
   const [formEditProduct] = Form.useForm()
   const [updateProduct, {}] = useMutation(updateProductMutation)
   const { loading, error, data } = useQuery(categoriesAllQuery)
-  const [values, setValues] = useState({})
+  // @ts-ignore
+  const [values, setValues] = useState<ProductCatId>({})
   useEffect(() => {
     setValues(edited_product)
     console.log("edited_product", edited_product)
@@ -31,12 +43,12 @@ const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, 
   }, [edited_product])
   console.log("values+++", values)
 
-  const onFinish = (valuefromformlist) => {
+  const onFinish = (valuefromformlist: ProductCatId) => {
     console.log("Received values of form:", values)
 
     const { name, categoryId, images, icon } = valuefromformlist
-    const id = String(values.id)
-    const price = priceStringToIntCent(valuefromformlist.price)
+    const id = String(values?.id)
+    const price = priceStringToIntCent(String(valuefromformlist.price))
     console.log("onFinish", valuefromformlist)
     updateProduct({
       variables: {
@@ -46,15 +58,15 @@ const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, 
       .catch(e => console.log("updateProductERROR:", e))
     setIsOpenEditProductModal(false)
   }
-  const handleCancel = e => {
-    console.log(e)
+  const handleCancel = () => {
     setIsOpenEditProductModal(false)
-    editProduct({})
+    clearEditProduct()
   }
-  const handleChange = e => {
+  const handleChange = (e: { target: HTMLInputElement }) => {
     const { name, value } = e.target
     setValues({ ...values, [name]: value })
   }
+
   if (!data.categoriesAll) return <Skeleton/>
   const { categoriesAll } = data
   if (!edited_product) return <Skeleton/>
@@ -65,22 +77,25 @@ const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, 
   return (
     <Modal
       title={`Product information id: ${values.id}`}
-      visible={isOpenEditProductModal}
+      visible={Boolean(isOpenEditProductModal)}
       footer={false}
       onCancel={handleCancel}
       forceRender={true}
       destroyOnClose={false}
-
     >
 
       <Form
         form={formEditProduct}
-        name="product" {...formItemLayoutWithOutLabel} onFinish={onFinish}>
+        name="product" {...formItemLayoutWithOutLabel}
+        // @ts-ignore
+        onFinish={onFinish}>
+
         <Form.Item
           label="Name product"
           name="name"
           // noStyle
-          value={values.name}
+          // @ts-ignore
+          value={String(values?.name)}
           rules={[{ required: true, message: "Name product is required" }]}
         >
           <Input
@@ -103,17 +118,18 @@ const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, 
           name="categoryId"
           // noStyle
           // defaultValue="5e820a91e3cd504a9fef2b0f"
+          // @ts-ignore
           onChange={handleChange}
           rules={[{ required: true, message: "Category is required" }]}
         >
           <Select
             // defaultValue={category.name}
             placeholder="Select category">
-            {categoriesAll.map(category =>
+            {categoriesAll.map((category: Category) =>
               <Select.Option
-                key={category.id}
+                key={String(category?.id)}
                 firstActiveValue="nike"
-
+                value={String(category?.id)}
               >{category.name}</Select.Option>
             )
             }
@@ -153,7 +169,7 @@ const ProductEditForm = ({ edited_product, editProduct, isOpenEditProductModal, 
                           remove(field.name)
                         }}
                       />
-                    ) : null}
+                    ) : <span/>}
                   </Form.Item>
                 ))}
                 <Form.Item>
@@ -205,8 +221,18 @@ const formItemLayoutWithOutLabel = {
   }
 }
 
-export default connect(state => ({
-    isOpenEditProductModal: state.edit_product_modal.isOpen,
-    edited_product: state.edit_product.product
-  }), { setIsOpenEditProductModal, editProduct }
+interface StateProps {
+  isOpenAddProductModal: Boolean
+  edited_product?: Product | {}
+}
+
+const mapStateToProps = (state: RootState): StateProps => ({
+  isOpenAddProductModal: state.add_product_modal.isOpen,
+  edited_product: state.edit_product.product
+})
+
+export default connect<typeof ProductEditForm>(
+// @ts-ignore
+  mapStateToProps,
+  { setIsOpenEditProductModal, editProduct, clearEditProduct }
 )(ProductEditForm)

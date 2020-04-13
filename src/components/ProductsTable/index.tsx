@@ -72,7 +72,7 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
 
   const handleOk = (productDeleted: ProductCatId | any): void => {
     const { id, name, price, images, icon } = productDeleted
-    const categoryId = String(REACT_APP_RECYCLE_BIN_ID)
+    const categoryId = REACT_APP_RECYCLE_BIN_ID
 
     updateProduct({
       variables: {

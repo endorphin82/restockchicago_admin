@@ -1,12 +1,12 @@
 import {
   Category,
   EditProductState,
-  interfaceREACT_APP_RECYCLE_BIN_ID
+  REACT_APP_RECYCLE_BIN_ID
 } from "../../actions/types"
 import {
   IproductsByCategoryId,
   Product,
-  ProductCatId,
+  ProductCatId
 } from "../../__generated__apollo__/types-query"
 import { MutationAddProductArgs } from "../../__generated__/types"
 
@@ -23,14 +23,8 @@ export interface PropsRecycleBinIcon {
   categoryById: ProductCatId
   productsByCategoryId: IproductsByCategoryId
 }
-export interface PropsProductAddForm {
-  setIsOpenAddProductModal: (isOpen: Boolean) => void
-  isOpenAddProductModal: Boolean
-}
-export interface PropsRecycleBinProductsTable {
-  editProduct: (product: MutationAddProductArgs) => void
-  edited_product: MutationAddProductArgs
-}
+
+
 
 export interface PropsProducts {
   editProduct: (product: EditProductState) => void
@@ -65,7 +59,7 @@ export interface ProductsByCategoryIdQuery {
 }
 
 export interface InputProductsByCategoryIdQueryVars {
-  categoryId: String | interfaceREACT_APP_RECYCLE_BIN_ID
+  categoryId: String | typeof REACT_APP_RECYCLE_BIN_ID
 }
 
 export interface ResponseUpdateProductMutationData {
