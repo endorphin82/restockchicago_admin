@@ -3,23 +3,21 @@ import { Button, Form, Input, Modal, Select } from "antd"
 import { useQuery } from "@apollo/react-hooks"
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined"
 import MinusCircleOutlined from "@ant-design/icons/lib/icons/MinusCircleOutlined"
-import { addProductMutation } from "../Products/mutations"
-import { categoriesAllQuery } from "../Categories/query"
 import { connect } from "react-redux"
 import { setIsOpenAddProductModal } from "../../actions"
 import { productsAllQuery } from "../Products/query"
 import { priceStringToIntCent, toArray } from "../../utils/utils"
 import {
   Category,
-  REACT_APP_NO_IMAGE_AVAILABLE
+  REACT_APP_NO_IMAGE_AVAILABLE, REACT_APP_RECYCLE_BIN_ID
 } from "../../actions/types"
 import { RootState } from "../../reducer"
 import { AllTasksResult } from "../Products/types"
 import { useAddProduct } from "../Products/mutations/__generated__/AddProduct"
 import { ProductsAllDocument } from "../Products/queries/__generated__/ProductsAll"
 import { ProductCatId } from "../../__generated__apollo__/types-query"
-import { Product } from "../../__generated__/types"
 import { CategoriesAllDocument } from "../Categories/queries/__generated__/CategoriesAll"
+import { ProductsByCategoryIdDocument } from "../Products/queries/__generated__/ProductsByCategoryId"
 
 type PropsProductAddForm = {
   setIsOpenAddProductModal: (isOpen: Boolean) => void
@@ -36,7 +34,10 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
           query: productsAllQuery,
           data: { productsAll: productsAll.concat([addProduct]) }
         })
-      }
+      },
+      refetchQueries: [{
+        query: ProductsAllDocument
+      }]
     }
   )
   const { loading, error, data: data_categories } = useQuery(CategoriesAllDocument)

@@ -11,6 +11,9 @@ import RecycleBinIcon from "../RecycleBinIcon"
 import RecycleBin from "../RecycleBin"
 import { useProductsAll } from "../Products/queries/__generated__/ProductsAll"
 import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
+import { useProductsByCategoryId } from "../Products/queries/__generated__/ProductsByCategoryId"
+import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
+import { useCategoryById } from "../Categories/queries/__generated__/CategoryById"
 
 const { TabPane } = Tabs
 
@@ -21,19 +24,19 @@ function callback(key: any) {
 const TabsContainer: React.FC = () => {
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
   const { loading: prod_loading, error: prod_error, data: prod_data } = useProductsAll()
-  const { loading: recycle_bin_loading, error: recycle_bin_error, data: recycle_bin_data } = useQuery(productsByCategoryIdQuery, {
+  const { loading: recycle_bin_loading, error: recycle_bin_error, data: recycle_bin_data } = useProductsByCategoryId({
     variables: {
-      categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
+      categoryId: REACT_APP_RECYCLE_BIN_ID
     }
   })
-  const { loading: recycle_bin_prod_loading, error: recycle_bin_prod_error, data: recycle_bin_prod_data } = useQuery(productsByCategoryIdQuery, {
+  const { loading: recycle_bin_prod_loading, error: recycle_bin_prod_error, data: recycle_bin_prod_data } = useProductsByCategoryId({
     variables: {
-      categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
+      categoryId: REACT_APP_RECYCLE_BIN_ID
     }
   })
-  const { loading: recycle_bin_cat_loading, error: recycle_bin_cat_error, data: recycle_bin_cat_data } = useQuery(categoryByIdQuery, {
+  const { loading: recycle_bin_cat_loading, error: recycle_bin_cat_error, data: recycle_bin_cat_data } = useCategoryById({
     variables: {
-      id: process.env.REACT_APP_RECYCLE_BIN_ID
+      id: REACT_APP_RECYCLE_BIN_ID
     }
   })
   if (cat_loading || prod_loading || recycle_bin_prod_loading || recycle_bin_loading || recycle_bin_cat_loading) {
@@ -46,7 +49,7 @@ const TabsContainer: React.FC = () => {
   const { productsAll } = prod_data
   const { productsByCategoryId } = recycle_bin_prod_data
   const { categoryById } = recycle_bin_cat_data
-  console.log("categoryById", categoryById)
+
   return (
     <Tabs defaultActiveKey="1" onChange={callback}>
       <Tabs.TabPane tab="Products" key="1">
@@ -57,11 +60,13 @@ const TabsContainer: React.FC = () => {
       </TabPane>
       <TabPane tab={
         <span>
-          <RecycleBinIcon categoryById={categoryById} productsByCategoryId={productsByCategoryId}/>
+          <RecycleBinIcon
+            // @ts-ignore
+            categoryById={categoryById} productsByCategoryId={productsByCategoryId}/>
           Recycle bin
         </span>
       } key="3">
-        {(productsByCategoryId.length === 0) ? <Empty/> : <RecycleBin/>}
+        {(productsByCategoryId?.length === 0) ? <Empty/> : <RecycleBin/>}
       </TabPane>
 
     </Tabs>

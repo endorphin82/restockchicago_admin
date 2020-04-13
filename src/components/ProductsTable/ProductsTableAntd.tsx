@@ -1,6 +1,6 @@
 import React from "react"
 import { ColumnProps } from "antd/es/table"
-import { Category } from "../../actions/types"
+import { Category, CategoryRequireIcons } from "../../actions/types"
 import { priceToDollars } from "../../utils/utils"
 import { Button, Table, Tooltip } from "antd"
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined"
@@ -33,7 +33,7 @@ const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, h
       title: "Category",
       dataIndex: "category",
       key: "category",
-      render: (category: Category) => {
+      render: (category: CategoryRequireIcons) => {
         const { name, icons, id } = category
         return (
           <div>
@@ -41,10 +41,9 @@ const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, h
             {
               (icons?.length !== 0)
                 ? <img
-                  // @ts-ignore
-                  key={icons[0]}
-                  // @ts-ignore
-                  alt="img" src={icons[0]} style={styleIconInTable}/> : ""
+                  key={String(icons[0])}
+                  alt="img"
+                  src={String(icons[0])} style={styleIconInTable}/> : ""
             }
             <span> {id} </span>
           </div>)
@@ -60,11 +59,9 @@ const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, h
             {
               images
                 .map((image, index) => <img
-                  // @ts-ignore
-                  key={image+index}
+                  key={String(`${image}+${index}`)}
                   alt="img"
-                  // @ts-ignore
-                  src={image}
+                  src={String(image)}
                   style={styleImagesInTable}/>
                 )
             }
@@ -97,10 +94,11 @@ const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, h
   ]
   return (
     <>
-      // @ts-ignore
-      <Table dataSource={productsAllWithoutRecycleBinProp}
-             columns={columns}
-             rowKey="id"/>
+      <Table
+        // @ts-ignore
+        dataSource={productsAllWithoutRecycleBinProp}
+        columns={columns}
+        rowKey="id"/>
     </>
   )
 }
