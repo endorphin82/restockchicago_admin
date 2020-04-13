@@ -43,8 +43,7 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
     //   }
   )
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState<Boolean>(false)
-  // @ts-ignore
-  const [productDeleted, setProductDeleted] = useState<Product>({})
+  const [productDeleted, setProductDeleted] = useState<Product | any>({})
   console.log("productDeleted", productDeleted)
   if (loading) {
     return (<div>Loading...</div>) // tslint:disable

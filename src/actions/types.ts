@@ -1,6 +1,7 @@
 import { Product } from "../__generated__apollo__/types-query"
 import { MutationAddProductArgs } from "../__generated__/types"
-import { StoreValue } from 'rc-field-form/lib/interface';
+import { StoreValue } from "rc-field-form/lib/interface"
+
 export const IS_OPEN_ADD_MODAL = "IS_OPEN_ADD_MODAL"
 export const IS_OPEN_EDIT_MODAL = "IS_OPEN_EDIT_MODAL"
 export const EDIT_PRODUCT = "EDIT_PRODUCT"
@@ -60,6 +61,10 @@ export interface Category {
   icons?: String[]
 }
 
+export interface ICategory {
+  category: Category
+}
+
 export interface CategoryRequireIcons {
   id?: String
   name?: String
@@ -90,6 +95,6 @@ export interface mstpEditProductState {
 }
 
 export interface editProductAction {
-  type: typeof EDIT_PRODUCT |  typeof CLEAR_EDIT_PRODUCT
+  type: typeof EDIT_PRODUCT | typeof CLEAR_EDIT_PRODUCT
   payload?: Product | {}
 }

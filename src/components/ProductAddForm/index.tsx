@@ -1,23 +1,19 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useState } from "react"
 import { Button, Form, Input, Modal, Select } from "antd"
-import { useQuery } from "@apollo/react-hooks"
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined"
 import MinusCircleOutlined from "@ant-design/icons/lib/icons/MinusCircleOutlined"
 import { connect } from "react-redux"
 import { setIsOpenAddProductModal } from "../../actions"
-import { productsAllQuery } from "../Products/query"
-import { priceStringToIntCent, toArray } from "../../utils/utils"
+import { priceStringToIntCent } from "../../utils/utils"
 import {
-  Category,
-  REACT_APP_NO_IMAGE_AVAILABLE, REACT_APP_RECYCLE_BIN_ID
+  REACT_APP_NO_IMAGE_AVAILABLE, REACT_APP_RECYCLE_BIN_ID, CategoryRequireIcons
 } from "../../actions/types"
 import { RootState } from "../../reducer"
-import { AllTasksResult } from "../Products/types"
+import { IProductsAll } from "../Products/types"
 import { useAddProduct } from "../Products/mutations/__generated__/AddProduct"
 import { ProductsAllDocument } from "../Products/queries/__generated__/ProductsAll"
 import { ProductCatId } from "../../__generated__apollo__/types-query"
-import { CategoriesAllDocument } from "../Categories/queries/__generated__/CategoriesAll"
-import { ProductsByCategoryIdDocument } from "../Products/queries/__generated__/ProductsByCategoryId"
+import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
 
 type PropsProductAddForm = {
   setIsOpenAddProductModal: (isOpen: Boolean) => void
@@ -29,10 +25,10 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
     {
       // @ts-ignore
       update(cache, { data: { addProduct } }) {
-        const { productsAll } = cache.readQuery<AllTasksResult>({ query: ProductsAllDocument })!.allTasks
+        const { productsAll } = cache.readQuery<IProductsAll>({ query: ProductsAllDocument })!.productsAll
         cache.writeQuery({
-          query: productsAllQuery,
-          data: { productsAll: productsAll.concat([addProduct]) }
+          query: ProductsAllDocument,
+          data: { productsAll: productsAll?.concat([addProduct]) }
         })
       },
       refetchQueries: [{
@@ -40,9 +36,8 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
       }]
     }
   )
-  const { loading, error, data: data_categories } = useQuery(CategoriesAllDocument)
-  // @ts-ignore
-  const [values, setValues] = useState<ProductCatId>({})
+  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
+  const [values, setValues] = useState<ProductCatId | any>({})
   console.log("values+++", values)
 
   const onFinish = (valuefromformlist: ProductCatId) => {
@@ -78,7 +73,16 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
   const handleChangeSelect = (value: string) => {
     setValues({ ...values, "categoryId": value })
   }
-  const { categoriesAll = [] } = data_categories
+  if (cat_loading) {
+    return (<div>Loading...</div>)
+  }
+  if (cat_error || !cat_data) {
+    return (<div>Error...</div>)
+  }
+  const { categoriesAll } = cat_data
+  const categoriesAllWithoutRecycleBin = categoriesAll?.filter((category) => {
+    return category?.id !== REACT_APP_RECYCLE_BIN_ID
+  })
   console.log("isOpenAddProductModal", isOpenAddProductModal)
 
   return (
@@ -86,7 +90,6 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
       title="Product information"
       visible={Boolean(isOpenAddProductModal)}
       footer={false}
-      // onOk={onFinish}
       onCancel={handleCancel}
       // forceRender={true}
       // destroyOnClose={true}
@@ -114,7 +117,6 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
           <Input
             name="price"
             onChange={handleChange}
-            // value={0}
             type="number" placeholder="Price $" style={{ width: "100%", marginRight: 8 }}/>
         </Form.Item>
 
@@ -122,21 +124,18 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
           label="Category"
           name="categoryId"
           // noStyle
-          // onChange={handleChange}
           rules={[{ required: true, message: "Category is required" }]}
         >
           <Select
-            // @ts-ignore
-            name="categoryId"
-            // onChange={handleChange}
             onChange={handleChangeSelect}
             placeholder="Select category">
-            {categoriesAll.map((category: Category) =>
+            {categoriesAllWithoutRecycleBin?.map((category) =>
               <Select.Option
-                key={String(category.id)}
-                value={String(category.id)}
+                key={String(category?.id)}
+                value={String(category?.id)}
                 onChange={handleChange}
-              >{category.name}</Select.Option>
+              >{String(category?.name)}
+              </Select.Option>
             )
             }
           </Select>
@@ -166,7 +165,6 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
                       noStyle
                     >
                       <Input
-                        // value={values.images[index]}
                         style={{ width: "90%", marginRight: 8 }}/>
                     </Form.Item>
 
@@ -238,6 +236,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 })
 
 export default connect<typeof ProductAddForm>(
+  // TODO:
 // @ts-ignore
   mapStateToProps,
   { setIsOpenAddProductModal }

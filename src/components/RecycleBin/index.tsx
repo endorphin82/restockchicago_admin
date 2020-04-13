@@ -3,7 +3,6 @@ import RecycleBinProductsTable from "../RecycleBinProductsTable"
 import { Button, Modal, Tooltip } from "antd"
 import { DeleteOutlined } from "@ant-design/icons"
 import { productsByCategoryIdQuery } from "../Products/query"
-import { AllTasksResult } from "../Products/types"
 import { useclearRecycleBin } from "../Products/mutations/__generated__/ClearRecycleBin"
 import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
 
