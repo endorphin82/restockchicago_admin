@@ -86,10 +86,12 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
     const { categoryId } = valuefromformlist
 
     const { name, images, price, icon } = edited_product
+    // TODO:
     // @ts-ignore
     const id = String(edited_product.id)
 
     console.log("onFinish", valuefromformlist)
+    // TODO:
     // @ts-ignore
     updateProduct<PropsUpdateProduct>({
       variables: {
@@ -104,6 +106,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
     setIsVisualRestoreModal(false)
   }
   const handleEdit = (id: String) => {
+    // TODO:
     // @ts-ignore
     editProduct(productsByCategoryId?.find((prod: Product) => prod.id === id))
     setIsVisualRestoreModal(true)
@@ -198,6 +201,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
   return (
     <>
       <Table
+        // TODO:
         // @ts-ignore
         dataSource={Array(productsByCategoryId)} columns={columns} rowKey="id"/>
       <Modal
