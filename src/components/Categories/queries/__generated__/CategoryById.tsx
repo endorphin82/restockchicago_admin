@@ -8,7 +8,6 @@ export type CategoryByIdVariables = {
   id?: Types.Maybe<Types.Scalars['ID']>;
 };
 
-
 export type CategoryById = (
   { __typename: 'Query' }
   & { categoryById?: Types.Maybe<(
@@ -16,7 +15,6 @@ export type CategoryById = (
     & Pick<Types.Category, 'id' | 'name' | 'icons'>
   )> }
 );
-
 
 export const CategoryByIdDocument = gql`
     query CategoryById($id: ID) {

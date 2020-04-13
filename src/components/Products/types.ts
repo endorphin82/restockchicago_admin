@@ -19,10 +19,7 @@ export interface PropsProductsTable {
   setIsOpenEditProductModal: (isOpen: Boolean | undefined) => void
 }
 
-export interface PropsRecycleBinIcon {
-  categoryById: ProductCatId
-  productsByCategoryId: IproductsByCategoryId
-}
+
 
 
 

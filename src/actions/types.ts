@@ -60,6 +60,13 @@ export interface Category {
   icons?: String[]
 }
 
+export interface CategoryRequireIcons {
+  id?: String
+  name?: String
+  icons: String[]
+}
+
+
 export interface setIsOpenAddProductModalAction {
   type: typeof IS_OPEN_ADD_MODAL
   payload: Boolean
