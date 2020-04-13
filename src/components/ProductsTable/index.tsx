@@ -58,7 +58,6 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
     return prod?.category?.id !== REACT_APP_RECYCLE_BIN_ID
   })
 
-  console.log("productsAllWithoutRecycleBin", productsAllWithoutRecycleBin)
   const handleEdit = (id: String): void => {
     const prod = productsAllWithoutRecycleBin?.find((prod: Product) => prod.id === id)
     editProduct(prod)

@@ -3,7 +3,7 @@ import { Button, Tooltip } from "antd"
 import { PlusOutlined } from "@ant-design/icons"
 import CategoriesTable from "../CategoriesTable"
 
-const Categories = () => {
+const Categories: React.FC = () => {
   return (
     <>
       <h1>Categories</h1>
