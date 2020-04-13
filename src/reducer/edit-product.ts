@@ -1,4 +1,4 @@
-import { EDIT_PRODUCT, editProductAction, EditProductState } from "../actions/types"
+import { CLEAR_EDIT_PRODUCT, EDIT_PRODUCT, editProductAction, EditProductState } from "../actions/types"
 
 const initialState: EditProductState = {
   product: {}
@@ -10,6 +10,10 @@ export default (state = initialState, action: editProductAction): EditProductSta
       return {
         ...state,
         product: action.payload
+      }
+      case CLEAR_EDIT_PRODUCT:
+      return {
+        ...initialState
       }
     default:
       return state

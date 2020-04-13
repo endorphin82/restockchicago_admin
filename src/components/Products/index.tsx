@@ -5,13 +5,18 @@ import ProductsTable from "../ProductsTable"
 import ProductEditForm from "../ProductEditForm"
 import ProductAddForm from "../ProductAddForm"
 import { connect } from "react-redux"
-import { editProduct, setIsOpenAddProductModal } from "../../actions"
-import { PropsProducts } from "./types"
+import { clearEditProduct, editProduct, setIsOpenAddProductModal } from "../../actions"
+import { EditProductState } from "../../actions/types"
 
-const Products: React.FC<PropsProducts> = ({ setIsOpenAddProductModal, editProduct }) => {
+export interface PropsProducts {
+  clearEditProduct: () => void
+  setIsOpenAddProductModal: (isOpen: Boolean) => void
+}
+
+const Products: React.FC<PropsProducts> = ({ setIsOpenAddProductModal, clearEditProduct }) => {
 
   const onClickHandler = () => {
-    editProduct({})
+    clearEditProduct()
     setIsOpenAddProductModal(true)
   }
   return (
@@ -31,4 +36,4 @@ const Products: React.FC<PropsProducts> = ({ setIsOpenAddProductModal, editProdu
   )
 }
 
-export default connect<typeof Products>(null, { setIsOpenAddProductModal, editProduct }, null, { pure: false })(Products)
+export default connect<typeof Products>(null, { setIsOpenAddProductModal, clearEditProduct }, null, { pure: false })(Products)

@@ -1,45 +1,46 @@
 import React, { useState } from "react"
 import { Modal } from "antd"
-import { productsByCategoryIdQuery } from "../Products/query"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenEditProductModal } from "../../actions"
 import { Product, ProductCatId } from "../../__generated__apollo__/types-query"
-import { AllTasksResult, PropsProductsTable, PropsUpdateProduct } from "../Products/types"
+import { PropsProductsTable } from "../Products/types"
 
 import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
 
 import ProductsTableAntd from "./ProductsTableAntd"
 import { useProductsAll } from "../Products/queries/__generated__/ProductsAll"
 import { useUpdateProduct } from "../Products/mutations/__generated__/UpdateProduct"
+import { ProductsByCategoryIdDocument } from "../Products/queries/__generated__/ProductsByCategoryId"
 
 const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEditProductModal }) => {
   const { loading, error, data } = useProductsAll()
   const [updateProduct, {}] = useUpdateProduct(
-    // {
-    //   refetchQueries: [{
-    //     query: productsByCategoryIdQuery,
-    //     variables: {
-    //       categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
-    //     }
-    //   }]
-    // }
     {
-  // @ts-ignore
-      update(cache, { data: { updateProduct } }) {
-        const { productsByCategoryId } = cache.readQuery<AllTasksResult>({
-          query: productsByCategoryIdQuery, variables: {
-            categoryId: REACT_APP_RECYCLE_BIN_ID
-          }
-        })!.allTasks
-        cache.writeQuery({
-          query: productsByCategoryIdQuery,
-          variables: {
-            categoryId: REACT_APP_RECYCLE_BIN_ID
-          },
-          data: { productsByCategoryId: productsByCategoryId.concat([updateProduct]) }
-        })
-      }
+      refetchQueries: [{
+        query: ProductsByCategoryIdDocument,
+        variables: {
+          categoryId: REACT_APP_RECYCLE_BIN_ID
+        }
+      }]
     }
+
+    //   {
+    // // @ts-ignore
+    //     update(cache, { data: { updateProduct } }) {
+    //       const dataReadQuery = cache.readQuery<AllTasksResult>({
+    //         query: ProductsByCategoryIdDocument, variables: {
+    //           categoryId: REACT_APP_RECYCLE_BIN_ID
+    //         }
+    //       })!.allTasks
+    //       cache.writeQuery({
+    //         query: ProductsByCategoryIdDocument,
+    //         variables: {
+    //           categoryId: REACT_APP_RECYCLE_BIN_ID
+    //         },
+    //         data: { productsByCategoryId: dataReadQuery?.productsByCategoryId.concat([updateProduct]) }
+    //       })
+    //     }
+    //   }
   )
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState<Boolean>(false)
   // @ts-ignore
@@ -71,7 +72,7 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
 
   const handleOk = (productDeleted: ProductCatId | any): void => {
     const { id, name, price, images, icon } = productDeleted
-    const categoryId = String(REACT_APP_RECYCLE_BIN_ID)
+    const categoryId = REACT_APP_RECYCLE_BIN_ID
 
     updateProduct({
       variables: {

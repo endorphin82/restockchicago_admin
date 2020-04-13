@@ -2,31 +2,39 @@ import React, { useState } from "react"
 import RecycleBinProductsTable from "../RecycleBinProductsTable"
 import { Button, Modal, Tooltip } from "antd"
 import { DeleteOutlined } from "@ant-design/icons"
-import { useMutation } from "@apollo/react-hooks"
-import { clearRecycleBinMutation } from "../Products/mutations"
 import { productsByCategoryIdQuery } from "../Products/query"
-import { IclearRecycleBin, clearRecycleBin_clearRecycleBin } from "../../__generated__apollo__/types-mutation"
-import { IproductsByCategoryId } from "../../__generated__apollo__/types-query"
 import { AllTasksResult } from "../Products/types"
+import { useclearRecycleBin } from "../Products/mutations/__generated__/ClearRecycleBin"
+import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
 
 const RecycleBin = () => {
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState<Boolean>(false)
-  const [clearRecycleBin] = useMutation(clearRecycleBinMutation,
+  const [clearRecycleBin] = useclearRecycleBin(
     {
-      update(cache, { data: { clearRecycleBin } }) {
-        const { productsByCategoryId } = cache.readQuery<AllTasksResult>({
-          query: productsByCategoryIdQuery,
-          variables: {
-            categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
-          }
-        })!.allTasks
-        cache.writeQuery({
-          query: productsByCategoryIdQuery,
-          variables: { categoryId: process.env.REACT_APP_RECYCLE_BIN_ID },
-          data: { productsByCategoryId: [] }
-        })
-      }
+      refetchQueries: [{
+        query: productsByCategoryIdQuery,
+        variables: {
+          categoryId: REACT_APP_RECYCLE_BIN_ID
+        }
+      }]
     }
+
+    // {
+    // // @ts-ignore
+    //   update(cache, { data: { clearRecycleBin } }) {
+    //     const { productsByCategoryId } = cache.readQuery<AllTasksResult>({
+    //       query: productsByCategoryIdQuery,
+    //       variables: {
+    //         categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
+    //       }
+    //     })!.allTasks
+    //     cache.writeQuery({
+    //       query: productsByCategoryIdQuery,
+    //       variables: { categoryId: process.env.REACT_APP_RECYCLE_BIN_ID },
+    //       data: { productsByCategoryId: [] }
+    //     })
+    //   }
+    // }
   )
 
   const handleDelete = () => {
@@ -63,5 +71,4 @@ const RecycleBin = () => {
   )
 }
 
-// @ts-ignore
 export default RecycleBin

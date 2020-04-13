@@ -2,13 +2,17 @@ import {
   EDIT_PRODUCT,
   IS_OPEN_EDIT_MODAL,
   IS_OPEN_ADD_MODAL,
-  editProductAction, setIsOpenEditProductModalAction, setIsOpenAddProductModalAction
+  editProductAction, setIsOpenEditProductModalAction, setIsOpenAddProductModalAction, CLEAR_EDIT_PRODUCT
 } from "./types"
 import { Product } from "../__generated__apollo__/types-query"
 
 export const editProduct = (product: Product): editProductAction => ({
   type: EDIT_PRODUCT,
   payload: product
+})
+
+export const clearEditProduct = () => ({
+  type: CLEAR_EDIT_PRODUCT
 })
 
 export const setIsOpenEditProductModal = (isOpen: Boolean): setIsOpenEditProductModalAction => ({

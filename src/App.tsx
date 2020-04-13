@@ -1,9 +1,9 @@
 import React from "react"
 import TabsContainer from "./components/TabsContainer"
-import "antd/dist/antd.css";
+import "antd/dist/antd.css"
 import "./App.css"
 
-function App() {
+const App: React.FC = () => {
   return (
     <div className="App">
       <header className="App-header">

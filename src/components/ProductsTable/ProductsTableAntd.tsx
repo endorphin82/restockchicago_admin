@@ -59,10 +59,9 @@ const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, h
           ? <div>
             {
               images
-                .map((image) => <img
+                .map((image, index) => <img
                   // @ts-ignore
-
-                  key={image}
+                  key={image+index}
                   alt="img"
                   // @ts-ignore
                   src={image}
@@ -70,7 +69,7 @@ const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, h
                 )
             }
           </div>
-          : <span>no  images </span>
+          : <span>no  images</span>
       }
     },
     {
