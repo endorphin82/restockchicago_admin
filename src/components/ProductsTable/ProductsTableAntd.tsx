@@ -1,13 +1,18 @@
 import React from "react"
-import { ColumnProps } from "antd/es/table"
 import { Category, CategoryRequireIcons } from "../../actions/types"
 import { priceToDollars } from "../../utils/utils"
 import { Button, Table, Tooltip } from "antd"
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined"
-import { PropsProductsTableAntd } from "../Products/types"
+import { IproductsByCategoryId } from "../../__generated__apollo__/types-query"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
+
+interface PropsProductsTableAntd {
+  handleEditProp: (id: String) => void
+  handleDeleteProp: (id: String) => void
+  productsAllWithoutRecycleBinProp: IproductsByCategoryId
+}
 
 const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, handleDeleteProp, productsAllWithoutRecycleBinProp }) => {
   const columns = [
@@ -92,11 +97,11 @@ const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, h
       </>
     }
   ]
+
   return (
     <>
       <Table
-        // @ts-ignore
-        dataSource={productsAllWithoutRecycleBinProp}
+        dataSource={Array(productsAllWithoutRecycleBinProp)}
         columns={columns}
         rowKey="id"/>
     </>

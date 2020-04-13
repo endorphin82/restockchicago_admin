@@ -15,7 +15,7 @@ import { useProductsByCategoryId } from "../Products/queries/__generated__/Produ
 import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
 import { useDeleteProduct } from "../Products/mutations/__generated__/DeleteProduct"
 import { useUpdateProduct } from "../Products/mutations/__generated__/UpdateProduct"
-import { MutationAddProductArgs } from "../../__generated__/types"
+import { Category, MutationAddProductArgs } from "../../__generated__/types"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
@@ -62,7 +62,10 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
 
   if (!data) return <p>Loading ... </p>
   const { categoriesAll } = data
-
+  
+  const categoriesAllWithoutRecycleBin = categoriesAll?.filter((category) => {
+    return category?.id !== REACT_APP_RECYCLE_BIN_ID
+  })
   console.log("productDeleted", productDeleted)
 
   if (recycle_bin_prod_loading) return <p>Loading ... </p>
@@ -123,7 +126,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
     setIsVisualDeleteModal(false)
   }
 
-  const handleChange = (e: { target: HTMLInputElement }) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setValues({ ...values, [name]: value })
   }
@@ -156,10 +159,9 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
             {
               images
                 .map(image => <img
-                  // @ts-ignore
-                  key={image} alt="img"
-                  // @ts-ignore
-                  src={image}
+                  key={String(image)}
+                  alt="img"
+                  src={String(image)}
                   style={styleImagesInTable}/>
                 )
             }
@@ -205,21 +207,25 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
         onCancel={handleCancelRestore}
       >
         <Form
+          name="restore"
+          // TODO:
           // @ts-ignore
-          name="restore" onFinish={onFinish}>
+          onFinish={onFinish}>
           <Form.Item
             label="Category"
             name="categoryId"
+            // TODO:
             // @ts-ignore
             onChange={handleChange}
             rules={[{ required: true, message: "Category is required" }]}
           >
             <Select
               placeholder="Select category">
-              {categoriesAll?.map((category) =>
+              {categoriesAllWithoutRecycleBin?.map((category) =>
                 <Select.Option
+                  // TODO:
                   // @ts-ignore
-                  key={category.id}
+                  key={category?.id}
                 >{category?.name}</Select.Option>
               )
               }
@@ -244,6 +250,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 })
 
 export default connect<StateProps, typeof RecycleBinProductsTable>(
-// @ts-ignore
+  // TODO:
+  // @ts-ignore
   mapStateToProps,
   { editProduct, clearEditProduct })(RecycleBinProductsTable)

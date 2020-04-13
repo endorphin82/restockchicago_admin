@@ -2,45 +2,28 @@ import React, { useState } from "react"
 import RecycleBinProductsTable from "../RecycleBinProductsTable"
 import { Button, Modal, Tooltip } from "antd"
 import { DeleteOutlined } from "@ant-design/icons"
-import { productsByCategoryIdQuery } from "../Products/query"
-import { useclearRecycleBin } from "../Products/mutations/__generated__/ClearRecycleBin"
+import { useClearRecycleBin } from "../Products/mutations/__generated__/ClearRecycleBin"
 import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
+import { ProductsByCategoryIdDocument } from "../Products/queries/__generated__/ProductsByCategoryId"
 
 const RecycleBin = () => {
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState<Boolean>(false)
-  const [clearRecycleBin] = useclearRecycleBin(
+  const [clearRecycleBin] = useClearRecycleBin(
     {
       refetchQueries: [{
-        query: productsByCategoryIdQuery,
+        query: ProductsByCategoryIdDocument,
         variables: {
           categoryId: REACT_APP_RECYCLE_BIN_ID
         }
       }]
     }
-
-    // {
-    // // @ts-ignore
-    //   update(cache, { data: { clearRecycleBin } }) {
-    //     const { productsByCategoryId } = cache.readQuery<AllTasksResult>({
-    //       query: productsByCategoryIdQuery,
-    //       variables: {
-    //         categoryId: process.env.REACT_APP_RECYCLE_BIN_ID
-    //       }
-    //     })!.allTasks
-    //     cache.writeQuery({
-    //       query: productsByCategoryIdQuery,
-    //       variables: { categoryId: process.env.REACT_APP_RECYCLE_BIN_ID },
-    //       data: { productsByCategoryId: [] }
-    //     })
-    //   }
-    // }
   )
 
   const handleDelete = () => {
     setIsVisualDeleteModal(true)
   }
   const handleOk = () => {
-    clearRecycleBin().then(r => console.log("Cleared recycle bin"))
+    clearRecycleBin().then()
     setIsVisualDeleteModal(false)
   }
 
@@ -58,8 +41,7 @@ const RecycleBin = () => {
       </Tooltip>
       <Modal
         title="Clear recycle bin?"
-        // @ts-ignore
-        visible={isVisualDeleteModal}
+        visible={Boolean(isVisualDeleteModal)}
         onOk={handleOk}
         onCancel={handleCancel}
       >

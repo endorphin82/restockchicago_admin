@@ -5,8 +5,7 @@ import ProductsTable from "../ProductsTable"
 import ProductEditForm from "../ProductEditForm"
 import ProductAddForm from "../ProductAddForm"
 import { connect } from "react-redux"
-import { clearEditProduct, editProduct, setIsOpenAddProductModal } from "../../actions"
-import { EditProductState } from "../../actions/types"
+import { clearEditProduct, setIsOpenAddProductModal } from "../../actions"
 
 export interface PropsProducts {
   clearEditProduct: () => void
@@ -19,6 +18,7 @@ const Products: React.FC<PropsProducts> = ({ setIsOpenAddProductModal, clearEdit
     clearEditProduct()
     setIsOpenAddProductModal(true)
   }
+
   return (
     <>
       <h1>Products</h1>
@@ -36,4 +36,4 @@ const Products: React.FC<PropsProducts> = ({ setIsOpenAddProductModal, clearEdit
   )
 }
 
-export default connect<typeof Products>(null, { setIsOpenAddProductModal, clearEditProduct }, null, { pure: false })(Products)
+export default connect<typeof Products>(null, { setIsOpenAddProductModal, clearEditProduct })(Products)
