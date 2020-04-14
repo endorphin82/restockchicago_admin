@@ -9,6 +9,7 @@ import MinusCircleOutlined from "@ant-design/icons/lib/icons/MinusCircleOutlined
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined"
 import { priceStringToIntCent } from "../../utils/utils"
 import { Category } from "../../__generated__/types"
+import { CategoriesAllDocument } from "../Categories/queries/__generated__/CategoriesAll"
 
 type PropsCategoryEditForm = {
   setIsOpenEditCategoryModal: (isOpen: Boolean) => void
@@ -17,7 +18,11 @@ type PropsCategoryEditForm = {
 }
 const CategoryEditForm: React.FC<PropsCategoryEditForm> = ({ edited_category, setIsOpenEditCategoryModal, isOpenEditCategoryModal }) => {
   const [formEditCategory] = Form.useForm()
-  const [updateCategory, {}] = useUpdateCategory()
+  const [updateCategory, {}] = useUpdateCategory({
+    refetchQueries: [{
+      query: CategoriesAllDocument
+    }]
+  })
   const [values, setValues] = useState<Category | any>({})
   useEffect(() => {
     setValues(edited_category)
