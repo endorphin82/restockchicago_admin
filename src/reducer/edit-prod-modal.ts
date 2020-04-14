@@ -1,4 +1,4 @@
-import { EditProductModalState, IS_OPEN_EDIT_MODAL, setIsOpenEditProductModalAction } from "../actions/types"
+import { EditProductModalState, IS_OPEN_EDIT_PRODUCT_MODAL, setIsOpenEditProductModalAction } from "../actions/types"
 
 const initialState: EditProductModalState = {
   isOpen: false
@@ -6,7 +6,7 @@ const initialState: EditProductModalState = {
 
 export default (state = initialState, action: setIsOpenEditProductModalAction): EditProductModalState => {
   switch (action.type) {
-    case IS_OPEN_EDIT_MODAL:
+    case IS_OPEN_EDIT_PRODUCT_MODAL:
       return {
         ...state,
         isOpen: action.payload

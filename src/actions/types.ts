@@ -1,9 +1,9 @@
 import { Product } from "../__generated__apollo__/types-query"
-import { MutationAddProductArgs } from "../__generated__/types"
-import { StoreValue } from "rc-field-form/lib/interface"
 
-export const IS_OPEN_ADD_MODAL = "IS_OPEN_ADD_MODAL"
-export const IS_OPEN_EDIT_MODAL = "IS_OPEN_EDIT_MODAL"
+export const IS_OPEN_ADD_PRODUCT_MODAL = "IS_OPEN_ADD_PRODUCT_MODAL"
+export const IS_OPEN_EDIT_PRODUCT_MODAL = "IS_OPEN_EDIT_PRODUCT_MODAL"
+export const IS_OPEN_EDIT_CATEGORY_MODAL = "IS_OPEN_EDIT_CATEGORY_MODAL"
+export const IS_OPEN_ADD_CATEGORY_MODAL = "IS_OPEN_ADD_CATEGORY_MODAL"
 export const EDIT_PRODUCT = "EDIT_PRODUCT"
 export const CLEAR_EDIT_PRODUCT = "CLEAR_EDIT_PRODUCT"
 export const REACT_APP_RECYCLE_BIN_ID = String(process.env.REACT_APP_RECYCLE_BIN_ID)
@@ -73,7 +73,7 @@ export interface CategoryRequireIcons {
 
 
 export interface setIsOpenAddProductModalAction {
-  type: typeof IS_OPEN_ADD_MODAL
+  type: typeof IS_OPEN_ADD_PRODUCT_MODAL
   payload: Boolean
 }
 
@@ -81,8 +81,25 @@ export interface EditProductModalState {
   isOpen: Boolean
 }
 
+export interface setIsOpenAddCategoryModalAction {
+  type: typeof IS_OPEN_ADD_CATEGORY_MODAL
+  payload: Boolean
+}
+export interface setIsOpenEditCategoryModalAction {
+  type: typeof IS_OPEN_EDIT_CATEGORY_MODAL
+  payload: Boolean
+}
+
+export interface AddCategoryModalState {
+  isOpen: Boolean
+}
+
+export interface EditCategoryModalState {
+  isOpen: Boolean
+}
+
 export interface setIsOpenEditProductModalAction {
-  type: typeof IS_OPEN_EDIT_MODAL
+  type: typeof IS_OPEN_EDIT_PRODUCT_MODAL
   payload: Boolean
 }
 

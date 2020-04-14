@@ -1,0 +1,8 @@
+mutation AddCategory($name: String!, $images: [String], $icons:  [String] ) {
+    addCategory(name: $name,  images: $images, icons: $icons ){
+        id
+        name
+        images
+        icons
+    }
+}
