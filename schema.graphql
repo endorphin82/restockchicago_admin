@@ -14,6 +14,7 @@ type Category {
 }
 
 type Mutation {
+    addCategory(icons: [String], images: [String], name: String!): Category
     addProduct(categoryId: ID!, icon: String, images: [String], name: String!, price: Float!): Product
     addProductsWithoutCategoryInRecycleBin: Product
     clearRecycleBin: Product

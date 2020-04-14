@@ -90,8 +90,8 @@ const CategoriesTable: React.FC = () => {
       dataIndex: "id",
       key: "id",
       render: (id: String) => <>
-        <Tooltip title="Edit this product">
-          <Button onClick={() => handleEdit(id)}
+        <Tooltip title="Edit this category">
+          <Button disabled onClick={() => handleEdit(id)}
                   type="dashed">
             Edit
           </Button>
