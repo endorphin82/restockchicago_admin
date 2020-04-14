@@ -74,6 +74,7 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
   const handleChangeSelect = (value: string) => {
     setValues({ ...values, "categoryId": value })
   }
+
   if (cat_loading) {
     return (<div>Loading...</div>)
   }
