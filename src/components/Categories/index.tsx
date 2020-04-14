@@ -5,6 +5,8 @@ import CategoriesTable from "../CategoriesTable"
 import { connect } from "react-redux"
 import { setIsOpenAddCategoryModal } from "../../actions"
 import CategoryAddForm from "../CategoryAddForm"
+import ProductEditForm from "../ProductEditForm"
+import CategoryEditForm from "../CategoryEditForm"
 
 export interface PropsCategories {
   setIsOpenAddCategoryModal: (isOpen: Boolean) => void
@@ -19,6 +21,7 @@ const Categories: React.FC<PropsCategories> = ({ setIsOpenAddCategoryModal }) =>
     <>
       <h1>Categories</h1>
       <CategoriesTable/>
+      <CategoryEditForm/>
       <CategoryAddForm/>
       <Tooltip title="Add Category">
         <Button

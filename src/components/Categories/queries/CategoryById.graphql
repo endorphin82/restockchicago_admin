@@ -3,5 +3,6 @@ query CategoryById($id: ID){
         id
         name
         icons
+        images
     }
 }

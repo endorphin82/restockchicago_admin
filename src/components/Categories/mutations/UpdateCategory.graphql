@@ -1,0 +1,7 @@
+mutation UpdateCategory($id: ID!, $name: String!, $images: [String], $icons: [String] ) {
+    updateCategory(id: $id, name: $name, images: $images, icons: $icons){
+        id
+        images
+        icons
+    }
+}

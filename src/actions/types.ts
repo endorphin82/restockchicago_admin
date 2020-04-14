@@ -5,7 +5,9 @@ export const IS_OPEN_EDIT_PRODUCT_MODAL = "IS_OPEN_EDIT_PRODUCT_MODAL"
 export const IS_OPEN_EDIT_CATEGORY_MODAL = "IS_OPEN_EDIT_CATEGORY_MODAL"
 export const IS_OPEN_ADD_CATEGORY_MODAL = "IS_OPEN_ADD_CATEGORY_MODAL"
 export const EDIT_PRODUCT = "EDIT_PRODUCT"
+export const EDIT_CATEGORY = "EDIT_CATEGORY"
 export const CLEAR_EDIT_PRODUCT = "CLEAR_EDIT_PRODUCT"
+export const CLEAR_EDIT_CATEGORY = "CLEAR_EDIT_CATEGORY"
 export const REACT_APP_RECYCLE_BIN_ID = String(process.env.REACT_APP_RECYCLE_BIN_ID)
 export const REACT_APP_NO_IMAGE_AVAILABLE = String(process.env.REACT_APP_NO_IMAGE_AVAILABLE)
 
@@ -59,6 +61,7 @@ export interface Category {
   id?: String
   name?: String
   icons?: String[]
+  images?: String[]
 }
 
 export interface ICategory {
@@ -107,11 +110,20 @@ export interface EditProductState {
   product?: Product | {}
 }
 
+export interface EditCategoryState {
+  category?: Category | {}
+}
+
 export interface mstpEditProductState {
   edited_product?: Product | {}
 }
 
 export interface editProductAction {
   type: typeof EDIT_PRODUCT | typeof CLEAR_EDIT_PRODUCT
+  payload?: Product | {}
+}
+
+export interface editCategoryAction {
+  type: typeof EDIT_CATEGORY | typeof CLEAR_EDIT_CATEGORY
   payload?: Product | {}
 }

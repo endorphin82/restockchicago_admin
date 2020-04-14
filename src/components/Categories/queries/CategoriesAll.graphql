@@ -3,5 +3,6 @@ query CategoriesAll{
         id
         name
         icons
+        images
     }
 }
