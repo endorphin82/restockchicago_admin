@@ -3,9 +3,10 @@ import { gql } from "apollo-boost";
 export const categoriesAllQuery = gql`
     query categoriesAll{
         categoriesAll{
-            id,
-            name,
+            id
+            name
             icons
+            images
         }
     }
 `
@@ -15,6 +16,7 @@ export const categoryByIdQuery = gql`
             id
             name
             icons
+            images
         }
     }
 `

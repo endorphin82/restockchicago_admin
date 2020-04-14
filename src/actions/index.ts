@@ -1,7 +1,12 @@
 import {
+  Category,
+  CLEAR_EDIT_CATEGORY,
   CLEAR_EDIT_PRODUCT,
+  EDIT_CATEGORY,
   EDIT_PRODUCT,
-  editProductAction, IS_OPEN_ADD_CATEGORY_MODAL,
+  editCategoryAction,
+  editProductAction,
+  IS_OPEN_ADD_CATEGORY_MODAL,
   IS_OPEN_ADD_PRODUCT_MODAL,
   IS_OPEN_EDIT_CATEGORY_MODAL,
   IS_OPEN_EDIT_PRODUCT_MODAL,
@@ -19,6 +24,15 @@ export const editProduct = (product: Product): editProductAction => ({
 
 export const clearEditProduct = () => ({
   type: CLEAR_EDIT_PRODUCT
+})
+
+export const editCategory = (category: Category): editCategoryAction => ({
+  type: EDIT_CATEGORY,
+  payload: category
+})
+
+export const clearEditCategory = () => ({
+  type: CLEAR_EDIT_CATEGORY
 })
 
 export const setIsOpenEditProductModal = (isOpen: Boolean): setIsOpenEditProductModalAction => ({

@@ -22,6 +22,7 @@ type Mutation {
     deleteCascadeCategoryWithProductsById(id: ID!): Category
     "Description deleteProduct"
     deleteProduct(id: ID!): Product
+    updateCategory(icons: [String], id: ID!, images: [String], name: String!): Category
     updateProduct(categoryId: ID!, icon: String, id: ID!, images: [String], name: String!, price: Float!): Product
 }
 

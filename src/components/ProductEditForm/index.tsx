@@ -37,10 +37,12 @@ const ProductEditForm: React.FC<PropsProductEditForm> = ({ clearEditProduct, edi
       formEditProduct.resetFields()
     }
   }, [edited_product])
+
   const onFinish = (valuefromformlist: ProductCatId) => {
     const { name, categoryId, images, icon } = valuefromformlist
     const id = String(values?.id)
     const price = priceStringToIntCent(String(valuefromformlist.price))
+
     updateProduct({
       variables: {
         id, name, price, categoryId: String(categoryId), images, icon
@@ -191,7 +193,6 @@ const ProductEditForm: React.FC<PropsProductEditForm> = ({ clearEditProduct, edi
           Submit
         </Button>
       </Form>
-
     </Modal>
   )
 }

@@ -6,10 +6,19 @@ import { Category } from "../../__generated__/types"
 import { useDeleteCascadeCategoryWithProductsById } from "../Categories/mutations/__generated__/DeleteCascadeCategoryWithProductsById"
 import { ProductsAllDocument } from "../Products/queries/__generated__/ProductsAll"
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined"
+import { editCategory } from "../../actions"
+import { setIsOpenEditCategoryModal } from "../../actions"
+import { Product } from "../../__generated__apollo__/types-query"
+import { connect } from "react-redux"
 
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 
-const CategoriesTable: React.FC = () => {
+export interface PropsCategoryTable {
+  editCategory: (product: Product | undefined) => void
+  setIsOpenEditCategoryModal: (isOpen: Boolean | undefined) => void
+}
+
+const CategoriesTable: React.FC<PropsCategoryTable> = ({ editCategory, setIsOpenEditCategoryModal }) => {
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
   const [deleteCascadeCategoryWithProductsById, {}] = useDeleteCascadeCategoryWithProductsById({
       refetchQueries: [{
@@ -33,9 +42,9 @@ const CategoriesTable: React.FC = () => {
   })
 
   const handleEdit = (id: String): void => {
-    // const prod = productsAllWithoutRecycleBin?.find((prod: Product) => prod.id === id)
-    // editProduct(prod)
-    // setIsOpenEditProductModal(true)
+    const cat = categoriesAllWithoutRecycleBin?.find((cat: Category) => cat.id === id)
+    editCategory(cat)
+    setIsOpenEditCategoryModal(true)
   }
 
   const handleDelete = (id: String): void => {
@@ -91,7 +100,7 @@ const CategoriesTable: React.FC = () => {
       key: "id",
       render: (id: String) => <>
         <Tooltip title="Edit this category">
-          <Button disabled onClick={() => handleEdit(id)}
+          <Button onClick={() => handleEdit(id)}
                   type="dashed">
             Edit
           </Button>
@@ -124,4 +133,6 @@ const CategoriesTable: React.FC = () => {
   )
 }
 
-export default CategoriesTable
+export default connect<typeof CategoriesTable>(null, {
+  editCategory, setIsOpenEditCategoryModal
+})(CategoriesTable)
