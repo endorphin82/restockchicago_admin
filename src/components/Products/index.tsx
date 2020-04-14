@@ -7,7 +7,7 @@ import ProductAddForm from "../ProductAddForm"
 import { connect } from "react-redux"
 import { clearEditProduct, setIsOpenAddProductModal } from "../../actions"
 
-export interface PropsProducts {
+interface PropsProducts {
   clearEditProduct: () => void
   setIsOpenAddProductModal: (isOpen: Boolean) => void
 }
