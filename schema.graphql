@@ -1,0 +1,45 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Category {
+    category: [Product]
+    icons: [String]
+    id: ID
+    images: [String]
+    name: String!
+}
+
+type Mutation {
+    addProduct(categoryId: ID!, icon: String, images: [String], name: String!, price: Float!): Product
+    addProductsWithoutCategoryInRecycleBin: Product
+    clearRecycleBin: Product
+    "Delete Category with products"
+    deleteCascadeCategoryWithProductsById(id: ID!): Category
+    "Description deleteProduct"
+    deleteProduct(id: ID!): Product
+    updateProduct(categoryId: ID!, icon: String, id: ID!, images: [String], name: String!, price: Float!): Product
+}
+
+type Product {
+    category: Category
+    icon: String
+    id: ID
+    images: [String]
+    name: String!
+    price: Float!
+}
+
+type Query {
+    categoriesAll: [Category]
+    categoriesByListNames(names: [String]): [Category]
+    categoryById(id: ID): Category
+    categoryByName(name: String): [Category]
+    productById(id: ID): Product
+    productByName(name: String): [Product]
+    productsAll: [Product]
+    productsByCategoryId(categoryId: ID): [Product]
+}

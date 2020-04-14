@@ -4,23 +4,23 @@ import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 
-export type clearRecycleBinVariables = {};
+export type ClearRecycleBinVariables = {};
 
 
-export type clearRecycleBin = (
+export type ClearRecycleBin = (
   { __typename: 'Mutation' }
   & { clearRecycleBin?: Types.Maybe<{ __typename: 'Product' }> }
 );
 
 
-export const clearRecycleBinDocument = gql`
-    mutation clearRecycleBin {
+export const ClearRecycleBinDocument = gql`
+    mutation ClearRecycleBin {
   clearRecycleBin {
     __typename
   }
 }
     `;
-export type clearRecycleBinMutationFn = ApolloReactCommon.MutationFunction<clearRecycleBin, clearRecycleBinVariables>;
+export type ClearRecycleBinMutationFn = ApolloReactCommon.MutationFunction<ClearRecycleBin, ClearRecycleBinVariables>;
 
 /**
  * __useClearRecycleBin__
@@ -38,9 +38,9 @@ export type clearRecycleBinMutationFn = ApolloReactCommon.MutationFunction<clear
  *   },
  * });
  */
-export function useClearRecycleBin(baseOptions?: ApolloReactHooks.MutationHookOptions<clearRecycleBin, clearRecycleBinVariables>) {
-        return ApolloReactHooks.useMutation<clearRecycleBin, clearRecycleBinVariables>(clearRecycleBinDocument, baseOptions);
+export function useClearRecycleBin(baseOptions?: ApolloReactHooks.MutationHookOptions<ClearRecycleBin, ClearRecycleBinVariables>) {
+        return ApolloReactHooks.useMutation<ClearRecycleBin, ClearRecycleBinVariables>(ClearRecycleBinDocument, baseOptions);
       }
-export type clearRecycleBinHookResult = ReturnType<typeof useClearRecycleBin>;
-export type clearRecycleBinMutationResult = ApolloReactCommon.MutationResult<clearRecycleBin>;
-export type clearRecycleBinMutationOptions = ApolloReactCommon.BaseMutationOptions<clearRecycleBin, clearRecycleBinVariables>;
+export type ClearRecycleBinHookResult = ReturnType<typeof useClearRecycleBin>;
+export type ClearRecycleBinMutationResult = ApolloReactCommon.MutationResult<ClearRecycleBin>;
+export type ClearRecycleBinMutationOptions = ApolloReactCommon.BaseMutationOptions<ClearRecycleBin, ClearRecycleBinVariables>;

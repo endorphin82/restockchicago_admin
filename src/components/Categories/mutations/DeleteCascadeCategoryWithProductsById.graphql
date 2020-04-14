@@ -1,0 +1,5 @@
+mutation DeleteCascadeCategoryWithProductsById($id: ID!) {
+    deleteCascadeCategoryWithProductsById(id: $id){
+    __typename
+    }
+}

@@ -203,7 +203,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
       <Table
         // TODO:
         // @ts-ignore
-        dataSource={Array(productsByCategoryId)} columns={columns} rowKey="id"/>
+        dataSource={productsByCategoryId} columns={columns} rowKey="id"/>
       <Modal
         title="Delete product?"
         visible={isVisualDeleteModal}
