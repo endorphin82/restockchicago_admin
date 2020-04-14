@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Form, Modal } from "antd"
+import { Modal } from "antd"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenEditProductModal } from "../../actions"
 import { Product, ProductCatId } from "../../__generated__apollo__/types-query"

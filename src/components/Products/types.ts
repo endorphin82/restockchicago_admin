@@ -24,10 +24,6 @@ export interface PropsProductsTable {
   setIsOpenEditProductModal: (isOpen: Boolean | undefined) => void
 }
 
-
-
-
-
 export interface PropsProducts {
   editProduct: (product: EditProductState) => void
   setIsOpenAddProductModal: (isOpen: Boolean) => void

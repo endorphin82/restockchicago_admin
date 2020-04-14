@@ -9,6 +9,7 @@ import { Product, ProductCatId } from "../../__generated__apollo__/types-query"
 import { RootState } from "../../reducer"
 import { useUpdateProduct } from "../Products/mutations/__generated__/UpdateProduct"
 import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
+import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
 
 interface PropsProductEditForm {
   edited_product: Product
@@ -63,6 +64,9 @@ const ProductEditForm: React.FC<PropsProductEditForm> = ({ clearEditProduct, edi
     return (<div>Error...</div>)
   }
   const { categoriesAll } = cat_data
+  const categoriesAllWithoutRecycleBin = categoriesAll?.filter((category) => {
+    return category?.id !== REACT_APP_RECYCLE_BIN_ID
+  })
 
   return (
     <Modal
@@ -70,8 +74,8 @@ const ProductEditForm: React.FC<PropsProductEditForm> = ({ clearEditProduct, edi
       visible={Boolean(isOpenEditProductModal)}
       footer={false}
       onCancel={handleCancel}
-      forceRender={true}
-      destroyOnClose={false}
+      // forceRender={true}
+      // destroyOnClose={false}
     >
 
       <Form
@@ -113,7 +117,7 @@ const ProductEditForm: React.FC<PropsProductEditForm> = ({ clearEditProduct, edi
         >
           <Select
             placeholder="Select category">
-            {categoriesAll?.map((category) =>
+            {categoriesAllWithoutRecycleBin?.map((category) =>
               <Select.Option
                 key={String(category?.id)}
                 firstActiveValue="nike"
@@ -211,12 +215,12 @@ const formItemLayoutWithOutLabel = {
 }
 
 interface StateProps {
-  isOpenAddProductModal: Boolean
+  isOpenEditProductModal: Boolean
   edited_product?: Product | {}
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  isOpenAddProductModal: state.add_product_modal.isOpen,
+  isOpenEditProductModal: state.edit_product_modal.isOpen,
   edited_product: state.edit_product.product
 })
 
