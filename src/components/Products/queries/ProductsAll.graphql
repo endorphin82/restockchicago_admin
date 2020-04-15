@@ -5,10 +5,11 @@ query ProductsAll{
         price
         images
         icon
-        category{
+        categories{
             id
             name
             icons
+            images
         }
     }
 }

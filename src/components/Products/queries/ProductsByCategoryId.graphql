@@ -1,14 +1,15 @@
-query ProductsByCategoryId($categoryId: ID!){
-    productsByCategoryId(categoryId: $categoryId){
+query ProductsByCategoryId($id: String!){
+    productsByCategoryId(id: $id){
         id
         name
         price
         images
         icon
-        category{
+        categories{
             id
             name
             icons
+            images
         }
     }
 }
