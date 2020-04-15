@@ -95,6 +95,25 @@ const CategoriesTable: React.FC<PropsCategoryTable> = ({ editCategory, setIsOpen
       }
     },
     {
+      title: "Images",
+      dataIndex: "images",
+      key: "images",
+      render: (icons: String[]) => {
+        return (icons.length !== 0)
+          ? <div>
+            {
+              icons
+                .map(image => <img
+                  key={String(image)} alt="img"
+                  src={String(image)}
+                  style={styleIconInTable}/>
+                )
+            }
+          </div>
+          : <span>no images</span>
+      }
+    },
+    {
       title: "Actions",
       dataIndex: "id",
       key: "id",
