@@ -10,19 +10,19 @@ type Category {
     id: String
     images: [String]
     name: String!
-    products: [Product]
+    parent: String
 }
 
 type Mutation {
-    addCategory(icons: [String], id: String!, images: [String], name: String!): Category
+    addCategory(icons: [String], id: String!, images: [String], name: String!, parent: String): Category
     addProduct(categories: [String], icon: String, images: [String], name: String!, price: Float!): Product
     addProductsWithoutCategoryInWithoutCategory: Product
     clearRecycleBin: Product
     "Delete Category with products"
-    deleteCascadeCategoryWithProductsById(id: ID!): Category
+    deleteCascadeCategoryWithProductsById(id: String!): Category
     "Description deleteProduct"
     deleteProduct(id: ID!): Product
-    updateCategory(icons: [String], id: String!, images: [String], name: String!): Category
+    updateCategory(icons: [String], id: String!, images: [String], name: String!, parent: String): Category
     updateProduct(categories: [String], icon: String, id: ID!, images: [String], name: String!, price: Float!): Product
 }
 

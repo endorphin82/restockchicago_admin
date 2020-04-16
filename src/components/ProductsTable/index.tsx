@@ -2,7 +2,6 @@ import React, { useState } from "react"
 import { Modal } from "antd"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenEditProductModal } from "../../actions"
-import { Product, ProductCatId } from "../../__generated__apollo__/types-query"
 import { PropsProductsTable } from "../Products/types"
 
 import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
@@ -11,6 +10,7 @@ import ProductsTableAntd from "./ProductsTableAntd"
 import { useProductsAll } from "../Products/queries/__generated__/ProductsAll"
 import { useUpdateProduct } from "../Products/mutations/__generated__/UpdateProduct"
 import { ProductsByCategoryIdDocument } from "../Products/queries/__generated__/ProductsByCategoryId"
+import { Product } from "../../__generated__/types"
 
 const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEditProductModal }) => {
   const { loading, error, data } = useProductsAll()
@@ -19,11 +19,12 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
       refetchQueries: [{
         query: ProductsByCategoryIdDocument,
         variables: {
-          categoryId: REACT_APP_RECYCLE_BIN_ID
+          catId: REACT_APP_RECYCLE_BIN_ID
         }
       }]
     }
   )
+
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState<Boolean>(false)
   const [productDeleted, setProductDeleted] = useState<Product | any>({})
   console.log("productDeleted", productDeleted)
@@ -37,7 +38,7 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
   // TODO:
   // @ts-ignore
   const productsAllWithoutRecycleBin = productsAll?.filter((prod: Product) => {
-    return prod?.category?.id !== REACT_APP_RECYCLE_BIN_ID
+    return prod?.categories?.id !== REACT_APP_RECYCLE_BIN_ID
   })
 
   const handleEdit = (id: String): void => {
@@ -51,13 +52,14 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
     setProductDeleted(productsAllWithoutRecycleBin.find((prod: Product) => prod.id === id))
   }
 
-  const handleOk = (productDeleted: ProductCatId | any): void => {
-    const { id, name, price, images, icon } = productDeleted
-    const categoryId = REACT_APP_RECYCLE_BIN_ID
+  const handleOk = (productDeleted: Product | any): void => {
+    const { id, name, price, categories, images, icon } = productDeleted
+
+    categories.push(REACT_APP_RECYCLE_BIN_ID)
 
     updateProduct({
       variables: {
-        id, name, price, categoryId, images, icon
+        id, name, price, categories, images, icon
       }
     }).then(m => console.log("updateProductMESSAGE:", m))
       .catch((e: Error) => console.log("updateProductERROR:", e))

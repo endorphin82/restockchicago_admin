@@ -4,5 +4,6 @@ query CategoriesAll{
         name
         icons
         images
+        parent
     }
 }

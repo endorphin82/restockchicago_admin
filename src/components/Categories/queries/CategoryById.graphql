@@ -1,8 +1,9 @@
-query CategoryById($id: ID){
+query CategoryById($id: String){
     categoryById(id: $id){
         id
         name
         icons
         images
+        parent
     }
 }

@@ -1,21 +1,19 @@
 import React, { useState } from "react"
 import { Button, Form, Modal, Select, Table, Tooltip } from "antd"
-import { productsByCategoryIdQuery } from "../Products/query"
 import { connect } from "react-redux"
 import { clearEditProduct, editProduct } from "../../actions"
 import { priceToDollars } from "../../utils/utils"
 import { PropsUpdateProduct } from "../Products/types"
-import {
-  Product,
-  ProductCatId
-} from "../../__generated__apollo__/types-query"
 import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
 import { RootState } from "../../reducer"
-import { useProductsByCategoryId } from "../Products/queries/__generated__/ProductsByCategoryId"
+import {
+  ProductsByCategoryIdDocument,
+  useProductsByCategoryId
+} from "../Products/queries/__generated__/ProductsByCategoryId"
 import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
 import { useDeleteProduct } from "../Products/mutations/__generated__/DeleteProduct"
 import { useUpdateProduct } from "../Products/mutations/__generated__/UpdateProduct"
-import { MutationAddProductArgs } from "../../__generated__/types"
+import { MutationAddProductArgs, Product } from "../../__generated__/types"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 
@@ -32,7 +30,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
                                                                          }) => {
   const { loading: recycle_bin_prod_loading, error: recycle_bin_prod_error, data: recycle_bin_prod_data } = useProductsByCategoryId({
     variables: {
-      categoryId: REACT_APP_RECYCLE_BIN_ID
+      id: REACT_APP_RECYCLE_BIN_ID
     }
   })
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
@@ -42,7 +40,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
   const [productDeleted, setProductDeleted] = useState<Product | any>({})
   const [deleteProduct, {}] = useDeleteProduct({
       refetchQueries: [{
-        query: productsByCategoryIdQuery,
+        query: ProductsByCategoryIdDocument,
         variables: {
           categoryId: REACT_APP_RECYCLE_BIN_ID
         }
@@ -51,7 +49,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
   )
   const [updateProduct, {}] = useUpdateProduct({
       refetchQueries: [{
-        query: productsByCategoryIdQuery,
+        query: ProductsByCategoryIdDocument,
         variables: {
           categoryId: REACT_APP_RECYCLE_BIN_ID
         }
@@ -80,12 +78,11 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
   const { productsByCategoryId } = recycle_bin_prod_data
 
   console.log("productsByCategoryId", recycle_bin_prod_data?.productsByCategoryId)
-  const onFinish = (valuefromformlist: ProductCatId) => {
+  const onFinish = (valuefromformlist: Product) => {
     console.log("Received values of form:", values)
 
-    const { categoryId } = valuefromformlist
 
-    const { name, images, price, icon } = edited_product
+    const { name, images, price, categories, icon } = edited_product
     // TODO:
     // @ts-ignore
     const id = String(edited_product.id)
@@ -95,7 +92,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
     // @ts-ignore
     updateProduct<PropsUpdateProduct>({
       variables: {
-        id, name, price, categoryId, images, icon
+        id, name, price, categories, images, icon
       }
     }).then((m: String) => {
         console.log("updateProductMESSAGE:", m)
@@ -118,6 +115,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
 
   const handleDelete = (id: String) => {
     setIsVisualDeleteModal(true)
+    // TODO:
     // @ts-ignore
     setProductDeleted(productsByCategoryId?.find((prod: Product) => prod.id === id))
   }
@@ -252,7 +250,6 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
     </>
   )
 }
-
 
 interface StateProps {
   edited_product?: Product | {}

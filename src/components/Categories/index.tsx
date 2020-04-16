@@ -5,7 +5,6 @@ import CategoriesTable from "../CategoriesTable"
 import { connect } from "react-redux"
 import { setIsOpenAddCategoryModal } from "../../actions"
 import CategoryAddForm from "../CategoryAddForm"
-import ProductEditForm from "../ProductEditForm"
 import CategoryEditForm from "../CategoryEditForm"
 
 export interface PropsCategories {

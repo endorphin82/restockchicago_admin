@@ -1,8 +1,9 @@
-mutation AddCategory($name: String!, $images: [String], $icons:  [String] ) {
-    addCategory(name: $name,  images: $images, icons: $icons ){
+mutation AddCategory($id: String!, $name: String!, $images: [String], $icons: [String], $parent: String ) {
+    addCategory(id: $id, name: $name, images: $images, icons: $icons, parent: $parent ){
         id
         name
         images
         icons
+        parent
     }
 }

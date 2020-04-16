@@ -1,15 +1,12 @@
 import {
-  Category,
   EditProductState,
   REACT_APP_RECYCLE_BIN_ID
 } from "../../actions/types"
 import {
-  IproductsByCategoryId,
-  Product,
   ProductCatId
 } from "../../__generated__apollo__/types-query"
-import { MutationAddProductArgs } from "../../__generated__/types"
-import { ProductsAllDocument, ProductsAll } from "./queries/__generated__/ProductsAll"
+import { Product, Category, MutationAddProductArgs } from "../../__generated__/types"
+import { ProductsAll } from "./queries/__generated__/ProductsAll"
 
 // export interface AllTasksResult {
 //   allTasks: any;  // TODO: Put correct type here
