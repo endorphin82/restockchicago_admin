@@ -11,7 +11,7 @@ export type CategoriesAll = (
   { __typename: 'Query' }
   & { categoriesAll?: Types.Maybe<Array<Types.Maybe<(
     { __typename: 'Category' }
-    & Pick<Types.Category, 'id' | 'name' | 'icons' | 'images'>
+    & Pick<Types.Category, 'id' | 'name' | 'icons' | 'images' | 'parent'>
   )>>> }
 );
 
@@ -23,6 +23,7 @@ export const CategoriesAllDocument = gql`
     name
     icons
     images
+    parent
   }
 }
     `;

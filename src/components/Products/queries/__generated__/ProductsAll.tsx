@@ -12,10 +12,10 @@ export type ProductsAll = (
   & { productsAll?: Types.Maybe<Array<Types.Maybe<(
     { __typename: 'Product' }
     & Pick<Types.Product, 'id' | 'name' | 'price' | 'images' | 'icon'>
-    & { category?: Types.Maybe<(
+    & { categories?: Types.Maybe<Array<Types.Maybe<(
       { __typename: 'Category' }
-      & Pick<Types.Category, 'id' | 'name' | 'icons'>
-    )> }
+      & Pick<Types.Category, 'id' | 'name' | 'icons' | 'images' | 'parent'>
+    )>>> }
   )>>> }
 );
 
@@ -28,10 +28,12 @@ export const ProductsAllDocument = gql`
     price
     images
     icon
-    category {
+    categories {
       id
       name
       icons
+      images
+      parent
     }
   }
 }

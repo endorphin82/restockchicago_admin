@@ -8,7 +8,7 @@ export type UpdateProductVariables = {
   id: Types.Scalars['ID'];
   name: Types.Scalars['String'];
   price: Types.Scalars['Float'];
-  categoryId: Types.Scalars['ID'];
+  categories?: Types.Maybe<Array<Types.Maybe<Types.Scalars['String']>>>;
   images?: Types.Maybe<Array<Types.Maybe<Types.Scalars['String']>>>;
   icon?: Types.Maybe<Types.Scalars['String']>;
 };
@@ -19,26 +19,28 @@ export type UpdateProduct = (
   & { updateProduct?: Types.Maybe<(
     { __typename: 'Product' }
     & Pick<Types.Product, 'id' | 'name' | 'price' | 'images' | 'icon'>
-    & { category?: Types.Maybe<(
+    & { categories?: Types.Maybe<Array<Types.Maybe<(
       { __typename: 'Category' }
-      & Pick<Types.Category, 'id' | 'name' | 'icons'>
-    )> }
+      & Pick<Types.Category, 'id' | 'name' | 'icons' | 'images' | 'parent'>
+    )>>> }
   )> }
 );
 
 
 export const UpdateProductDocument = gql`
-    mutation UpdateProduct($id: ID!, $name: String!, $price: Float!, $categoryId: ID!, $images: [String], $icon: String) {
-  updateProduct(id: $id, name: $name, price: $price, categoryId: $categoryId, images: $images, icon: $icon) {
+    mutation UpdateProduct($id: ID!, $name: String!, $price: Float!, $categories: [String], $images: [String], $icon: String) {
+  updateProduct(id: $id, name: $name, price: $price, categories: $categories, images: $images, icon: $icon) {
     id
     name
     price
     images
     icon
-    category {
+    categories {
       id
       name
       icons
+      images
+      parent
     }
   }
 }
@@ -61,7 +63,7 @@ export type UpdateProductMutationFn = ApolloReactCommon.MutationFunction<UpdateP
  *      id: // value for 'id'
  *      name: // value for 'name'
  *      price: // value for 'price'
- *      categoryId: // value for 'categoryId'
+ *      categories: // value for 'categories'
  *      images: // value for 'images'
  *      icon: // value for 'icon'
  *   },

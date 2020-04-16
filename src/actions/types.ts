@@ -9,6 +9,7 @@ export const EDIT_CATEGORY = "EDIT_CATEGORY"
 export const CLEAR_EDIT_PRODUCT = "CLEAR_EDIT_PRODUCT"
 export const CLEAR_EDIT_CATEGORY = "CLEAR_EDIT_CATEGORY"
 export const REACT_APP_RECYCLE_BIN_ID = String(process.env.REACT_APP_RECYCLE_BIN_ID)
+export const REACT_APP_WITHOUT_CATEGORY_ID= String(process.env.REACT_APP_WITHOUT_CATEGORY_ID)
 export const REACT_APP_NO_IMAGE_AVAILABLE = String(process.env.REACT_APP_NO_IMAGE_AVAILABLE)
 
 // export interface FieldData {

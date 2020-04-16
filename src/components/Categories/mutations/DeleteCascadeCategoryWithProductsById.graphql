@@ -1,4 +1,4 @@
-mutation DeleteCascadeCategoryWithProductsById($id: ID!) {
+mutation DeleteCascadeCategoryWithProductsById($id: String!) {
     deleteCascadeCategoryWithProductsById(id: $id){
     __typename
     }

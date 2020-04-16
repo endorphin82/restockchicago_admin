@@ -5,7 +5,7 @@ import * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type CategoryByIdVariables = {
-  id?: Types.Maybe<Types.Scalars['ID']>;
+  id?: Types.Maybe<Types.Scalars['String']>;
 };
 
 
@@ -13,18 +13,19 @@ export type CategoryById = (
   { __typename: 'Query' }
   & { categoryById?: Types.Maybe<(
     { __typename: 'Category' }
-    & Pick<Types.Category, 'id' | 'name' | 'icons' | 'images'>
+    & Pick<Types.Category, 'id' | 'name' | 'icons' | 'images' | 'parent'>
   )> }
 );
 
 
 export const CategoryByIdDocument = gql`
-    query CategoryById($id: ID) {
+    query CategoryById($id: String) {
   categoryById(id: $id) {
     id
     name
     icons
     images
+    parent
   }
 }
     `;

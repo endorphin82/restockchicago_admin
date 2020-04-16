@@ -5,7 +5,7 @@ import * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type DeleteCascadeCategoryWithProductsByIdVariables = {
-  id: Types.Scalars['ID'];
+  id: Types.Scalars['String'];
 };
 
 
@@ -16,7 +16,7 @@ export type DeleteCascadeCategoryWithProductsById = (
 
 
 export const DeleteCascadeCategoryWithProductsByIdDocument = gql`
-    mutation DeleteCascadeCategoryWithProductsById($id: ID!) {
+    mutation DeleteCascadeCategoryWithProductsById($id: String!) {
   deleteCascadeCategoryWithProductsById(id: $id) {
     __typename
   }

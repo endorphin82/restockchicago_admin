@@ -48,9 +48,7 @@
     "generate": "graphql-codegen",
     "watch-generate": "graphql-codegen --watch",
     "clear": "find ./src -name \"__generated__\" -exec rm -rf '{}' +",
-    "deploy-gh-pages": "npm run build && gh-pages -d build",
-    "schema": "apollo client:download-schema --endpoint=http://localhost:3005/graphql ./src/schema.json",
-    "types": "apollo client:codegen ./src/__generated__apollo__/types.ts --outputFlat --includes=./src/**/query.ts --addTypename --localSchemaFile=./src/schema.json --target=typescript"
+    "deploy-gh-pages": "npm run build && gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"

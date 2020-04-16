@@ -5,7 +5,7 @@ import * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type ProductsByCategoryIdVariables = {
-  categoryId: Types.Scalars['ID'];
+  id: Types.Scalars['String'];
 };
 
 
@@ -14,26 +14,28 @@ export type ProductsByCategoryId = (
   & { productsByCategoryId?: Types.Maybe<Array<Types.Maybe<(
     { __typename: 'Product' }
     & Pick<Types.Product, 'id' | 'name' | 'price' | 'images' | 'icon'>
-    & { category?: Types.Maybe<(
+    & { categories?: Types.Maybe<Array<Types.Maybe<(
       { __typename: 'Category' }
-      & Pick<Types.Category, 'id' | 'name' | 'icons'>
-    )> }
+      & Pick<Types.Category, 'id' | 'name' | 'icons' | 'images' | 'parent'>
+    )>>> }
   )>>> }
 );
 
 
 export const ProductsByCategoryIdDocument = gql`
-    query ProductsByCategoryId($categoryId: ID!) {
-  productsByCategoryId(categoryId: $categoryId) {
+    query ProductsByCategoryId($id: String!) {
+  productsByCategoryId(id: $id) {
     id
     name
     price
     images
     icon
-    category {
+    categories {
       id
       name
       icons
+      images
+      parent
     }
   }
 }
@@ -51,7 +53,7 @@ export const ProductsByCategoryIdDocument = gql`
  * @example
  * const { data, loading, error } = useProductsByCategoryId({
  *   variables: {
- *      categoryId: // value for 'categoryId'
+ *      id: // value for 'id'
  *   },
  * });
  */

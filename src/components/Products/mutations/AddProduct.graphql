@@ -7,6 +7,10 @@ mutation AddProduct($name: String!, $price: Float!, $categories: [String], $imag
         icon
         categories{
             id
+            name
+            icons
+            images
+            parent
         }
     }
 }

@@ -1,12 +1,7 @@
 import React from "react"
-import { Empty, Select, Tabs } from "antd"
+import { Empty, Tabs } from "antd"
 import Categories from "../Categories"
 import Products from "../Products"
-import { Query } from "react-apollo"
-import { useQuery } from "@apollo/react-hooks"
-import { categoriesAllQuery, categoryByIdQuery } from "../Categories/query"
-import { productsAllQuery, productsByCategoryIdQuery } from "../Products/query"
-import AndroidOutlined from "@ant-design/icons/lib/icons/AndroidOutlined"
 import RecycleBinIcon from "../RecycleBinIcon"
 import RecycleBin from "../RecycleBin"
 import { useProductsAll } from "../Products/queries/__generated__/ProductsAll"
@@ -26,12 +21,12 @@ const TabsContainer: React.FC = () => {
   const { loading: prod_loading, error: prod_error, data: prod_data } = useProductsAll()
   const { loading: recycle_bin_loading, error: recycle_bin_error, data: recycle_bin_data } = useProductsByCategoryId({
     variables: {
-      categoryId: REACT_APP_RECYCLE_BIN_ID
+      id: REACT_APP_RECYCLE_BIN_ID
     }
   })
   const { loading: recycle_bin_prod_loading, error: recycle_bin_prod_error, data: recycle_bin_prod_data } = useProductsByCategoryId({
     variables: {
-      categoryId: REACT_APP_RECYCLE_BIN_ID
+      id: REACT_APP_RECYCLE_BIN_ID
     }
   })
   const { loading: recycle_bin_cat_loading, error: recycle_bin_cat_error, data: recycle_bin_cat_data } = useCategoryById({
