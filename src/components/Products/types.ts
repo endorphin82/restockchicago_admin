@@ -2,9 +2,7 @@ import {
   EditProductState,
   REACT_APP_RECYCLE_BIN_ID
 } from "../../actions/types"
-import {
-  ProductCatId
-} from "../../__generated__apollo__/types-query"
+
 import { Product, Category, MutationAddProductArgs } from "../../__generated__/types"
 import { ProductsAll } from "./queries/__generated__/ProductsAll"
 
@@ -27,7 +25,7 @@ export interface PropsProducts {
 }
 
 export interface PropsUpdateProduct {
-  variables: Product | ProductCatId
+  variables: Product
 }
 
 export interface ResponseProductsAllQueryData {

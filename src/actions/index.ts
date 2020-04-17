@@ -1,5 +1,4 @@
 import {
-  Category,
   CLEAR_EDIT_CATEGORY,
   CLEAR_EDIT_PRODUCT,
   EDIT_CATEGORY,
@@ -15,7 +14,7 @@ import {
   setIsOpenEditCategoryModalAction,
   setIsOpenEditProductModalAction
 } from "./types"
-import { Product } from "../__generated__apollo__/types-query"
+import { Category, Product } from "../__generated__/types"
 
 export const editProduct = (product: Product): editProductAction => ({
   type: EDIT_PRODUCT,

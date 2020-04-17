@@ -1,6 +1,6 @@
 query CategoriesAll{
     categoriesAll{
-        id
+        _id
         name
         icons
         images

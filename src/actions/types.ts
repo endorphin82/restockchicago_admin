@@ -1,4 +1,4 @@
-import { Product } from "../__generated__apollo__/types-query"
+import { Product, Category } from "../__generated__/types"
 
 export const IS_OPEN_ADD_PRODUCT_MODAL = "IS_OPEN_ADD_PRODUCT_MODAL"
 export const IS_OPEN_EDIT_PRODUCT_MODAL = "IS_OPEN_EDIT_PRODUCT_MODAL"
@@ -9,7 +9,7 @@ export const EDIT_CATEGORY = "EDIT_CATEGORY"
 export const CLEAR_EDIT_PRODUCT = "CLEAR_EDIT_PRODUCT"
 export const CLEAR_EDIT_CATEGORY = "CLEAR_EDIT_CATEGORY"
 export const REACT_APP_RECYCLE_BIN_ID = String(process.env.REACT_APP_RECYCLE_BIN_ID)
-export const REACT_APP_WITHOUT_CATEGORY_ID= String(process.env.REACT_APP_WITHOUT_CATEGORY_ID)
+// export const REACT_APP_WITHOUT_CATEGORY_ID= String(process.env.REACT_APP_WITHOUT_CATEGORY_ID)
 export const REACT_APP_NO_IMAGE_AVAILABLE = String(process.env.REACT_APP_NO_IMAGE_AVAILABLE)
 
 // export interface FieldData {
@@ -58,16 +58,16 @@ export interface mstpAddProductModalState {
 //   icon?: String
 // }
 
-export interface Category {
-  id?: String
-  name?: String
-  icons?: String[]
-  images?: String[]
-}
+// export interface Category {
+//   id?: String
+//   name?: String
+//   icons?: String[]
+//   images?: String[]
+// }
 
-export interface ICategory {
-  category: Category
-}
+// export interface ICategory {
+//   category: Category
+// }
 
 export interface CategoryRequireIcons {
   id?: String

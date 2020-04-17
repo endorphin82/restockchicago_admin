@@ -1,29 +1,28 @@
 import React, { useState } from "react"
 import { connect } from "react-redux"
-import { RootState } from "../../reducer"
-import { setIsOpenAddCategoryModal } from "../../actions"
-import { useAddCategory } from "../Categories/mutations/__generated__/AddCategory"
-import { IProductsAll } from "../Products/types"
-import { ProductsAllDocument } from "../Products/queries/__generated__/ProductsAll"
-import { CategoriesAllDocument, useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
-import { ICategoriesAll } from "../Categories/types"
-import { ProductCatId } from "../../__generated__apollo__/types-query"
-import { Category } from "../../__generated__/types"
-import { Modal, Form, Input, Button } from "antd"
-import MinusCircleOutlined from "@ant-design/icons/lib/icons/MinusCircleOutlined"
+import { Modal, Form, Input, Button, Select } from "antd"
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined"
+import MinusCircleOutlined from "@ant-design/icons/lib/icons/MinusCircleOutlined"
+import { setIsOpenAddCategoryModal } from "../../actions"
+import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
+import { RootState } from "../../reducer"
+import { ICategoriesAll } from "../Categories/types"
+import { useAddCategory } from "../Categories/mutations/__generated__/AddCategory"
+import { CategoriesAllDocument, useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
+import { Category } from "../../__generated__/types"
 
 type PropsCategoryAddForm = {
   setIsOpenAddCategoryModal: (isOpen: Boolean) => void
   isOpenAddCategoryModal: Boolean
 }
+
 const CategoryAddForm: React.FC<PropsCategoryAddForm> = ({ setIsOpenAddCategoryModal, isOpenAddCategoryModal }) => {
   const [addCategory, { data: daa_cat_data }] = useAddCategory(
     {
       // TODO:
       // @ts-ignore
       update(cache, { data: { addCategory } }) {
-        const { categoriesAll } = cache.readQuery<ICategoriesAll>({ query: ProductsAllDocument })!.categoriesAll
+        const { categoriesAll } = cache.readQuery<ICategoriesAll>({ query: CategoriesAllDocument })!.categoriesAll
         cache.writeQuery({
           query: CategoriesAllDocument,
           data: { categoriesAll: categoriesAll?.concat([addCategory]) }
@@ -37,15 +36,37 @@ const CategoryAddForm: React.FC<PropsCategoryAddForm> = ({ setIsOpenAddCategoryM
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
   const [values, setValues] = useState<Category | any>({})
 
+  if (cat_loading) {
+    return (<div>Loading...</div>)
+  }
+  if (cat_error || !cat_data) {
+    return (<div>Error...</div>)
+  }
+  const { categoriesAll } = cat_data
+
+  // @ts-ignore
+  const categoriesAllWithoutRecycleBin = categoriesAll?.filter((category: Category) => {
+    return category._id !== REACT_APP_RECYCLE_BIN_ID
+  })
+
   const onFinish = (valuefromformlist: Category) => {
-    const { name } = values
-    const { icons, images } = valuefromformlist
+    const { _id, icons, images, parent, name } = values
+    // const _id = String(values._id)
+    // const name = String(valuefromformlist.name)
+    console.log("++++++++++++",
+      valuefromformlist
+    )
+    console.log("+++V+++V++++++",
+      values
+    )
 
     addCategory({
       variables: {
+        _id,
         name,
         icons,
-        images
+        images,
+        parent
       }
     }).then(m => console.log("addCategory:", m))
       .catch(e => console.log("addCategoryERROR:", e))
@@ -74,6 +95,17 @@ const CategoryAddForm: React.FC<PropsCategoryAddForm> = ({ setIsOpenAddCategoryM
         name="category" {...formItemLayoutWithOutLabel}
         // @ts-ignore
         onFinish={onFinish}>
+
+        <Form.Item
+          label="ID category"
+          rules={[{ required: true, message: "ID category is required" }]}
+        >
+          <Input
+            name="_id"
+            onChange={handleChange} placeholder="name category"
+            style={{ width: "100%", marginRight: 8 }}/>
+        </Form.Item>
+
         <Form.Item
           label="Name category"
           rules={[{ required: true, message: "Name category is required" }]}
@@ -82,6 +114,26 @@ const CategoryAddForm: React.FC<PropsCategoryAddForm> = ({ setIsOpenAddCategoryM
             name="name"
             onChange={handleChange} placeholder="name category"
             style={{ width: "100%", marginRight: 8 }}/>
+        </Form.Item>
+
+        <Form.Item
+          label="Parent category"
+          name="parent"
+          // TODO:
+          // @ts-ignore
+          onChange={handleChange}
+        >
+          <Select
+            placeholder="Select category">
+            {categoriesAllWithoutRecycleBin?.map((category: Category) =>
+              <Select.Option
+                key={String(category._id)}
+                value={String(category._id)}
+              >{category._id}
+              </Select.Option>
+            )
+            }
+          </Select>
         </Form.Item>
 
         <Form.List name="icons">

@@ -17,11 +17,7 @@ export type AddProduct = (
   { __typename: 'Mutation' }
   & { addProduct?: Types.Maybe<(
     { __typename: 'Product' }
-    & Pick<Types.Product, 'id' | 'name' | 'price' | 'images' | 'icon'>
-    & { categories?: Types.Maybe<Array<Types.Maybe<(
-      { __typename: 'Category' }
-      & Pick<Types.Category, 'id' | 'name' | 'icons' | 'images' | 'parent'>
-    )>>> }
+    & Pick<Types.Product, 'id' | 'name' | 'price' | 'images' | 'icon' | 'categories'>
   )> }
 );
 
@@ -34,13 +30,7 @@ export const AddProductDocument = gql`
     price
     images
     icon
-    categories {
-      id
-      name
-      icons
-      images
-      parent
-    }
+    categories
   }
 }
     `;

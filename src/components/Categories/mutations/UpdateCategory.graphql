@@ -1,6 +1,6 @@
-mutation UpdateCategory($id: String!, $name: String!, $images: [String], $icons: [String], $parent: String ) {
-    updateCategory(id: $id, name: $name, images: $images, icons: $icons, parent: $parent){
-        id
+mutation UpdateCategory($_id: String!, $name: String!, $images: [String], $icons: [String], $parent: String ) {
+    updateCategory(_id: $_id, name: $name, images: $images, icons: $icons, parent: $parent){
+        _id
         name
         images
         icons

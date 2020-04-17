@@ -5,12 +5,6 @@ mutation UpdateProduct($id: ID!, $name: String!, $price: Float!, $categories: [S
         price
         images
         icon
-        categories{
-            id
-            name
-            icons
-            images
-            parent
-        }
+        categories
     }
 }

@@ -1,11 +1,10 @@
 import React from "react"
 import { Button, Tooltip } from "antd"
 import { PlusOutlined } from "@ant-design/icons"
-import CategoriesTable from "../CategoriesTable"
 import { connect } from "react-redux"
 import { setIsOpenAddCategoryModal } from "../../actions"
+import CategoriesTable from "../CategoriesTable"
 import CategoryAddForm from "../CategoryAddForm"
-import CategoryEditForm from "../CategoryEditForm"
 
 export interface PropsCategories {
   setIsOpenAddCategoryModal: (isOpen: Boolean) => void
@@ -20,7 +19,7 @@ const Categories: React.FC<PropsCategories> = ({ setIsOpenAddCategoryModal }) =>
     <>
       <h1>Categories</h1>
       <CategoriesTable/>
-      <CategoryEditForm/>
+      {/*<CategoryEditForm/>*/}
       <CategoryAddForm/>
       <Tooltip title="Add Category">
         <Button
