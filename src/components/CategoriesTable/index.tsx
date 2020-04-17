@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Button, Modal, Table, Tooltip } from "antd"
+import { Button, Modal, Table, Tooltip, Tag } from "antd"
 import { CategoriesAllDocument, useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
 import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
 import { Category, Product } from "../../__generated__/types"
@@ -73,6 +73,17 @@ const CategoriesTable: React.FC<PropsCategoryTable> = ({ editCategory, setIsOpen
       title: "ID",
       dataIndex: "_id",
       key: "_id"
+    },
+    {
+      title: "Parent",
+      dataIndex: "parent",
+      key: "parent",
+      render: (parent: String) => {
+        return parent ?
+          <span>
+          <Tag color="green" key={String(parent)}>{parent}</Tag>
+        </span> : null
+      }
     },
     {
       title: "Icons",

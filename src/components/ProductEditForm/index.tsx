@@ -68,7 +68,7 @@ const ProductEditForm: React.FC<PropsProductEditForm> = ({ clearEditProduct, edi
   }
   const { categoriesAll } = cat_data
   const categoriesAllWithoutRecycleBin = categoriesAll?.filter((category) => {
-    return category?.id !== REACT_APP_RECYCLE_BIN_ID
+    return category?._id !== REACT_APP_RECYCLE_BIN_ID
   })
 
   return (
@@ -111,20 +111,21 @@ const ProductEditForm: React.FC<PropsProductEditForm> = ({ clearEditProduct, edi
         </Form.Item>
 
         <Form.Item
-          label="Category"
-          name="categoryId"
+          label="Categories"
+          name="categories"
           // TODO:
           // @ts-ignore
           onChange={handleChange}
           rules={[{ required: true, message: "Category is required" }]}
         >
           <Select
+            mode="multiple"
             placeholder="Select category">
             {categoriesAllWithoutRecycleBin?.map((category) =>
               <Select.Option
-                key={String(category?.id)}
-                firstActiveValue="nike"
-                value={String(category?.id)}
+                defaultValue={edited_product.categories}
+                key={String(category?._id)}
+                value={String(category?._id)}
               >{String(category?.name)}
               </Select.Option>
             )
