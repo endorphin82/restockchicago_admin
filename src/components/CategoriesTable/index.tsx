@@ -1,14 +1,13 @@
 import React, { useState } from "react"
-import { Button, Modal, Table, Tooltip } from "antd"
+import { Button, Modal, Table, Tooltip, Tag } from "antd"
 import { CategoriesAllDocument, useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
 import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
-import { Category } from "../../__generated__/types"
+import { Category, Product } from "../../__generated__/types"
 import { useDeleteCascadeCategoryWithProductsById } from "../Categories/mutations/__generated__/DeleteCascadeCategoryWithProductsById"
 import { ProductsAllDocument } from "../Products/queries/__generated__/ProductsAll"
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined"
 import { editCategory } from "../../actions"
 import { setIsOpenEditCategoryModal } from "../../actions"
-import { Product } from "../../__generated__apollo__/types-query"
 import { connect } from "react-redux"
 
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
@@ -38,26 +37,26 @@ const CategoriesTable: React.FC<PropsCategoryTable> = ({ editCategory, setIsOpen
 
   // @ts-ignore
   const categoriesAllWithoutRecycleBin = categoriesAll?.filter((category: Category) => {
-    return category.id !== REACT_APP_RECYCLE_BIN_ID
+    return category._id !== REACT_APP_RECYCLE_BIN_ID
   })
 
-  const handleEdit = (id: String): void => {
-    const cat = categoriesAllWithoutRecycleBin?.find((cat: Category) => cat.id === id)
+  const handleEdit = (_id: String): void => {
+    const cat = categoriesAllWithoutRecycleBin?.find((cat: Category) => cat._id === _id)
     editCategory(cat)
     setIsOpenEditCategoryModal(true)
   }
 
-  const handleDelete = (id: String): void => {
+  const handleDelete = (_id: String): void => {
     setIsVisualDeleteModal(true)
-    setCategoryDeleted(categoriesAllWithoutRecycleBin.find((cat: Category) => cat.id === id))
+    setCategoryDeleted(categoriesAllWithoutRecycleBin.find((cat: Category) => cat._id === _id))
   }
 
-  const handleOk = (id: String) => {
+  const handleOk = (_id: String) => {
     deleteCascadeCategoryWithProductsById({
       variables: {
-        id: String(id)
+        _id: String(_id)
       }
-    }).then(mess => console.log("deleteCascadeCategoryWithProductsById response:", mess))
+    }).then((mess: any) => console.log("deleteCascadeCategoryWithProductsById response:", mess))
     setIsVisualDeleteModal(false)
   }
 
@@ -72,8 +71,19 @@ const CategoriesTable: React.FC<PropsCategoryTable> = ({ editCategory, setIsOpen
     },
     {
       title: "ID",
-      dataIndex: "id",
-      key: "id"
+      dataIndex: "_id",
+      key: "_id"
+    },
+    {
+      title: "Parent",
+      dataIndex: "parent",
+      key: "parent",
+      render: (parent: String) => {
+        return parent ?
+          <span>
+          <Tag color="green" key={String(parent)}>{parent}</Tag>
+        </span> : null
+      }
     },
     {
       title: "Icons",
@@ -115,11 +125,11 @@ const CategoriesTable: React.FC<PropsCategoryTable> = ({ editCategory, setIsOpen
     },
     {
       title: "Actions",
-      dataIndex: "id",
-      key: "id",
-      render: (id: String) => <>
+      dataIndex: "_id",
+      key: "_id",
+      render: (_id: String) => <>
         <Tooltip title="Edit this category">
-          <Button onClick={() => handleEdit(id)}
+          <Button onClick={() => handleEdit(_id)}
                   type="dashed">
             Edit
           </Button>
@@ -127,7 +137,7 @@ const CategoriesTable: React.FC<PropsCategoryTable> = ({ editCategory, setIsOpen
         <Tooltip
           title="Delete Category With All Products">
           <Button style={{ float: "right" }}
-                  onClick={() => handleDelete(id)}
+                  onClick={() => handleDelete(String(_id))}
                   type="dashed"
                   danger
                   icon={<DeleteOutlined/>}>
@@ -143,7 +153,7 @@ const CategoriesTable: React.FC<PropsCategoryTable> = ({ editCategory, setIsOpen
       <Modal
         title="Delete Category With All Products WITHOUT recovery!?"
         visible={Boolean(isVisualDeleteModal)}
-        onOk={() => handleOk(categoryDeleted.id)}
+        onOk={() => handleOk(categoryDeleted._id)}
         onCancel={handleCancel}
       >
         <p>{categoryDeleted.name}</p>

@@ -38,7 +38,7 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
   // TODO:
   // @ts-ignore
   const productsAllWithoutRecycleBin = productsAll?.filter((prod: Product) => {
-    return prod?.categories?.id !== REACT_APP_RECYCLE_BIN_ID
+    return !prod?.categories?.includes(REACT_APP_RECYCLE_BIN_ID)
   })
 
   const handleEdit = (id: String): void => {

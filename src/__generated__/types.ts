@@ -10,7 +10,7 @@ export type Scalars = {
 
 export type Category = {
    __typename?: 'Category';
-  id?: Maybe<Scalars['String']>;
+  _id?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   parent?: Maybe<Scalars['String']>;
   icons?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -57,12 +57,12 @@ export type MutationDeleteProductArgs = {
 
 
 export type MutationDeleteCascadeCategoryWithProductsByIdArgs = {
-  id: Scalars['String'];
+  _id: Scalars['String'];
 };
 
 
 export type MutationAddCategoryArgs = {
-  id: Scalars['String'];
+  _id: Scalars['String'];
   name: Scalars['String'];
   parent?: Maybe<Scalars['String']>;
   icons?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -71,7 +71,7 @@ export type MutationAddCategoryArgs = {
 
 
 export type MutationUpdateCategoryArgs = {
-  id: Scalars['String'];
+  _id: Scalars['String'];
   name: Scalars['String'];
   parent?: Maybe<Scalars['String']>;
   images?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -84,8 +84,8 @@ export type Product = {
   name: Scalars['String'];
   price: Scalars['Float'];
   images?: Maybe<Array<Maybe<Scalars['String']>>>;
+  categories?: Maybe<Array<Maybe<Scalars['String']>>>;
   icon?: Maybe<Scalars['String']>;
-  categories?: Maybe<Array<Maybe<Category>>>;
 };
 
 export type Query = {
@@ -112,7 +112,7 @@ export type QueryProductByNameArgs = {
 
 
 export type QueryCategoryByIdArgs = {
-  id?: Maybe<Scalars['String']>;
+  _id?: Maybe<Scalars['String']>;
 };
 
 

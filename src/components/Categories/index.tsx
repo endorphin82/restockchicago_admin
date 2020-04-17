@@ -1,9 +1,9 @@
 import React from "react"
 import { Button, Tooltip } from "antd"
 import { PlusOutlined } from "@ant-design/icons"
-import CategoriesTable from "../CategoriesTable"
 import { connect } from "react-redux"
 import { setIsOpenAddCategoryModal } from "../../actions"
+import CategoriesTable from "../CategoriesTable"
 import CategoryAddForm from "../CategoryAddForm"
 import CategoryEditForm from "../CategoryEditForm"
 

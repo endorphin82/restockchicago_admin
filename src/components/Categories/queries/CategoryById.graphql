@@ -1,6 +1,6 @@
-query CategoryById($id: String){
-    categoryById(id: $id){
-        id
+query CategoryById($_id: String){
+    categoryById(_id: $_id){
+        _id
         name
         icons
         images

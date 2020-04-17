@@ -5,7 +5,7 @@ import * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type UpdateCategoryVariables = {
-  id: Types.Scalars['String'];
+  _id: Types.Scalars['String'];
   name: Types.Scalars['String'];
   images?: Types.Maybe<Array<Types.Maybe<Types.Scalars['String']>>>;
   icons?: Types.Maybe<Array<Types.Maybe<Types.Scalars['String']>>>;
@@ -17,15 +17,15 @@ export type UpdateCategory = (
   { __typename: 'Mutation' }
   & { updateCategory?: Types.Maybe<(
     { __typename: 'Category' }
-    & Pick<Types.Category, 'id' | 'name' | 'images' | 'icons' | 'parent'>
+    & Pick<Types.Category, '_id' | 'name' | 'images' | 'icons' | 'parent'>
   )> }
 );
 
 
 export const UpdateCategoryDocument = gql`
-    mutation UpdateCategory($id: String!, $name: String!, $images: [String], $icons: [String], $parent: String) {
-  updateCategory(id: $id, name: $name, images: $images, icons: $icons, parent: $parent) {
-    id
+    mutation UpdateCategory($_id: String!, $name: String!, $images: [String], $icons: [String], $parent: String) {
+  updateCategory(_id: $_id, name: $name, images: $images, icons: $icons, parent: $parent) {
+    _id
     name
     images
     icons
@@ -48,7 +48,7 @@ export type UpdateCategoryMutationFn = ApolloReactCommon.MutationFunction<Update
  * @example
  * const [updateCategory, { data, loading, error }] = useUpdateCategory({
  *   variables: {
- *      id: // value for 'id'
+ *      _id: // value for '_id'
  *      name: // value for 'name'
  *      images: // value for 'images'
  *      icons: // value for 'icons'

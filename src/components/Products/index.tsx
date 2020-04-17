@@ -1,11 +1,11 @@
 import React from "react"
 import { Button, Tooltip } from "antd"
 import { PlusOutlined } from "@ant-design/icons"
-import ProductsTable from "../ProductsTable"
-import ProductEditForm from "../ProductEditForm"
 import ProductAddForm from "../ProductAddForm"
 import { connect } from "react-redux"
 import { clearEditProduct, setIsOpenAddProductModal } from "../../actions"
+import ProductsTable from "../ProductsTable"
+import ProductEditForm from "../ProductEditForm"
 
 interface PropsProducts {
   clearEditProduct: () => void

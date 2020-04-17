@@ -11,7 +11,7 @@ export type CategoriesAll = (
   { __typename: 'Query' }
   & { categoriesAll?: Types.Maybe<Array<Types.Maybe<(
     { __typename: 'Category' }
-    & Pick<Types.Category, 'id' | 'name' | 'icons' | 'images' | 'parent'>
+    & Pick<Types.Category, '_id' | 'name' | 'icons' | 'images' | 'parent'>
   )>>> }
 );
 
@@ -19,7 +19,7 @@ export type CategoriesAll = (
 export const CategoriesAllDocument = gql`
     query CategoriesAll {
   categoriesAll {
-    id
+    _id
     name
     icons
     images

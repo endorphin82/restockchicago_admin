@@ -5,11 +5,11 @@ import MinusCircleOutlined from "@ant-design/icons/lib/icons/MinusCircleOutlined
 import { connect } from "react-redux"
 import { clearEditProduct, setIsOpenEditProductModal } from "../../actions"
 import { priceStringToIntCent } from "../../utils/utils"
-import { Product, ProductCatId } from "../../__generated__apollo__/types-query"
 import { RootState } from "../../reducer"
 import { useUpdateProduct } from "../Products/mutations/__generated__/UpdateProduct"
 import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
 import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
+import { Product } from "../../__generated__/types"
 
 interface PropsProductEditForm {
   edited_product: Product
@@ -22,7 +22,7 @@ const ProductEditForm: React.FC<PropsProductEditForm> = ({ clearEditProduct, edi
   const [formEditProduct] = Form.useForm()
   const [updateProduct, {}] = useUpdateProduct()
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
-  const [values, setValues] = useState<ProductCatId | any>({})
+  const [values, setValues] = useState<Product | any>({})
   useEffect(() => {
     setValues(edited_product)
   }, [edited_product])
@@ -31,21 +31,22 @@ const ProductEditForm: React.FC<PropsProductEditForm> = ({ clearEditProduct, edi
       "name": edited_product.name,
       "price": edited_product.price,
       "images": edited_product.images,
-      "icon": edited_product.icon
+      "icon": edited_product.icon,
+      "categories": edited_product.categories
     })
     return () => {
       formEditProduct.resetFields()
     }
   }, [edited_product])
 
-  const onFinish = (valuefromformlist: ProductCatId) => {
-    const { name, categoryId, images, icon } = valuefromformlist
+  const onFinish = (valuefromformlist: Product) => {
+    const { name, categories, images, icon } = valuefromformlist
     const id = String(values?.id)
     const price = priceStringToIntCent(String(valuefromformlist.price))
 
     updateProduct({
       variables: {
-        id, name, price, categoryId: String(categoryId), images, icon
+        id, name, price, categories, images, icon
       }
     }).then(m => console.log("updateProductMESSAGE:", m))
       .catch(e => console.log("updateProductERROR:", e))
@@ -67,7 +68,7 @@ const ProductEditForm: React.FC<PropsProductEditForm> = ({ clearEditProduct, edi
   }
   const { categoriesAll } = cat_data
   const categoriesAllWithoutRecycleBin = categoriesAll?.filter((category) => {
-    return category?.id !== REACT_APP_RECYCLE_BIN_ID
+    return category?._id !== REACT_APP_RECYCLE_BIN_ID
   })
 
   return (
@@ -110,20 +111,21 @@ const ProductEditForm: React.FC<PropsProductEditForm> = ({ clearEditProduct, edi
         </Form.Item>
 
         <Form.Item
-          label="Category"
-          name="categoryId"
+          label="Categories"
+          name="categories"
           // TODO:
           // @ts-ignore
           onChange={handleChange}
           rules={[{ required: true, message: "Category is required" }]}
         >
           <Select
+            mode="multiple"
             placeholder="Select category">
             {categoriesAllWithoutRecycleBin?.map((category) =>
               <Select.Option
-                key={String(category?.id)}
-                firstActiveValue="nike"
-                value={String(category?.id)}
+                defaultValue={edited_product.categories}
+                key={String(category?._id)}
+                value={String(category?._id)}
               >{String(category?.name)}
               </Select.Option>
             )

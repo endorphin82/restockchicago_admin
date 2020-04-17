@@ -6,28 +6,28 @@ schema {
 }
 
 type Category {
+    _id: String
     icons: [String]
-    id: String
     images: [String]
     name: String!
     parent: String
 }
 
 type Mutation {
-    addCategory(icons: [String], id: String!, images: [String], name: String!, parent: String): Category
+    addCategory(_id: String!, icons: [String], images: [String], name: String!, parent: String): Category
     addProduct(categories: [String], icon: String, images: [String], name: String!, price: Float!): Product
     addProductsWithoutCategoryInWithoutCategory: Product
     clearRecycleBin: Product
     "Delete Category with products"
-    deleteCascadeCategoryWithProductsById(id: String!): Category
+    deleteCascadeCategoryWithProductsById(_id: String!): Category
     "Description deleteProduct"
     deleteProduct(id: ID!): Product
-    updateCategory(icons: [String], id: String!, images: [String], name: String!, parent: String): Category
+    updateCategory(_id: String!, icons: [String], images: [String], name: String!, parent: String): Category
     updateProduct(categories: [String], icon: String, id: ID!, images: [String], name: String!, price: Float!): Product
 }
 
 type Product {
-    categories: [Category]
+    categories: [String]
     icon: String
     id: ID
     images: [String]
@@ -38,7 +38,7 @@ type Product {
 type Query {
     categoriesAll: [Category]
     categoriesByListNames(names: [String]): [Category]
-    categoryById(id: String): Category
+    categoryById(_id: String): Category
     categoryByName(name: String): [Category]
     productById(id: ID): Product
     productByName(name: String): [Product]

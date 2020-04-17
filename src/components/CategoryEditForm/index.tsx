@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react"
 import { connect } from "react-redux"
 import { RootState } from "../../reducer"
 import { clearEditCategory, clearEditProduct, setIsOpenEditCategoryModal } from "../../actions"
-import { Button, Form, Input, Modal } from "antd"
+import { Button, Form, Input, Modal, Select } from "antd"
 import { useUpdateCategory } from "../Categories/mutations/__generated__/UpdateCategory"
-import { ProductCatId } from "../../__generated__apollo__/types-query"
 import MinusCircleOutlined from "@ant-design/icons/lib/icons/MinusCircleOutlined"
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined"
 import { priceStringToIntCent } from "../../utils/utils"
 import { Category } from "../../__generated__/types"
-import { CategoriesAllDocument } from "../Categories/queries/__generated__/CategoriesAll"
+import { CategoriesAllDocument, useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
 import { ProductsAllDocument } from "../Products/queries/__generated__/ProductsAll"
+import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
 
 type PropsCategoryEditForm = {
   setIsOpenEditCategoryModal: (isOpen: Boolean) => void
@@ -37,20 +37,36 @@ const CategoryEditForm: React.FC<PropsCategoryEditForm> = ({ edited_category, se
     formEditCategory.setFieldsValue({
       "name": edited_category.name,
       "icons": edited_category.icons,
-      "images": edited_category.images
+      "images": edited_category.images,
+      "parent": edited_category.parent,
+      "_id": edited_category._id,
     })
     return () => {
       formEditCategory.resetFields()
     }
   }, [edited_category])
+  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
+
+  if (cat_loading) {
+    return (<div>Loading...</div>)
+  }
+  if (cat_error || !cat_data) {
+    return (<div>Error...</div>)
+  }
+  const { categoriesAll } = cat_data
+
+  // @ts-ignore
+  const categoriesAllWithoutRecycleBin = categoriesAll?.filter((category: Category) => {
+    return category._id !== REACT_APP_RECYCLE_BIN_ID
+  })
 
   const onFinish = (valuefromformlist: Category) => {
     const { name, images, icons } = valuefromformlist
-    const id = String(values?.id)
+    const _id = String(values?._id)
 
     updateCategory({
       variables: {
-        id, name, images, icons
+        _id, name, images, icons
       }
     }).then(m => console.log("updateProductMESSAGE:", m))
       .catch(e => console.log("updateProductERROR:", e))
@@ -65,9 +81,10 @@ const CategoryEditForm: React.FC<PropsCategoryEditForm> = ({ edited_category, se
     const { name, value } = e.target
     setValues({ ...values, [name]: value })
   }
+
   return (
     <Modal
-      title={`Category information id: ${values.id}`}
+      title={`Category information id: ${values._id}`}
       visible={Boolean(isOpenEditCategoryModal)}
       footer={false}
       onCancel={handleCancel}
@@ -78,6 +95,20 @@ const CategoryEditForm: React.FC<PropsCategoryEditForm> = ({ edited_category, se
         // TODO:
         // @ts-ignore
         onFinish={onFinish}>
+
+        <Form.Item
+          label="ID category"
+          name="_id"
+          // TODO:
+          // @ts-ignore
+          value={String(values?._id)}
+          rules={[{ required: true, message: "Name category is required" }]}
+        >
+          <Input
+            onChange={handleChange} placeholder="name category"
+            style={{ width: "100%", marginRight: 8 }}/>
+        </Form.Item>
+
         <Form.Item
           label="Name category"
           name="name"
@@ -90,6 +121,28 @@ const CategoryEditForm: React.FC<PropsCategoryEditForm> = ({ edited_category, se
             onChange={handleChange} placeholder="name category"
             style={{ width: "100%", marginRight: 8 }}/>
         </Form.Item>
+
+        <Form.Item
+          label="Parent category"
+          name="parent"
+          // TODO:
+          // @ts-ignore
+          onChange={handleChange}
+        >
+          <Select
+            defaultValue={values._id}
+            placeholder="Select category">
+            {categoriesAllWithoutRecycleBin?.map((category: Category) =>
+              <Select.Option
+                key={String(category._id)}
+                value={String(category._id)}
+              >{category._id}
+              </Select.Option>
+            )
+            }
+          </Select>
+        </Form.Item>
+
         <Form.List name="icons">
           {(fields, { add, remove }) => {
             return (

@@ -13,11 +13,7 @@ export type DeleteProduct = (
   { __typename: 'Mutation' }
   & { deleteProduct?: Types.Maybe<(
     { __typename: 'Product' }
-    & Pick<Types.Product, 'id' | 'name' | 'price' | 'images' | 'icon'>
-    & { categories?: Types.Maybe<Array<Types.Maybe<(
-      { __typename: 'Category' }
-      & Pick<Types.Category, 'id' | 'name' | 'icons' | 'images' | 'parent'>
-    )>>> }
+    & Pick<Types.Product, 'id' | 'name' | 'price' | 'images' | 'icon' | 'categories'>
   )> }
 );
 
@@ -30,13 +26,7 @@ export const DeleteProductDocument = gql`
     price
     images
     icon
-    categories {
-      id
-      name
-      icons
-      images
-      parent
-    }
+    categories
   }
 }
     `;

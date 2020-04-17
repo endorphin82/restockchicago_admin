@@ -5,12 +5,6 @@ mutation DeleteProduct($id: ID!) {
         price
         images
         icon
-        categories{
-            id
-            name
-            icons
-            images
-            parent
-        }
+        categories
     }
 }

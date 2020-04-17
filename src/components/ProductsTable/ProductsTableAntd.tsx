@@ -1,9 +1,8 @@
 import React from "react"
-import { Category, CategoryRequireIcons } from "../../actions/types"
 import { priceToDollars } from "../../utils/utils"
-import { Button, Table, Tooltip } from "antd"
+import { Button, Table, Tooltip, Tag } from "antd"
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined"
-import { IproductsByCategoryId } from "../../__generated__apollo__/types-query"
+import { ProductsAll } from "../Products/queries/__generated__/ProductsAll"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
@@ -11,7 +10,7 @@ const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 interface PropsProductsTableAntd {
   handleEditProp: (id: String) => void
   handleDeleteProp: (id: String) => void
-  productsAllWithoutRecycleBinProp: IproductsByCategoryId
+  productsAllWithoutRecycleBinProp: ProductsAll
 }
 
 const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, handleDeleteProp, productsAllWithoutRecycleBinProp }) => {
@@ -35,24 +34,18 @@ const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, h
       }
     },
     {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
-      render: (category: CategoryRequireIcons) => {
-        const { name, icons, id } = category
-        return (
-          <div>
-            <span>{name} </span>
-            {
-              (icons?.length !== 0)
-                ? <img
-                  key={String(icons[0])}
-                  alt="img"
-                  src={String(icons[0])} style={styleIconInTable}/> : ""
-            }
-            <span> {id} </span>
-          </div>)
-      }
+      title: "Categories",
+      dataIndex: "categories",
+      key: "categories",
+      render: (categories: String[]) => (
+        <span>
+          {categories.map(tag => (
+            <Tag color="blue" key={String(tag)}>
+            {tag}
+            </Tag>
+          ))}
+        </span>
+        )
     },
     {
       title: "Images",
