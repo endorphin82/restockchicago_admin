@@ -33,6 +33,7 @@ const CategoryAddForm: React.FC<PropsCategoryAddForm> = ({ setIsOpenAddCategoryM
       }]
     }
   )
+
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
   const [values, setValues] = useState<Category | any>({})
 
@@ -68,7 +69,7 @@ const CategoryAddForm: React.FC<PropsCategoryAddForm> = ({ setIsOpenAddCategoryM
         images,
         parent
       }
-    }).then(m => console.log("addCategory:", m))
+    }).then(m => console.log("addCategoryMESSAGE:", m))
       .catch(e => console.log("addCategoryERROR:", e))
 
     setIsOpenAddCategoryModal(false)
@@ -82,7 +83,6 @@ const CategoryAddForm: React.FC<PropsCategoryAddForm> = ({ setIsOpenAddCategoryM
     console.log("target", e.target)
     setValues({ ...values, [name]: value })
   }
-
 
   return (
     <Modal

@@ -2,6 +2,7 @@ import React from "react"
 import TabsContainer from "./components/TabsContainer"
 import "antd/dist/antd.css"
 import "./App.css"
+import {REACT_APP_BASE_URL} from "./actions/types"
 
 const App: React.FC = () => {
   console.log("app.tsx")
@@ -13,7 +14,7 @@ const App: React.FC = () => {
         </p>
         <a
           className="App-link"
-          href={process.env.REACT_APP_BASE_URL}
+          href={REACT_APP_BASE_URL}
           target="_blank"
           rel="noopener noreferrer"
         >
