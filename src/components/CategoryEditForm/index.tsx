@@ -61,12 +61,12 @@ const CategoryEditForm: React.FC<PropsCategoryEditForm> = ({ edited_category, se
   })
 
   const onFinish = (valuefromformlist: Category) => {
-    const { name, images, icons } = valuefromformlist
+    const { name, images, icons, parent } = valuefromformlist
     const _id = String(values?._id)
 
     updateCategory({
       variables: {
-        _id, name, images, icons
+        _id, name, images, icons, parent
       }
     }).then(m => console.log("updateProductMESSAGE:", m))
       .catch(e => console.log("updateProductERROR:", e))
