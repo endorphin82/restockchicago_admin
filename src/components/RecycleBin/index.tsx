@@ -13,7 +13,7 @@ const RecycleBin = () => {
       refetchQueries: [{
         query: ProductsByCategoryIdDocument,
         variables: {
-          categoryId: REACT_APP_RECYCLE_BIN_ID
+          id: REACT_APP_RECYCLE_BIN_ID
         }
       }]
     }

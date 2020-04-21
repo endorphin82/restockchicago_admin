@@ -19,7 +19,7 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
       refetchQueries: [{
         query: ProductsByCategoryIdDocument,
         variables: {
-          catId: REACT_APP_RECYCLE_BIN_ID
+          id: REACT_APP_RECYCLE_BIN_ID
         }
       }]
     }
