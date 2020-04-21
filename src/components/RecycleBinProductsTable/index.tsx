@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Button, Form, Modal, Select, Table, Tooltip } from "antd"
+import { Button, Form, Modal, Select, Table, Tag, Tooltip } from "antd"
 import { connect } from "react-redux"
 import { clearEditProduct, editProduct } from "../../actions"
 import { priceToDollars } from "../../utils/utils"
@@ -13,7 +13,7 @@ import {
 import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
 import { useDeleteProduct } from "../Products/mutations/__generated__/DeleteProduct"
 import { useUpdateProduct } from "../Products/mutations/__generated__/UpdateProduct"
-import { MutationAddProductArgs, Product } from "../../__generated__/types"
+import { Category, MutationAddProductArgs, Product } from "../../__generated__/types"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 
@@ -42,7 +42,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
       refetchQueries: [{
         query: ProductsByCategoryIdDocument,
         variables: {
-          categoryId: REACT_APP_RECYCLE_BIN_ID
+          id: REACT_APP_RECYCLE_BIN_ID
         }
       }]
     }
@@ -51,7 +51,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
       refetchQueries: [{
         query: ProductsByCategoryIdDocument,
         variables: {
-          categoryId: REACT_APP_RECYCLE_BIN_ID
+          id: REACT_APP_RECYCLE_BIN_ID
         }
       }]
     }
@@ -65,7 +65,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
   const { categoriesAll } = cat_data
 
   const categoriesAllWithoutRecycleBin = categoriesAll?.filter((category) => {
-    return category?.id !== REACT_APP_RECYCLE_BIN_ID
+    return category?._id !== REACT_APP_RECYCLE_BIN_ID
   })
   console.log("productDeleted", productDeleted)
 
@@ -78,16 +78,23 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
   const { productsByCategoryId } = recycle_bin_prod_data
 
   console.log("productsByCategoryId", recycle_bin_prod_data?.productsByCategoryId)
-  const onFinish = (valuefromformlist: Product) => {
-    console.log("Received values of form:", values)
 
+  const onFinish = (valuefromform: any) => {
 
-    const { name, images, price, categories, icon } = edited_product
+    const categoriesWithoutRecyclebin = edited_product?.categories?.filter((category) => {
+      return category !== REACT_APP_RECYCLE_BIN_ID
+    })
+    const productWithoutRecycleBin = {
+      ...edited_product,
+      categories: [valuefromform?.category]
+    }
+
+    const { name, images, price, categories, icon } = productWithoutRecycleBin
     // TODO:
     // @ts-ignore
     const id = String(edited_product.id)
 
-    console.log("onFinish", valuefromformlist)
+    console.log("onFinish", edited_product)
     // TODO:
     // @ts-ignore
     updateProduct<PropsUpdateProduct>({
@@ -105,8 +112,34 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
   const handleEdit = (id: String) => {
     // TODO:
     // @ts-ignore
-    editProduct(productsByCategoryId?.find((prod: Product) => prod.id === id))
-    setIsVisualRestoreModal(true)
+    const edit_product = productsByCategoryId?.find((prod: Product) => prod.id === id)
+    if (edit_product.categories.length === 1) {
+      editProduct(edit_product)
+      setIsVisualRestoreModal(true)
+    } else {
+      const categoriesWithoutRecyclebin = edit_product.categories.filter((category: String) => {
+        return category !== REACT_APP_RECYCLE_BIN_ID
+      })
+      const productWithoutRecycleBin = {
+        ...edit_product,
+        categories: [...categoriesWithoutRecyclebin]
+      }
+      const {
+        id, name, price, categories, images, icon
+      } = productWithoutRecycleBin
+      console.log("productWithoutRecycleBin", productWithoutRecycleBin)
+      // TODO:
+      // @ts-ignore
+      updateProduct<PropsUpdateProduct>({
+        variables: {
+          id, name, price, categories, images, icon
+        }
+      }).then((m: String) => {
+          console.log("updateProductMESSAGE:", m)
+        }
+      )
+        .catch((e: Error) => console.log("updateProductERROR:", e))
+    }
   }
   const handleCancelRestore = () => {
     clearEditProduct()
@@ -156,6 +189,25 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
       render: (price: Number) => {
         return priceToDollars(price)
       }
+    },
+    {
+      title: "Categories",
+      dataIndex: "categories",
+      key: "categories",
+      render: (categories: String[]) => (
+        <span>
+          {categories.map(tag => (
+            tag !== REACT_APP_RECYCLE_BIN_ID ?
+              <Tag color="blue" key={String(tag)}>
+                {tag}
+              </Tag>
+              :
+              <Tag color="red" key={String(tag)}>
+                {tag}
+              </Tag>
+          ))}
+        </span>
+      )
     },
     {
       title: "Images",
@@ -224,7 +276,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
           onFinish={onFinish}>
           <Form.Item
             label="Category"
-            name="categoryId"
+            name="category"
             // TODO:
             // @ts-ignore
             onChange={handleChange}
@@ -236,7 +288,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
                 <Select.Option
                   // TODO:
                   // @ts-ignore
-                  key={category?.id}
+                  key={category?._id}
                 >{category?.name}</Select.Option>
               )
               }

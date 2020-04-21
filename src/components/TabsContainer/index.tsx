@@ -7,6 +7,8 @@ import { useProductsByCategoryId } from "../Products/queries/__generated__/Produ
 import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
 import { useCategoryById } from "../Categories/queries/__generated__/CategoryById"
 import Categories from "../Categories"
+import RecycleBinIcon from "../RecycleBinIcon"
+import RecycleBin from "../RecycleBin"
 
 const { TabPane } = Tabs
 
@@ -45,17 +47,17 @@ const TabsContainer: React.FC = () => {
       <TabPane tab="Categories" key="2">
         <Categories/>
       </TabPane>
-      {/*<TabPane tab={*/}
-      {/*  <span>*/}
-      {/*    <RecycleBinIcon*/}
-      {/*      // TODO:*/}
-      {/*      // @ts-ignore*/}
-      {/*      categoryById={categoryById} productsByCategoryId={productsByCategoryId}/>*/}
-      {/*    Recycle bin*/}
-      {/*  </span>*/}
-      {/*} key="3">*/}
-      {/*  {(productsByCategoryId?.length === 0) ? <Empty/> : <RecycleBin/>}*/}
-      {/*</TabPane>*/}
+      <TabPane tab={
+        <span>
+          <RecycleBinIcon
+            // TODO:
+            // @ts-ignore
+            categoryById={categoryById} productsByCategoryId={productsByCategoryId}/>
+          Recycle bin
+        </span>
+      } key="3">
+        {(productsByCategoryId?.length === 0) ? <Empty/> : <RecycleBin/>}
+      </TabPane>
 
     </Tabs>
   )

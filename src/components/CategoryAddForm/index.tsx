@@ -8,7 +8,9 @@ import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
 import { RootState } from "../../reducer"
 import { ICategoriesAll } from "../Categories/types"
 import { useAddCategory } from "../Categories/mutations/__generated__/AddCategory"
-import { CategoriesAllDocument, useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
+import {
+  CategoriesAllDocument, useCategoriesAll
+} from "../Categories/queries/__generated__/CategoriesAll"
 import { Category } from "../../__generated__/types"
 
 type PropsCategoryAddForm = {
@@ -16,13 +18,19 @@ type PropsCategoryAddForm = {
   isOpenAddCategoryModal: Boolean
 }
 
-const CategoryAddForm: React.FC<PropsCategoryAddForm> = ({ setIsOpenAddCategoryModal, isOpenAddCategoryModal }) => {
+const CategoryAddForm: React.FC<PropsCategoryAddForm> = (
+  {
+    setIsOpenAddCategoryModal,
+    isOpenAddCategoryModal
+  }) => {
   const [addCategory, { data: daa_cat_data }] = useAddCategory(
     {
       // TODO:
       // @ts-ignore
       update(cache, { data: { addCategory } }) {
-        const { categoriesAll } = cache.readQuery<ICategoriesAll>({ query: CategoriesAllDocument })!.categoriesAll
+        const { categoriesAll } = cache.readQuery<ICategoriesAll>({
+          query: CategoriesAllDocument
+        })!.categoriesAll
         cache.writeQuery({
           query: CategoriesAllDocument,
           data: { categoriesAll: categoriesAll?.concat([addCategory]) }
