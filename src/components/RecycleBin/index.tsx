@@ -22,6 +22,7 @@ const RecycleBin = () => {
   const handleDelete = () => {
     setIsVisualDeleteModal(true)
   }
+
   const handleOk = () => {
     clearRecycleBin().then()
     setIsVisualDeleteModal(false)

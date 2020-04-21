@@ -23,16 +23,18 @@ interface PropsRecycleBinProductsTable {
   edited_product: MutationAddProductArgs
 }
 
-const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = ({
-                                                                           clearEditProduct,
-                                                                           editProduct,
-                                                                           edited_product
-                                                                         }) => {
-  const { loading: recycle_bin_prod_loading, error: recycle_bin_prod_error, data: recycle_bin_prod_data } = useProductsByCategoryId({
-    variables: {
-      id: REACT_APP_RECYCLE_BIN_ID
-    }
-  })
+const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = (
+  {
+    clearEditProduct,
+    editProduct,
+    edited_product
+  }) => {
+  const { loading: recycle_bin_prod_loading, error: recycle_bin_prod_error, data: recycle_bin_prod_data } = useProductsByCategoryId(
+    {
+      variables: {
+        id: REACT_APP_RECYCLE_BIN_ID
+      }
+    })
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
   const [values, setValues] = useState({})
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
