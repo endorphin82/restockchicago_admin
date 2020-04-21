@@ -59,7 +59,7 @@ const CategoryAddForm: React.FC<PropsCategoryAddForm> = (
   })
 
   const onFinish = (valuefromformlist: Category) => {
-    const { _id, icons, images, parent, name } = values
+    const { _id, icons, images, name } = values
     // const _id = String(values._id)
     // const name = String(valuefromformlist.name)
     console.log("++++++++++++",
@@ -75,7 +75,7 @@ const CategoryAddForm: React.FC<PropsCategoryAddForm> = (
         name,
         icons,
         images,
-        parent
+        parent: valuefromformlist.parent
       }
     }).then(m => console.log("addCategoryMESSAGE:", m))
       .catch(e => console.log("addCategoryERROR:", e))
