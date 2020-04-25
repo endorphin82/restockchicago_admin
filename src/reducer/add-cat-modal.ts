@@ -1,15 +1,16 @@
-import { AddCategoryModalState, IS_OPEN_ADD_CATEGORY_MODAL, setIsOpenAddCategoryModalAction } from "../actions/types"
+import { ActionsTypes } from "../store"
 
-const initialState: AddCategoryModalState = {
+export type initialState = typeof initialState
+const initialState = {
   isOpen: false
 }
 
-export default (state = initialState, action: setIsOpenAddCategoryModalAction): AddCategoryModalState => {
+export default (state: initialState = initialState, action: ActionsTypes): initialState => {
   switch (action.type) {
-    case IS_OPEN_ADD_CATEGORY_MODAL:
+    case "IS_OPEN_ADD_CATEGORY_MODAL":
       return {
         ...state,
-        isOpen: action.payload
+        isOpen: action.payload as boolean
       }
     default:
       return state

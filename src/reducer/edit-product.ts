@@ -1,17 +1,18 @@
-import { CLEAR_EDIT_PRODUCT, EDIT_PRODUCT, editProductAction, EditProductState } from "../actions/types"
+import { ActionsTypes } from "../store"
 
-const initialState: EditProductState = {
+export type initialState = typeof initialState
+const initialState = {
   product: {}
 }
 
-export default (state = initialState, action: editProductAction): EditProductState => {
+export default (state: initialState = initialState, action: ActionsTypes): initialState => {
   switch (action.type) {
-    case EDIT_PRODUCT:
+    case "EDIT_PRODUCT":
       return {
         ...state,
         product: action.payload
       }
-      case CLEAR_EDIT_PRODUCT:
+    case "CLEAR_EDIT_PRODUCT":
       return {
         ...initialState
       }

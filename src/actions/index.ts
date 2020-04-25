@@ -1,55 +1,39 @@
-import {
-  CLEAR_EDIT_CATEGORY,
-  CLEAR_EDIT_PRODUCT,
-  EDIT_CATEGORY,
-  EDIT_PRODUCT,
-  editCategoryAction,
-  editProductAction,
-  IS_OPEN_ADD_CATEGORY_MODAL,
-  IS_OPEN_ADD_PRODUCT_MODAL,
-  IS_OPEN_EDIT_CATEGORY_MODAL,
-  IS_OPEN_EDIT_PRODUCT_MODAL,
-  setIsOpenAddCategoryModalAction,
-  setIsOpenAddProductModalAction,
-  setIsOpenEditCategoryModalAction,
-  setIsOpenEditProductModalAction
-} from "./types"
 import { Category, Product } from "../__generated__/types"
 
-export const editProduct = (product: Product): editProductAction => ({
-  type: EDIT_PRODUCT,
+export const editProduct = (product: Product) => ({
+  type: "EDIT_PRODUCT",
   payload: product
-})
+}as const)
 
 export const clearEditProduct = () => ({
-  type: CLEAR_EDIT_PRODUCT
-})
+  type: "CLEAR_EDIT_PRODUCT"
+}as const)
 
-export const editCategory = (category: Category): editCategoryAction => ({
-  type: EDIT_CATEGORY,
+export const editCategory = (category: Category) => ({
+  type: "EDIT_CATEGORY",
   payload: category
-})
+}as const)
 
 export const clearEditCategory = () => ({
-  type: CLEAR_EDIT_CATEGORY
-})
+  type: "CLEAR_EDIT_CATEGORY"
+}as const)
 
-export const setIsOpenEditProductModal = (isOpen: Boolean): setIsOpenEditProductModalAction => ({
-  type: IS_OPEN_EDIT_PRODUCT_MODAL,
+export const setIsOpenEditProductModal = (isOpen: Boolean) => ({
+  type: "IS_OPEN_EDIT_PRODUCT_MODAL",
   payload: isOpen
-})
+}as const)
 
-export const setIsOpenAddProductModal = (isOpen: Boolean): setIsOpenAddProductModalAction => ({
-  type: IS_OPEN_ADD_PRODUCT_MODAL,
+export const setIsOpenAddProductModal = (isOpen: Boolean) => ({
+  type: "IS_OPEN_ADD_PRODUCT_MODAL",
   payload: isOpen
-})
+}as const)
 
-export const setIsOpenEditCategoryModal = (isOpen: Boolean): setIsOpenEditCategoryModalAction => ({
-  type: IS_OPEN_EDIT_CATEGORY_MODAL,
+export const setIsOpenEditCategoryModal = (isOpen: Boolean) => ({
+  type: "IS_OPEN_EDIT_CATEGORY_MODAL",
   payload: isOpen
-})
+}as const)
 
-export const setIsOpenAddCategoryModal = (isOpen: Boolean): setIsOpenAddCategoryModalAction => ({
-  type: IS_OPEN_ADD_CATEGORY_MODAL,
+export const setIsOpenAddCategoryModal = (isOpen: Boolean) => ({
+  type: "IS_OPEN_ADD_CATEGORY_MODAL",
   payload: isOpen
 })

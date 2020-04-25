@@ -1,6 +1,4 @@
-import {
-  EditProductState,
-  REACT_APP_RECYCLE_BIN_ID
+import {   REACT_APP_RECYCLE_BIN_ID
 } from "../../actions/types"
 
 import { Product, Category, MutationAddProductArgs } from "../../__generated__/types"
@@ -20,7 +18,7 @@ export interface PropsProductsTable {
 }
 
 export interface PropsProducts {
-  editProduct: (product: EditProductState) => void
+  editProduct: (product: Product) => void
   setIsOpenAddProductModal: (isOpen: Boolean) => void
 }
 
