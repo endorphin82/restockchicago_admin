@@ -23,7 +23,7 @@ const CategoryAddForm: React.FC<PropsCategoryAddForm> = (
     setIsOpenAddCategoryModal,
     isOpenAddCategoryModal
   }) => {
-  const [addCategory, { data: daa_cat_data }] = useAddCategory(
+  const [addCategory] = useAddCategory(
     {
       // TODO:
       // @ts-ignore

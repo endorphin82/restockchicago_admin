@@ -4,7 +4,6 @@ import { CategoriesAllDocument, useCategoriesAll } from "../Categories/queries/_
 import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
 import { Category, Product } from "../../__generated__/types"
 import { useDeleteCascadeCategoryWithProductsById } from "../Categories/mutations/__generated__/DeleteCascadeCategoryWithProductsById"
-import { ProductsAllDocument } from "../Products/queries/__generated__/ProductsAll"
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined"
 import { editCategory } from "../../actions"
 import { setIsOpenEditCategoryModal } from "../../actions"
@@ -19,7 +18,7 @@ export interface PropsCategoryTable {
 
 const CategoriesTable: React.FC<PropsCategoryTable> = ({ editCategory, setIsOpenEditCategoryModal }) => {
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
-  const [deleteCascadeCategoryWithProductsById, {}] = useDeleteCascadeCategoryWithProductsById({
+  const [deleteCascadeCategoryWithProductsById] = useDeleteCascadeCategoryWithProductsById({
       refetchQueries: [{
         query: CategoriesAllDocument
       }]

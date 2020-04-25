@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react"
 import { connect } from "react-redux"
 import { RootState } from "../../reducer"
-import { clearEditCategory, clearEditProduct, setIsOpenEditCategoryModal } from "../../actions"
+import { clearEditCategory, setIsOpenEditCategoryModal } from "../../actions"
 import { Button, Form, Input, Modal, Select } from "antd"
 import { useUpdateCategory } from "../Categories/mutations/__generated__/UpdateCategory"
 import MinusCircleOutlined from "@ant-design/icons/lib/icons/MinusCircleOutlined"
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined"
-import { priceStringToIntCent } from "../../utils/utils"
 import { Category } from "../../__generated__/types"
 import { CategoriesAllDocument, useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
 import { ProductsAllDocument } from "../Products/queries/__generated__/ProductsAll"
@@ -19,7 +18,7 @@ type PropsCategoryEditForm = {
 }
 const CategoryEditForm: React.FC<PropsCategoryEditForm> = ({ edited_category, setIsOpenEditCategoryModal, isOpenEditCategoryModal }) => {
   const [formEditCategory] = Form.useForm()
-  const [updateCategory, {}] = useUpdateCategory({
+  const [updateCategory] = useUpdateCategory({
     refetchQueries: [
       {
         query: CategoriesAllDocument
@@ -44,7 +43,7 @@ const CategoryEditForm: React.FC<PropsCategoryEditForm> = ({ edited_category, se
     return () => {
       formEditCategory.resetFields()
     }
-  }, [edited_category])
+  }, [edited_category, formEditCategory])
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
 
   if (cat_loading) {

@@ -13,14 +13,14 @@ import {
 import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
 import { useDeleteProduct } from "../Products/mutations/__generated__/DeleteProduct"
 import { useUpdateProduct } from "../Products/mutations/__generated__/UpdateProduct"
-import { Category, MutationAddProductArgs, Product } from "../../__generated__/types"
+import { Product } from "../../__generated__/types"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
 
 interface PropsRecycleBinProductsTable {
   clearEditProduct: () => void
-  editProduct: (product: MutationAddProductArgs) => void
-  edited_product: MutationAddProductArgs
+  editProduct: (product: Product) => void
+  edited_product: Product
 }
 
 const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = (
@@ -40,7 +40,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = (
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState(false)
   const [isVisualRestoreModal, setIsVisualRestoreModal] = useState(false)
   const [productDeleted, setProductDeleted] = useState<Product | any>({})
-  const [deleteProduct, {}] = useDeleteProduct({
+  const [deleteProduct] = useDeleteProduct({
       refetchQueries: [{
         query: ProductsByCategoryIdDocument,
         variables: {
@@ -49,7 +49,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = (
       }]
     }
   )
-  const [updateProduct, {}] = useUpdateProduct({
+  const [updateProduct] = useUpdateProduct({
       refetchQueries: [{
         query: ProductsByCategoryIdDocument,
         variables: {
@@ -82,10 +82,6 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = (
   console.log("productsByCategoryId", recycle_bin_prod_data?.productsByCategoryId)
 
   const onFinish = (valuefromform: any) => {
-
-    const categoriesWithoutRecyclebin = edited_product?.categories?.filter((category) => {
-      return category !== REACT_APP_RECYCLE_BIN_ID
-    })
     const productWithoutRecycleBin = {
       ...edited_product,
       categories: [valuefromform?.category]
@@ -313,8 +309,9 @@ const mapStateToProps = (state: RootState): StateProps => ({
   edited_product: state.edit_product.product
 })
 
-export default connect<StateProps, typeof RecycleBinProductsTable>(
+export default connect<typeof RecycleBinProductsTable>(
   // TODO:
-  // @ts-ignore
+// @ts-ignore
   mapStateToProps,
-  { editProduct, clearEditProduct })(RecycleBinProductsTable)
+  { editProduct, clearEditProduct }
+)(RecycleBinProductsTable)
