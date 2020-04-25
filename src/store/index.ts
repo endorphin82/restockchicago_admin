@@ -1,15 +1,10 @@
 import { createStore } from "redux";
 import { rootReducer } from "../reducer"
 import { composeWithDevTools } from "redux-devtools-extension/logOnlyInProduction"
-// const composeEnhancers =
-//   typeof window === "object" &&
-//   window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
-//     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
-//       // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
-//     }) : compose;
-
+import * as actions from "../actions"
 const composeEnhancers = composeWithDevTools();
 
-const store = createStore(rootReducer, {}, composeEnhancers);
+type InferValueTypes<T> = T extends { [key: string]: infer U } ? U : never;
+export type ActionsTypes = ReturnType<InferValueTypes<typeof actions>>;
 
-export default store;
+export const store = createStore(rootReducer, {}, composeEnhancers);
