@@ -14,26 +14,26 @@ export const editCategory = (category: Category) => ({
   payload: category
 }as const)
 
-export const clearEditCategory = () => ({
-  type: "CLEAR_EDIT_CATEGORY"
-}as const)
-
-export const setIsOpenEditProductModal = (isOpen: Boolean) => ({
+export const setIsOpenEditProductModal = (isOpen: boolean) => ({
   type: "IS_OPEN_EDIT_PRODUCT_MODAL",
   payload: isOpen
 }as const)
 
-export const setIsOpenAddProductModal = (isOpen: Boolean) => ({
+export const setIsOpenAddProductModal = (isOpen: boolean) => ({
   type: "IS_OPEN_ADD_PRODUCT_MODAL",
   payload: isOpen
 }as const)
 
-export const setIsOpenEditCategoryModal = (isOpen: Boolean) => ({
+export const setIsOpenEditCategoryModal = (isOpen: boolean) => ({
   type: "IS_OPEN_EDIT_CATEGORY_MODAL",
   payload: isOpen
 }as const)
 
-export const setIsOpenAddCategoryModal = (isOpen: Boolean) => ({
+export const setIsOpenAddCategoryModal = (isOpen: boolean) => ({
   type: "IS_OPEN_ADD_CATEGORY_MODAL",
   payload: isOpen
 })
+
+export const clearEditCategory = () => ({
+  type: "CLEAR_EDIT_CATEGORY"
+}as const)

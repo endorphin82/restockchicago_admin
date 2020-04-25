@@ -21,7 +21,7 @@ type PropsProductAddForm = {
 }
 
 const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => {
-  const [addProduct, {data: add_product_data}] = useAddProduct(
+  const [addProduct, { data: add_product_data }] = useAddProduct(
     {
       // TODO:
       // @ts-ignore

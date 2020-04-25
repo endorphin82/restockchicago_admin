@@ -1,5 +1,3 @@
-import { Product, Category } from "../__generated__/types"
-
 export const REACT_APP_RECYCLE_BIN_ID = String(process.env.REACT_APP_RECYCLE_BIN_ID)
 // export const REACT_APP_WITHOUT_CATEGORY_ID= String(process.env.REACT_APP_WITHOUT_CATEGORY_ID)
 export const REACT_APP_NO_IMAGE_AVAILABLE = String(process.env.REACT_APP_NO_IMAGE_AVAILABLE)
@@ -20,13 +18,6 @@ export const REACT_APP_BASE_URL = String(process.env.REACT_APP_BASE_URL)
 //   move: (from: number, to: number) => void;
 // }
 
-export interface AddProductModalState {
-  isOpen: Boolean
-}
-
-export interface mstpAddProductModalState {
-  isOpenAddProductModal: Boolean
-}
 
 export interface CategoryRequireIcons {
   id?: String
