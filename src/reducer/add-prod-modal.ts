@@ -5,12 +5,12 @@ const initialState = {
   isOpen: false
 }
 
-export default (state: initialState = initialState, action: ActionsTypes): initialState => {
+export default (state = initialState, action: ActionsTypes): initialState => {
   switch (action.type) {
     case "IS_OPEN_ADD_PRODUCT_MODAL":
       return {
         ...state,
-        isOpen: action.payload as boolean
+        isOpen: action.payload
       }
     default:
       return state

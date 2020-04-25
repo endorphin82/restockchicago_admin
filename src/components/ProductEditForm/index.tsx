@@ -18,9 +18,13 @@ interface PropsProductEditForm {
   isOpenEditProductModal: Boolean
 }
 
-const ProductEditForm: React.FC<PropsProductEditForm> = ({ clearEditProduct, edited_product, isOpenEditProductModal, setIsOpenEditProductModal }) => {
+const ProductEditForm: React.FC<PropsProductEditForm> = (
+  {
+    clearEditProduct, edited_product,
+    isOpenEditProductModal, setIsOpenEditProductModal
+  }) => {
   const [formEditProduct] = Form.useForm()
-  const [updateProduct, {}] = useUpdateProduct()
+  const [updateProduct] = useUpdateProduct()
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
   const [values, setValues] = useState<Product | any>({})
   useEffect(() => {
@@ -37,7 +41,7 @@ const ProductEditForm: React.FC<PropsProductEditForm> = ({ clearEditProduct, edi
     return () => {
       formEditProduct.resetFields()
     }
-  }, [edited_product])
+  }, [edited_product, formEditProduct])
 
   const onFinish = (valuefromformlist: Product) => {
     const { name, categories, images, icon } = valuefromformlist

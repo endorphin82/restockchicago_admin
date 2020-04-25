@@ -10,7 +10,7 @@ export default (state: initialState = initialState, action: ActionsTypes): initi
     case "IS_OPEN_EDIT_CATEGORY_MODAL":
       return {
         ...state,
-        isOpen: action.payload as boolean
+        isOpen: action.payload
       }
     default:
       return state

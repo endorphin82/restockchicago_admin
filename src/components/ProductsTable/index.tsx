@@ -14,7 +14,7 @@ import { Product } from "../../__generated__/types"
 
 const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEditProductModal }) => {
   const { loading, error, data } = useProductsAll()
-  const [updateProduct, {}] = useUpdateProduct(
+  const [updateProduct] = useUpdateProduct(
     {
       refetchQueries: [{
         query: ProductsByCategoryIdDocument,

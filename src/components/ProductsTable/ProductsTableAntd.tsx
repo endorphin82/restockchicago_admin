@@ -5,7 +5,6 @@ import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined"
 import { ProductsAll } from "../Products/queries/__generated__/ProductsAll"
 
 const styleImagesInTable = { width: "50px", height: "100%", marginRight: "10px" }
-const styleIconInTable = { width: "20px", height: "100%", marginRight: "10px" }
 
 interface PropsProductsTableAntd {
   handleEditProp: (id: String) => void
@@ -41,11 +40,11 @@ const ProductsTableAntd: React.FC<PropsProductsTableAntd> = ({ handleEditProp, h
         <span>
           {categories.map(tag => (
             <Tag color="blue" key={String(tag)}>
-            {tag}
+              {tag}
             </Tag>
           ))}
         </span>
-        )
+      )
     },
     {
       title: "Images",
