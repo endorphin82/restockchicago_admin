@@ -91,8 +91,9 @@ export type Product = {
 export type Query = {
    __typename?: 'Query';
   productById?: Maybe<Product>;
-  productByName?: Maybe<Array<Maybe<Product>>>;
+  productsByName?: Maybe<Array<Maybe<Product>>>;
   categoryById?: Maybe<Category>;
+  categoriesByParentId?: Maybe<Array<Maybe<Category>>>;
   productsAll?: Maybe<Array<Maybe<Product>>>;
   productsByCategoryId?: Maybe<Array<Maybe<Product>>>;
   categoryByName?: Maybe<Array<Maybe<Category>>>;
@@ -106,13 +107,18 @@ export type QueryProductByIdArgs = {
 };
 
 
-export type QueryProductByNameArgs = {
+export type QueryProductsByNameArgs = {
   name?: Maybe<Scalars['String']>;
 };
 
 
 export type QueryCategoryByIdArgs = {
   _id?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryCategoriesByParentIdArgs = {
+  parent?: Maybe<Scalars['String']>;
 };
 
 

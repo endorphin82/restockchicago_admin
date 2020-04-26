@@ -6,6 +6,7 @@ import { connect } from "react-redux"
 import { clearEditProduct, setIsOpenAddProductModal } from "../../actions"
 import ProductsTable from "../ProductsTable"
 import ProductEditForm from "../ProductEditForm"
+import ProductsSearch from "../ProductsSearch"
 
 interface PropsProducts {
   clearEditProduct: () => void
