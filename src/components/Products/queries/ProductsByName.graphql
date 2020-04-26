@@ -1,0 +1,10 @@
+query ProductsByName($name: String!){
+    productsByName(name: $name){
+        id
+        name
+        price
+        images
+        icon
+        categories
+    }
+}

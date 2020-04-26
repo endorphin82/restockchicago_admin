@@ -15,7 +15,7 @@ export const editCategory = (category: Category) => ({
 }as const)
 
 export const setIsOpenEditProductModal = (isOpen: boolean) => ({
-  type: "IS_OPEN_EDIT_PRODUCT_MODAL",
+  type: 'IS_OPEN_EDIT_PRODUCT_MODAL',
   payload: isOpen
 }as const)
 

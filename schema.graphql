@@ -38,10 +38,11 @@ type Product {
 type Query {
     categoriesAll: [Category]
     categoriesByListNames(names: [String]): [Category]
+    categoriesByParentId(parent: String): [Category]
     categoryById(_id: String): Category
     categoryByName(name: String): [Category]
     productById(id: ID): Product
-    productByName(name: String): [Product]
     productsAll: [Product]
     productsByCategoryId(id: String): [Product]
+    productsByName(name: String): [Product]
 }

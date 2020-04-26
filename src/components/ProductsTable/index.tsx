@@ -2,18 +2,27 @@ import React, { useState } from "react"
 import { Modal } from "antd"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenEditProductModal } from "../../actions"
-import { PropsProductsTable } from "../Products/types"
 
 import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
 
 import ProductsTableAntd from "./ProductsTableAntd"
 import { useProductsAll } from "../Products/queries/__generated__/ProductsAll"
 import { useUpdateProduct } from "../Products/mutations/__generated__/UpdateProduct"
-import { ProductsByCategoryIdDocument } from "../Products/queries/__generated__/ProductsByCategoryId"
+import {
+  ProductsByCategoryIdDocument,
+  useProductsByCategoryId
+} from "../Products/queries/__generated__/ProductsByCategoryId"
 import { Product } from "../../__generated__/types"
+import ProductsSearch from "../ProductsSearch"
+import { useProductsByName } from "../Products/queries/__generated__/ProductsByName"
+
+interface PropsProductsTable {
+  editProduct: (product: Product | undefined) => void
+  setIsOpenEditProductModal: (isOpen: Boolean | undefined) => void
+}
 
 const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEditProductModal }) => {
-  const { loading, error, data } = useProductsAll()
+  const { loading, error, data: product_all_data } = useProductsAll()
   const [updateProduct] = useUpdateProduct(
     {
       refetchQueries: [{
@@ -24,23 +33,46 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
       }]
     }
   )
-
+  const [name, setName] = useState("")
+  const { loading: prod_loading, error: prod_error, data: prod_data } = useProductsByName(
+    {
+    variables: {
+    name
+  }
+}
+     // ({ name = "" }) => ({    variables: { name },  })
+)
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState<Boolean>(false)
   const [productDeleted, setProductDeleted] = useState<Product | any>({})
   console.log("productDeleted", productDeleted)
+
+  // if (loading) {
+  //   return (<div>Loading...</div>)
+  // }
+  // if (error || !product_all_data) {
+  //   return (<div>Error...</div>)
+  // }
+  // const { productsAll } = product_all_data
+  //
+  // // TODO:
+  // // @ts-ignore
+  // const productsAllWithoutRecycleBin = productsAll?.filter((prod: Product) => {
+  //   return !prod?.categories?.includes(REACT_APP_RECYCLE_BIN_ID)
+  // })
+
   if (loading) {
     return (<div>Loading...</div>)
   }
-  if (error || !data) {
+  if (prod_error || !prod_data) {
     return (<div>Error...</div>)
   }
-  const { productsAll } = data
+  const { productsByName } = prod_data
+
   // TODO:
   // @ts-ignore
-  const productsAllWithoutRecycleBin = productsAll?.filter((prod: Product) => {
+  const productsAllWithoutRecycleBin = productsByName?.filter((prod: Product) => {
     return !prod?.categories?.includes(REACT_APP_RECYCLE_BIN_ID)
   })
-
   const handleEdit = (id: String): void => {
     const prod = productsAllWithoutRecycleBin?.find((prod: Product) => prod.id === id)
     editProduct(prod)
@@ -71,8 +103,26 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
     setIsVisualDeleteModal(false)
   }
 
+  const handleChange = (e: any) => {
+    // if (e.charCode === 13) {
+      setName(e.target.value)
+    // }
+  }
+
+  const handleSearch = (e: any) => {
+    // const { data = {} } = this.props;
+    // const { name } = this.state;
+    // if (e.charCode === 13) {
+    //   prod_data.fetchMore({
+    //     variables: { name },
+    //     updateQuery: (previousResult, { fetchMoreResult }) => fetchMoreResult,
+    //   })
+    // }
+  }
+
   return (
     <>
+      <ProductsSearch name={name} handleChange={handleChange} handleSearch={handleSearch}/>
       <ProductsTableAntd productsAllWithoutRecycleBinProp={productsAllWithoutRecycleBin}
                          handleEditProp={handleEdit}
                          handleDeleteProp={handleDelete}/>
