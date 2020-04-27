@@ -1,0 +1,10 @@
+query ProductsByNameAndCategoriesId($name: String!, $categories: [String]){
+    productsByNameAndCategoriesId(name: $name, categories: $categories){
+        id
+        name
+        price
+        images
+        icon
+        categories
+    }
+}

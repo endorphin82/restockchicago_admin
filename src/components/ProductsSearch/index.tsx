@@ -1,4 +1,4 @@
-import React  from "react"
+import React from "react"
 import { Input } from "antd"
 
 const { Search } = Input
@@ -10,14 +10,12 @@ interface PropsProductsSearch {
 
 const ProductsSearch: React.FC<PropsProductsSearch> = ({ handleSearch, handleEnterSearch }) => {
   return (
-    <>
-      <Search
-        onKeyPress={handleEnterSearch}
-        placeholder="input search text"
-        onSearch={(value) => handleSearch(value)}
-        style={{ width: 300 }}
-      />
-    </>
+    <Search
+      onKeyPress={handleEnterSearch}
+      placeholder="input search text"
+      onSearch={(value) => handleSearch(value)}
+      style={{ width: '30%' }}
+    />
   )
 }
 

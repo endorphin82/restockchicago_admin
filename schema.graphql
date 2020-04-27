@@ -1,48 +1,49 @@
 # This file was generated based on ".graphqlconfig". Do not edit manually.
 
 schema {
-    query: Query
-    mutation: Mutation
+  query: Query
+  mutation: Mutation
 }
 
 type Category {
-    _id: String
-    icons: [String]
-    images: [String]
-    name: String!
-    parent: String
+  _id: String
+  icons: [String]
+  images: [String]
+  name: String!
+  parent: String
 }
 
 type Mutation {
-    addCategory(_id: String!, icons: [String], images: [String], name: String!, parent: String): Category
-    addProduct(categories: [String], icon: String, images: [String], name: String!, price: Float!): Product
-    addProductsWithoutCategoryInWithoutCategory: Product
-    clearRecycleBin: Product
-    "Delete Category with products"
-    deleteCascadeCategoryWithProductsById(_id: String!): Category
-    "Description deleteProduct"
-    deleteProduct(id: ID!): Product
-    updateCategory(_id: String!, icons: [String], images: [String], name: String!, parent: String): Category
-    updateProduct(categories: [String], icon: String, id: ID!, images: [String], name: String!, price: Float!): Product
+  addCategory(_id: String!, icons: [String], images: [String], name: String!, parent: String): Category
+  addProduct(categories: [String], icon: String, images: [String], name: String!, price: Float!): Product
+  addProductsWithoutCategoryInWithoutCategory: Product
+  clearRecycleBin: Product
+  "Delete Category with products"
+  deleteCascadeCategoryWithProductsById(_id: String!): Category
+  "Description deleteProduct"
+  deleteProduct(id: ID!): Product
+  updateCategory(_id: String!, icons: [String], images: [String], name: String!, parent: String): Category
+  updateProduct(categories: [String], icon: String, id: ID!, images: [String], name: String!, price: Float!): Product
 }
 
 type Product {
-    categories: [String]
-    icon: String
-    id: ID
-    images: [String]
-    name: String!
-    price: Float!
+  categories: [String]
+  icon: String
+  id: ID
+  images: [String]
+  name: String!
+  price: Float!
 }
 
 type Query {
-    categoriesAll: [Category]
-    categoriesByListNames(names: [String]): [Category]
-    categoriesByParentId(parent: String): [Category]
-    categoryById(_id: String): Category
-    categoryByName(name: String): [Category]
-    productById(id: ID): Product
-    productsAll: [Product]
-    productsByCategoryId(id: String): [Product]
-    productsByName(name: String): [Product]
+  categoriesAll: [Category]
+  categoriesByListNames(names: [String]): [Category]
+  categoriesByParentId(parent: String): [Category]
+  categoryById(_id: String): Category
+  categoryByName(name: String): [Category]
+  productById(id: ID): Product
+  productsAll: [Product]
+  productsByCategoryId(id: String): [Product]
+  productsByName(name: String): [Product]
+  productsByNameAndCategoriesId(categories: [String], name: String): [Product]
 }
