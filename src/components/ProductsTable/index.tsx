@@ -2,19 +2,13 @@ import React, { useState } from "react"
 import { Modal } from "antd"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenEditProductModal } from "../../actions"
-
 import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
-
 import ProductsTableAntd from "./ProductsTableAntd"
-import { useProductsAll } from "../Products/queries/__generated__/ProductsAll"
 import { useUpdateProduct } from "../Products/mutations/__generated__/UpdateProduct"
-import {
-  ProductsByCategoryIdDocument,
-  useProductsByCategoryId
-} from "../Products/queries/__generated__/ProductsByCategoryId"
+import { ProductsByCategoryIdDocument } from "../Products/queries/__generated__/ProductsByCategoryId"
 import { Product } from "../../__generated__/types"
 import ProductsSearch from "../ProductsSearch"
-import { ProductsByNameDocument, useProductsByName } from "../Products/queries/__generated__/ProductsByName"
+import { useProductsByName } from "../Products/queries/__generated__/ProductsByName"
 
 interface PropsProductsTable {
   editProduct: (product: Product | undefined) => void
@@ -39,7 +33,6 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
         name: searchName
       }
     }
-    // ({ name = "" }) => ({    variables: { name },  })
   )
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState<Boolean>(false)
   const [productDeleted, setProductDeleted] = useState<Product | any>({})
