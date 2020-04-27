@@ -14,7 +14,7 @@ import {
 } from "../Products/queries/__generated__/ProductsByCategoryId"
 import { Product } from "../../__generated__/types"
 import ProductsSearch from "../ProductsSearch"
-import { useProductsByName } from "../Products/queries/__generated__/ProductsByName"
+import { ProductsByNameDocument, useProductsByName } from "../Products/queries/__generated__/ProductsByName"
 
 interface PropsProductsTable {
   editProduct: (product: Product | undefined) => void
@@ -33,11 +33,11 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
       }]
     }
   )
-  const [name, setName] = useState("")
-  const { loading: prod_loading, error: prod_error, data: prod_data } = useProductsByName(
+  const [searchname, setSearchname] = useState("")
+  const {loading: prod_loading, error: prod_error, data: prod_data } = useProductsByName(
     {
     variables: {
-    name
+    name: searchname
   }
 }
      // ({ name = "" }) => ({    variables: { name },  })
@@ -104,25 +104,18 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
   }
 
   const handleChange = (e: any) => {
-    // if (e.charCode === 13) {
-      setName(e.target.value)
-    // }
+    //   setSearchname(e.target.value)
   }
 
   const handleSearch = (e: any) => {
-    // const { data = {} } = this.props;
-    // const { name } = this.state;
-    // if (e.charCode === 13) {
-    //   prod_data.fetchMore({
-    //     variables: { name },
-    //     updateQuery: (previousResult, { fetchMoreResult }) => fetchMoreResult,
-    //   })
-    // }
+    if (e.charCode === 13) {
+      setSearchname(e.target.value)
+    }
   }
 
   return (
     <>
-      <ProductsSearch name={name} handleChange={handleChange} handleSearch={handleSearch}/>
+      <ProductsSearch searchname={searchname} handleChange={handleChange} handleSearch={handleSearch}/>
       <ProductsTableAntd productsAllWithoutRecycleBinProp={productsAllWithoutRecycleBin}
                          handleEditProp={handleEdit}
                          handleDeleteProp={handleDelete}/>
