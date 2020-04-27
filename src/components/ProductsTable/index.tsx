@@ -22,7 +22,6 @@ interface PropsProductsTable {
 }
 
 const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEditProductModal }) => {
-  const { loading, error, data: product_all_data } = useProductsAll()
   const [updateProduct] = useUpdateProduct(
     {
       refetchQueries: [{
@@ -33,34 +32,21 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
       }]
     }
   )
-  const [searchname, setSearchname] = useState("")
-  const {loading: prod_loading, error: prod_error, data: prod_data } = useProductsByName(
+  const [searchName, setSearchName] = useState("")
+  const { loading: prod_loading, error: prod_error, data: prod_data } = useProductsByName(
     {
-    variables: {
-    name: searchname
-  }
-}
-     // ({ name = "" }) => ({    variables: { name },  })
-)
+      variables: {
+        name: searchName
+      }
+    }
+    // ({ name = "" }) => ({    variables: { name },  })
+  )
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState<Boolean>(false)
   const [productDeleted, setProductDeleted] = useState<Product | any>({})
   console.log("productDeleted", productDeleted)
 
-  // if (loading) {
-  //   return (<div>Loading...</div>)
-  // }
-  // if (error || !product_all_data) {
-  //   return (<div>Error...</div>)
-  // }
-  // const { productsAll } = product_all_data
-  //
-  // // TODO:
-  // // @ts-ignore
-  // const productsAllWithoutRecycleBin = productsAll?.filter((prod: Product) => {
-  //   return !prod?.categories?.includes(REACT_APP_RECYCLE_BIN_ID)
-  // })
 
-  if (loading) {
+  if (prod_loading) {
     return (<div>Loading...</div>)
   }
   if (prod_error || !prod_data) {
@@ -103,19 +89,20 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
     setIsVisualDeleteModal(false)
   }
 
-  const handleChange = (e: any) => {
-    //   setSearchname(e.target.value)
+  const handleSearch = (value: string) => {
+    setSearchName(value)
   }
 
-  const handleSearch = (e: any) => {
+  const handleEnterSearch = (e: any) => {
     if (e.charCode === 13) {
-      setSearchname(e.target.value)
+      setSearchName(e.target.value)
     }
   }
 
   return (
     <>
-      <ProductsSearch searchname={searchname} handleChange={handleChange} handleSearch={handleSearch}/>
+      <ProductsSearch handleEnterSearch={handleEnterSearch}
+                      handleSearch={handleSearch}/>
       <ProductsTableAntd productsAllWithoutRecycleBinProp={productsAllWithoutRecycleBin}
                          handleEditProp={handleEdit}
                          handleDeleteProp={handleDelete}/>

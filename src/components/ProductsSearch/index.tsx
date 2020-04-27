@@ -4,19 +4,17 @@ import { Input } from "antd"
 const { Search } = Input
 
 interface PropsProductsSearch {
-  searchname: String
-  handleChange: (e: any) => void
   handleSearch: (e: any) => any
+  handleEnterSearch: (e: any) => any
 }
 
-const ProductsSearch: React.FC<PropsProductsSearch> = ({ searchname, handleChange, handleSearch }) => {
+const ProductsSearch: React.FC<PropsProductsSearch> = ({ handleSearch, handleEnterSearch }) => {
   return (
     <>
       <Search
-        onChange={handleChange}
-        onKeyPress={handleSearch}
+        onKeyPress={handleEnterSearch}
         placeholder="input search text"
-        onSearch={value => console.log(value)}
+        onSearch={(value) => handleSearch(value)}
         style={{ width: 300 }}
       />
     </>
