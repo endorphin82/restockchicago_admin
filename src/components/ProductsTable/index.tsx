@@ -105,13 +105,13 @@ const ProductsTable: React.FC<PropsProductsTable> = ({categories, editProduct, s
     }
   }
 
-  const handleChange = (values: any) => {
+  const handleChange = (values: string) => {
     if (values.length < 1) {
       // values = categories
       // console.log(`selected ${values}`)
       setSearchCategories(categories)
     }
-    setSearchCategories(values)
+    // setSearchCategories(values)
   }
 
   return (
