@@ -12,7 +12,6 @@ export interface IProductsAll {
   productsAll: ProductsAll  // TODO: Put correct type here
 }
 
-
 export interface PropsProducts {
   editProduct: (product: Product) => void
   setIsOpenAddProductModal: (isOpen: Boolean) => void
