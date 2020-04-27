@@ -14,6 +14,11 @@ export const editCategory = (category: Category) => ({
   payload: category
 }as const)
 
+export const categoriesList = (categories: String[]|[]) => ({
+  type: "CATEGORIES_LIST",
+  payload: [...categories]
+}as const)
+
 export const setIsOpenEditProductModal = (isOpen: boolean) => ({
   type: 'IS_OPEN_EDIT_PRODUCT_MODAL',
   payload: isOpen

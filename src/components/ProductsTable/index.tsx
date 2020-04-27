@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Modal } from "antd"
 import { connect } from "react-redux"
 import { editProduct, setIsOpenEditProductModal } from "../../actions"
@@ -6,16 +6,22 @@ import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
 import ProductsTableAntd from "./ProductsTableAntd"
 import { useUpdateProduct } from "../Products/mutations/__generated__/UpdateProduct"
 import { ProductsByCategoryIdDocument } from "../Products/queries/__generated__/ProductsByCategoryId"
-import { Product } from "../../__generated__/types"
+import { Product, Category } from "../../__generated__/types"
 import ProductsSearch from "../ProductsSearch"
 import { useProductsByName } from "../Products/queries/__generated__/ProductsByName"
+import ProductsSelectByCategories from "../ProductsSelectByCategories"
+import { useProductsByNameAndCategoriesId } from "../Products/queries/__generated__/ProductsByNameAndCategoriesId"
+import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
+import Categories from "../Categories"
+import { RootState } from "../../reducer"
 
 interface PropsProductsTable {
   editProduct: (product: Product | undefined) => void
   setIsOpenEditProductModal: (isOpen: Boolean | undefined) => void
+  categories: String[] | [] | any
 }
 
-const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEditProductModal }) => {
+const ProductsTable: React.FC<PropsProductsTable> = ({categories, editProduct, setIsOpenEditProductModal }) => {
   const [updateProduct] = useUpdateProduct(
     {
       refetchQueries: [{
@@ -27,29 +33,36 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
     }
   )
   const [searchName, setSearchName] = useState("")
-  const { loading: prod_loading, error: prod_error, data: prod_data } = useProductsByName(
+  const [searchCategories, setSearchCategories] = useState([])
+  const { loading: prod_loading, error: prod_error, data: prod_data } = useProductsByNameAndCategoriesId(
     {
       variables: {
-        name: searchName
+        name: searchName,
+        categories: searchCategories
       }
     }
   )
+  const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
   const [isVisualDeleteModal, setIsVisualDeleteModal] = useState<Boolean>(false)
   const [productDeleted, setProductDeleted] = useState<Product | any>({})
+
+  useEffect(() => {
+    setSearchCategories(categories)
+  }, [categories])
+
   console.log("productDeleted", productDeleted)
 
-
-  if (prod_loading) {
+  if (prod_loading || cat_loading) {
     return (<div>Loading...</div>)
   }
-  if (prod_error || !prod_data) {
+  if (prod_error || !prod_data || cat_error || !cat_data) {
     return (<div>Error...</div>)
   }
-  const { productsByName } = prod_data
+  const { productsByNameAndCategoriesId } = prod_data
 
   // TODO:
   // @ts-ignore
-  const productsAllWithoutRecycleBin = productsByName?.filter((prod: Product) => {
+  const productsAllWithoutRecycleBin = productsByNameAndCategoriesId?.filter((prod: Product) => {
     return !prod?.categories?.includes(REACT_APP_RECYCLE_BIN_ID)
   })
   const handleEdit = (id: String): void => {
@@ -92,10 +105,20 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
     }
   }
 
+  const handleChange = (values: string) => {
+    if (values.length < 1) {
+      // values = categories
+      // console.log(`selected ${values}`)
+      setSearchCategories(categories)
+    }
+    // setSearchCategories(values)
+  }
+
   return (
     <>
       <ProductsSearch handleEnterSearch={handleEnterSearch}
                       handleSearch={handleSearch}/>
+      <ProductsSelectByCategories handleChange={handleChange}/>
       <ProductsTableAntd productsAllWithoutRecycleBinProp={productsAllWithoutRecycleBin}
                          handleEditProp={handleEdit}
                          handleDeleteProp={handleDelete}/>
@@ -111,7 +134,17 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ editProduct, setIsOpenEdi
   )
 }
 
-export default connect<typeof ProductsTable>(null, {
+interface StateProps {
+  categories: String[]
+}
+
+const mapStateToProps = (state: RootState): StateProps => ({
+  categories: state.categories_list.categories
+})
+export default connect<typeof ProductsTable>(
+// @ts-ignore
+  mapStateToProps
+  , {
   setIsOpenEditProductModal,
   editProduct
 })(ProductsTable)
