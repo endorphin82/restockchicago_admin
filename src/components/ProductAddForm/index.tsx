@@ -138,7 +138,7 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
           <Select
             onChange={handleChangeSelect}
             // @ts-ignore
-            defaultValue={searchCategories.length == categories.length ? [] : searchCategories}
+            defaultValue={searchCategories.length === categories.length ? [] : searchCategories}
             mode="multiple"
             placeholder="Select category">
             {categoriesAllWithoutRecycleBin?.map((category) =>
