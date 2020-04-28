@@ -3,6 +3,10 @@ import {   REACT_APP_RECYCLE_BIN_ID
 
 import { Product, Category, MutationAddProductArgs } from "../../__generated__/types"
 import { ProductsAll } from "./queries/__generated__/ProductsAll"
+import {
+  ProductsByNameAndCategoriesId,
+  ProductsByNameAndCategoriesIdDocument
+} from "./queries/__generated__/ProductsByNameAndCategoriesId"
 
 // export interface AllTasksResult {
 //   allTasks: any;  // TODO: Put correct type here
@@ -10,6 +14,9 @@ import { ProductsAll } from "./queries/__generated__/ProductsAll"
 
 export interface IProductsAll {
   productsAll: ProductsAll  // TODO: Put correct type here
+}
+export interface IProductsByNameAndCategoriesId {
+  productsByNameAndCategoriesId: ProductsByNameAndCategoriesId  // TODO: Put correct type here
 }
 
 export interface PropsProducts {

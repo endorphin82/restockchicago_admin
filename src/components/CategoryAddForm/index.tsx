@@ -28,9 +28,7 @@ const CategoryAddForm: React.FC<PropsCategoryAddForm> = (
       // TODO:
       // @ts-ignore
       update(cache, { data: { addCategory } }) {
-        const { categoriesAll } = cache.readQuery<ICategoriesAll>({
-          query: CategoriesAllDocument
-        })!.categoriesAll
+        const { categoriesAll } = cache.readQuery<ICategoriesAll>({ query: CategoriesAllDocument })!.categoriesAll
         cache.writeQuery({
           query: CategoriesAllDocument,
           data: { categoriesAll: categoriesAll?.concat([addCategory]) }
