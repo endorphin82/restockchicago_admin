@@ -8,34 +8,30 @@ const { Option } = Select
 interface Props {
   categories: String[] | [] | any
   handleChange: (e: any) => any
+  searchCategories: String[] | [] | undefined
 }
 
-const ProductsSelectByCategories: React.FC<Props> = ({ categories, handleChange }) => {
-  console.log("categories+++", categories)
-  // const handleChange = (value: any) => {
-  //   if (value.length < 1){
-  //     value = categories
-  //     console.log(`selected ${value}`)
-  //   }
 
-    // console.log(`selected ${value}`)
-  // }
-  // const children = [];
-  // for (let i = 10; i < 36; i++) {
-  //   // @ts-ignore
-  //   children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
-  // }
+const ProductsSelectByCategories: React.FC<Props> = ({ categories, handleChange, searchCategories }) => {
   return (
     <Select
       mode="multiple"
+      // @ts-ignore
+      defaultValue={searchCategories.length === categories.length ? [] : searchCategories}
       style={{ width: "30%" }}
-      placeholder="Please select"
-      onChange={(value) => handleChange(value)}
+      placeholder="Please select categories"
+      onChange={(value: string[]) => {
+        // if categories empty, search all categories
+        return value?.length === 0 ?
+          handleChange(categories)
+          :
+          handleChange(value)
+      }}
     >
       {categories?.map((cat: String) => {
-        return <Option
-          // @ts-ignore
-          key={cat}>
+          return <Option
+            // @ts-ignore
+            key={cat}>
             {cat}
           </Option>
         }
@@ -47,10 +43,12 @@ const ProductsSelectByCategories: React.FC<Props> = ({ categories, handleChange 
 
 interface StateProps {
   categories: String[]
+  searchCategories: String[]
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  categories: state.categories_list.categories
+  categories: state.categories_list.categories,
+  searchCategories: state.search_categories_list.searchCategories
 })
 
 export default connect<typeof ProductsSelectByCategories>(

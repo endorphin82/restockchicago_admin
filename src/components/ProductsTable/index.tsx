@@ -10,7 +10,7 @@ import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
 import ProductsTableAntd from "./ProductsTableAntd"
 import { useUpdateProduct } from "../Products/mutations/__generated__/UpdateProduct"
 import { ProductsByCategoryIdDocument } from "../Products/queries/__generated__/ProductsByCategoryId"
-import { Product, Category } from "../../__generated__/types"
+import { Product } from "../../__generated__/types"
 import ProductsSearch from "../ProductsSearch"
 import ProductsSelectByCategories from "../ProductsSelectByCategories"
 import {
@@ -120,13 +120,11 @@ const ProductsTable: React.FC<PropsProductsTable> = ({ categories, editProduct, 
     }
   }
 
-  const handleChange = (values: string) => {
+  const handleChange = (values: string[]) => {
     if (values.length < 1) {
-      // values = categories
-      // console.log(`selected ${values}`)
       setSearchCategories(categories)
     }
-    // setSearchCategories(values)
+    setSearchCategories(values)
   }
 
   return (

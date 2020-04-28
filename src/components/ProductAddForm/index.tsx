@@ -9,11 +9,11 @@ import {
   REACT_APP_NO_IMAGE_AVAILABLE, REACT_APP_RECYCLE_BIN_ID
 } from "../../actions/types"
 import { RootState } from "../../reducer"
-import { IProductsAll } from "../Products/types"
+import { IProductsAll, IProductsByNameAndCategoriesId } from "../Products/types"
 import { useAddProduct } from "../Products/mutations/__generated__/AddProduct"
 import { ProductsAllDocument } from "../Products/queries/__generated__/ProductsAll"
 import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
-import { Product } from "../../__generated__/types"
+import { Category, Product } from "../../__generated__/types"
 import { ProductsByNameAndCategoriesIdDocument } from "../Products/queries/__generated__/ProductsByNameAndCategoriesId"
 
 type PropsProductAddForm = {
@@ -21,31 +21,44 @@ type PropsProductAddForm = {
   isOpenAddProductModal: Boolean
   searchName: String | void | undefined
   searchCategories: String[] | [] | undefined
-  categories: String[] | [] | any
 }
 
-const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, setIsOpenAddProductModal, searchName, searchCategories , categories}) => {
+const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, setIsOpenAddProductModal, searchName, searchCategories }) => {
   const [addProduct] = useAddProduct(
     {
       // TODO:
       // @ts-ignore
       update(cache, { data: { addProduct } }) {
         const { productsAll } = cache.readQuery<IProductsAll>({ query: ProductsAllDocument })!.productsAll
-        cache.writeQuery({
-          query: ProductsAllDocument,
-          data: { productsAll: productsAll?.concat([addProduct]) }
-        })
-      },
-      refetchQueries: [{
-        query: ProductsAllDocument
-      },
-        {
+        const { productsByNameAndCategoriesId } = cache.readQuery<IProductsByNameAndCategoriesId>({
           query: ProductsByNameAndCategoriesIdDocument,
           variables: {
             name: searchName,
             categories: searchCategories
           }
-        }]
+        })!.productsByNameAndCategoriesId
+        cache.writeQuery({
+          query: ProductsAllDocument,
+          data: {
+            productsAll: productsAll?.concat([addProduct]),
+            // TODO: first adding no update cache
+            // if add product includes search categories, update cache query productsByNameAndCategoriesId
+            // @ts-ignore
+            // productsByNameAndCategoriesId: addProduct.categories.every((cat: any) => searchCategories?.includes(cat)) ? productsByNameAndCategoriesId?.concat([addProduct]) : productsByNameAndCategoriesId
+          }
+        })
+      },
+      refetchQueries: [{
+        query: ProductsAllDocument
+      }
+        , {
+          query: ProductsByNameAndCategoriesIdDocument,
+          variables: {
+            name: searchName,
+            categories: searchCategories
+          }
+        }
+      ]
     }
   )
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
@@ -137,8 +150,6 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
         >
           <Select
             onChange={handleChangeSelect}
-            // @ts-ignore
-            defaultValue={searchCategories.length === categories.length ? [] : searchCategories}
             mode="multiple"
             placeholder="Select category">
             {categoriesAllWithoutRecycleBin?.map((category) =>
@@ -243,14 +254,12 @@ interface StateProps {
   isOpenAddProductModal: Boolean
   searchName: String
   searchCategories: String[]
-  categories: String[] | [] | any
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
   isOpenAddProductModal: state.add_product_modal.isOpen,
   searchName: state.search_name.searchName,
-  searchCategories: state.search_categories_list.searchCategories,
-  categories: state.categories_list.categories
+  searchCategories: state.search_categories_list.searchCategories
 })
 
 export default connect<typeof ProductAddForm>(
