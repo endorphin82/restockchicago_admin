@@ -1,4 +1,5 @@
 import { ActionsTypes } from "../store"
+import { IS_OPEN_EDIT_PRODUCT_MODAL } from "../actions/types"
 
 export type initialState = typeof initialState
 const initialState = {
@@ -8,7 +9,7 @@ const initialState = {
 
 export default (state: initialState  = initialState, action: ActionsTypes): initialState => {
   switch (action.type) {
-    case 'IS_OPEN_EDIT_PRODUCT_MODAL':
+    case IS_OPEN_EDIT_PRODUCT_MODAL:
       return {
         ...state,
         isOpen: action.payload

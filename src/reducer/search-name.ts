@@ -1,17 +1,18 @@
 import { ActionsTypes } from "../store"
-import { IS_OPEN_EDIT_CATEGORY_MODAL } from "../actions/types"
+import { SEARCH_NAME } from "../actions/types"
 
 export type initialState = typeof initialState
 const initialState = {
-  isOpen: false
+  searchName: ""
 }
 
 export default (state: initialState = initialState, action: ActionsTypes): initialState => {
   switch (action.type) {
-    case IS_OPEN_EDIT_CATEGORY_MODAL:
+    case SEARCH_NAME:
       return {
         ...state,
-        isOpen: action.payload
+      // @ts-ignore
+        searchName: action.payload
       }
     default:
       return state

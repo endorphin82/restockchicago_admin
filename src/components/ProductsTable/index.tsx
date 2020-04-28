@@ -1,27 +1,36 @@
 import React, { useEffect, useState } from "react"
 import { Modal } from "antd"
 import { connect } from "react-redux"
-import { editProduct, setIsOpenEditProductModal } from "../../actions"
+import {
+  editProduct,
+  setIsOpenEditProductModal, setSearchCategories,
+  setSearchName
+} from "../../actions"
 import { REACT_APP_RECYCLE_BIN_ID } from "../../actions/types"
 import ProductsTableAntd from "./ProductsTableAntd"
 import { useUpdateProduct } from "../Products/mutations/__generated__/UpdateProduct"
 import { ProductsByCategoryIdDocument } from "../Products/queries/__generated__/ProductsByCategoryId"
 import { Product, Category } from "../../__generated__/types"
 import ProductsSearch from "../ProductsSearch"
-import { useProductsByName } from "../Products/queries/__generated__/ProductsByName"
 import ProductsSelectByCategories from "../ProductsSelectByCategories"
-import { useProductsByNameAndCategoriesId } from "../Products/queries/__generated__/ProductsByNameAndCategoriesId"
+import {
+  ProductsByNameAndCategoriesIdDocument,
+  useProductsByNameAndCategoriesId
+} from "../Products/queries/__generated__/ProductsByNameAndCategoriesId"
 import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
-import Categories from "../Categories"
 import { RootState } from "../../reducer"
 
 interface PropsProductsTable {
   editProduct: (product: Product | undefined) => void
+  setSearchCategories: (searchCtegories: String[] | [] | undefined) => void
+  setSearchName: (searchName: String | void | undefined) => void
   setIsOpenEditProductModal: (isOpen: Boolean | undefined) => void
   categories: String[] | [] | any
+  searchName: String | void | undefined
+  searchCategories: String[] | [] | undefined
 }
 
-const ProductsTable: React.FC<PropsProductsTable> = ({categories, editProduct, setIsOpenEditProductModal }) => {
+const ProductsTable: React.FC<PropsProductsTable> = ({ categories, editProduct, setIsOpenEditProductModal, setSearchCategories, setSearchName, searchName, searchCategories }) => {
   const [updateProduct] = useUpdateProduct(
     {
       refetchQueries: [{
@@ -29,16 +38,22 @@ const ProductsTable: React.FC<PropsProductsTable> = ({categories, editProduct, s
         variables: {
           id: REACT_APP_RECYCLE_BIN_ID
         }
-      }]
+      },
+        {
+          query: ProductsByNameAndCategoriesIdDocument,
+          variables: {
+            name: searchName,
+            categories: searchCategories
+          }
+        }]
     }
   )
-  const [searchName, setSearchName] = useState("")
-  const [searchCategories, setSearchCategories] = useState([])
+
   const { loading: prod_loading, error: prod_error, data: prod_data } = useProductsByNameAndCategoriesId(
     {
       variables: {
-        name: searchName,
-        categories: searchCategories
+        name: searchName as string,
+        categories: searchCategories as string[]
       }
     }
   )
@@ -136,15 +151,21 @@ const ProductsTable: React.FC<PropsProductsTable> = ({categories, editProduct, s
 
 interface StateProps {
   categories: String[]
+  searchName: String
+  searchCategories: String[]
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  categories: state.categories_list.categories
+  categories: state.categories_list.categories,
+  searchName: state.search_name.searchName,
+  searchCategories: state.search_categories_list.searchCategories
 })
 export default connect<typeof ProductsTable>(
 // @ts-ignore
   mapStateToProps
   , {
-  setIsOpenEditProductModal,
-  editProduct
-})(ProductsTable)
+    setSearchCategories,
+    setSearchName,
+    setIsOpenEditProductModal,
+    editProduct
+  })(ProductsTable)
