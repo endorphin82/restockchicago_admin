@@ -14,13 +14,17 @@ import { useAddProduct } from "../Products/mutations/__generated__/AddProduct"
 import { ProductsAllDocument } from "../Products/queries/__generated__/ProductsAll"
 import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
 import { Product } from "../../__generated__/types"
+import { ProductsByNameAndCategoriesIdDocument } from "../Products/queries/__generated__/ProductsByNameAndCategoriesId"
 
 type PropsProductAddForm = {
   setIsOpenAddProductModal: (isOpen: Boolean) => void
   isOpenAddProductModal: Boolean
+  searchName: String | void | undefined
+  searchCategories: String[] | [] | undefined
+  categories: String[] | [] | any
 }
 
-const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, setIsOpenAddProductModal }) => {
+const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, setIsOpenAddProductModal, searchName, searchCategories , categories}) => {
   const [addProduct] = useAddProduct(
     {
       // TODO:
@@ -34,7 +38,14 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
       },
       refetchQueries: [{
         query: ProductsAllDocument
-      }]
+      },
+        {
+          query: ProductsByNameAndCategoriesIdDocument,
+          variables: {
+            name: searchName,
+            categories: searchCategories
+          }
+        }]
     }
   )
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()
@@ -93,10 +104,6 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
       visible={Boolean(isOpenAddProductModal)}
       footer={false}
       onCancel={handleCancel}
-      // forceRender={true}
-      // destroyOnClose={true}
-      // okButtonProps={{htmlType: "submit" }}
-      // cancelButtonProps={{ htmlType: "submit" }}
     >
       <Form
         // onChange={handleChange}
@@ -130,6 +137,8 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
         >
           <Select
             onChange={handleChangeSelect}
+            // @ts-ignore
+            defaultValue={searchCategories.length == categories.length ? [] : searchCategories}
             mode="multiple"
             placeholder="Select category">
             {categoriesAllWithoutRecycleBin?.map((category) =>
@@ -137,7 +146,6 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
                 key={String(category?._id)}
                 value={String(category?._id)}
                 onChange={handleChange}
-                // defaultValue={[]}
               >{String(category?._id)}
               </Select.Option>
             )
@@ -233,10 +241,16 @@ const formItemLayoutWithOutLabel = {
 
 interface StateProps {
   isOpenAddProductModal: Boolean
+  searchName: String
+  searchCategories: String[]
+  categories: String[] | [] | any
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  isOpenAddProductModal: state.add_product_modal.isOpen
+  isOpenAddProductModal: state.add_product_modal.isOpen,
+  searchName: state.search_name.searchName,
+  searchCategories: state.search_categories_list.searchCategories,
+  categories: state.categories_list.categories
 })
 
 export default connect<typeof ProductAddForm>(
