@@ -9,11 +9,10 @@ import {
   REACT_APP_NO_IMAGE_AVAILABLE, REACT_APP_RECYCLE_BIN_ID
 } from "../../actions/types"
 import { RootState } from "../../reducer"
-import { IProductsAll, IProductsByNameAndCategoriesId } from "../Products/types"
+import { IProductsByNameAndCategoriesId } from "../Products/types"
 import { useAddProduct } from "../Products/mutations/__generated__/AddProduct"
-import { ProductsAllDocument } from "../Products/queries/__generated__/ProductsAll"
 import { useCategoriesAll } from "../Categories/queries/__generated__/CategoriesAll"
-import { Category, Product } from "../../__generated__/types"
+import { Product } from "../../__generated__/types"
 import { ProductsByNameAndCategoriesIdDocument } from "../Products/queries/__generated__/ProductsByNameAndCategoriesId"
 
 type PropsProductAddForm = {
@@ -29,7 +28,6 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
       // TODO:
       // @ts-ignore
       update(cache, { data: { addProduct } }) {
-        const { productsAll } = cache.readQuery<IProductsAll>({ query: ProductsAllDocument })!.productsAll
         const { productsByNameAndCategoriesId } = cache.readQuery<IProductsByNameAndCategoriesId>({
           query: ProductsByNameAndCategoriesIdDocument,
           variables: {
@@ -38,20 +36,16 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
           }
         })!.productsByNameAndCategoriesId
         cache.writeQuery({
-          query: ProductsAllDocument,
+          query: ProductsByNameAndCategoriesIdDocument,
           data: {
-            productsAll: productsAll?.concat([addProduct]),
-            // TODO: first adding no update cache
             // if add product includes search categories, update cache query productsByNameAndCategoriesId
             // @ts-ignore
-            // productsByNameAndCategoriesId: addProduct.categories.every((cat: any) => searchCategories?.includes(cat)) ? productsByNameAndCategoriesId?.concat([addProduct]) : productsByNameAndCategoriesId
+            productsByNameAndCategoriesId: addProduct.categories.every((cat: any) => searchCategories?.includes(cat)) ? productsByNameAndCategoriesId?.concat([addProduct]) : productsByNameAndCategoriesId
           }
         })
       },
-      refetchQueries: [{
-        query: ProductsAllDocument
-      }
-        , {
+      refetchQueries: [
+        {
           query: ProductsByNameAndCategoriesIdDocument,
           variables: {
             name: searchName,

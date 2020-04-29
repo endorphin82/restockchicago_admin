@@ -58,6 +58,7 @@ const RecycleBinProductsTable: React.FC<PropsRecycleBinProductsTable> = (
       }]
     }
   )
+
   if (cat_loading) {
     return (<div>Loading...</div>)
   }
