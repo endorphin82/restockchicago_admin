@@ -49,10 +49,12 @@
     "react-scripts": "3.4.1",
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
+    "source-map-explorer": "^2.4.2",
     "typescript": "^3.8.3"
   },
   "scripts": {
     "start": "react-scripts start",
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start-antd": "react-app-rewired start",
     "build:react": "react-app-env --env-file=.env.production build",
     "build": "react-app-env --env-file=.env.production build",
