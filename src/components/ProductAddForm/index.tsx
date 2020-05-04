@@ -34,6 +34,20 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
             name: searchName,
             categories: searchCategories
           }
+          /*  // TODO: Optimistic UI ?
+              // add reject case
+
+                    ,
+                    // @ts-ignore
+                    optimisticResponse: {
+                      __typename: "Mutation",
+                      addProduct: {
+                        __typename: "Product",// @ts-ignore
+                        productsByNameAndCategoriesId: [...productsByNameAndCategoriesId, addProduct]
+                      }
+                    }
+
+           */
         })!.productsByNameAndCategoriesId
         cache.writeQuery({
           query: ProductsByNameAndCategoriesIdDocument,
@@ -43,7 +57,8 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
             productsByNameAndCategoriesId: addProduct.categories.every((cat: any) => searchCategories?.includes(cat)) ? productsByNameAndCategoriesId?.concat([addProduct]) : productsByNameAndCategoriesId
           }
         })
-      },
+      }
+      ,
       refetchQueries: [
         {
           query: ProductsByNameAndCategoriesIdDocument,
@@ -53,6 +68,7 @@ const ProductAddForm: React.FC<PropsProductAddForm> = ({ isOpenAddProductModal, 
           }
         }
       ]
+
     }
   )
   const { loading: cat_loading, error: cat_error, data: cat_data } = useCategoriesAll()

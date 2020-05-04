@@ -1,33 +1,35 @@
-import * as Types from '../../../../__generated__/types';
+import * as Types from "../../../../__generated__/types"
 
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import gql from "graphql-tag"
+import * as ApolloReactCommon from "@apollo/client"
+import * as ApolloReactHooks from "@apollo/react-hooks"
 
 export type ProductsAllVariables = {};
 
 
 export type ProductsAll = (
-  { __typename: 'Query' }
-  & { productsAll?: Types.Maybe<Array<Types.Maybe<(
-    { __typename: 'Product' }
-    & Pick<Types.Product, 'id' | 'name' | 'price' | 'images' | 'icon' | 'categories'>
-  )>>> }
-);
+  { __typename: "Query" }
+  & {
+  productsAll?: Types.Maybe<Array<Types.Maybe<(
+    { __typename: "Product" }
+    & Pick<Types.Product, "id" | "name" | "price" | "images" | "icon" | "categories">
+    )>>>
+}
+  );
 
 
 export const ProductsAllDocument = gql`
     query ProductsAll {
-  productsAll {
-    id
-    name
-    price
-    images
-    icon
-    categories
-  }
-}
-    `;
+        productsAll {
+            id
+            name
+            price
+            images
+            icon
+            categories
+        }
+    }
+`
 
 /**
  * __useProductsAll__
@@ -45,11 +47,13 @@ export const ProductsAllDocument = gql`
  * });
  */
 export function useProductsAll(baseOptions?: ApolloReactHooks.QueryHookOptions<ProductsAll, ProductsAllVariables>) {
-        return ApolloReactHooks.useQuery<ProductsAll, ProductsAllVariables>(ProductsAllDocument, baseOptions);
-      }
+  return ApolloReactHooks.useQuery<ProductsAll, ProductsAllVariables>(ProductsAllDocument, baseOptions)
+}
+
 export function useProductsAllLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ProductsAll, ProductsAllVariables>) {
-          return ApolloReactHooks.useLazyQuery<ProductsAll, ProductsAllVariables>(ProductsAllDocument, baseOptions);
-        }
+  return ApolloReactHooks.useLazyQuery<ProductsAll, ProductsAllVariables>(ProductsAllDocument, baseOptions)
+}
+
 export type ProductsAllHookResult = ReturnType<typeof useProductsAll>;
 export type ProductsAllLazyQueryHookResult = ReturnType<typeof useProductsAllLazyQuery>;
 export type ProductsAllQueryResult = ApolloReactCommon.QueryResult<ProductsAll, ProductsAllVariables>;
